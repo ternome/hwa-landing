@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero Wars Alliance — forge. siege.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display&family=Barlow+Condensed:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:        #0a0a0a;
+    --bg-2:      #0e0e0e;
+    --bg-3:      #131313;
+    --panel:     #181818;
+    --panel-2:   #1f1f1f;
+    --line:      rgba(255,255,255,.07);
+    --line-2:    rgba(255,255,255,.14);
+    --text:      #ebebeb;
+    --muted:     #9a9a9a;
+    --muted-2:   #6a6a6a;
+    --accent:    #ff8a2b;
+    --cream:     #efe4d0;          /* cream of "enlist." title */
+    --neon:      #b4ff3b;           /* neon green sticker */
+    --neon-2:    #d4ff66;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  /* film grain */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:200;pointer-events:none;mix-blend-mode:overlay;opacity:.07;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    background:rgba(10,10,10,.0);
+    transition:background .3s, backdrop-filter .3s, border-color .3s;
+    border-bottom:1px solid transparent;
+  }
+  .topbar.scrolled{
+    background:rgba(10,10,10,.82);
+    backdrop-filter:blur(14px) saturate(140%);
+    border-bottom-color:var(--line);
+  }
+  .topbar-inner{
+    max-width:1640px;margin:0 auto;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    padding:16px 28px;gap:24px;
+  }
+  .tb-left{display:flex;align-items:center;gap:18px}
+  .hamburger{
+    display:inline-flex;align-items:center;gap:8px;color:#fff;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;
+    cursor:pointer;padding:4px 0;
+  }
+  .hamburger svg{width:16px;height:16px}
+  .brand-mark{
+    display:flex;align-items:center;gap:10px;color:#fff;
+    font-family:'DM Serif Display',serif;font-size:24px;letter-spacing:.005em;
+  }
+  .brand-mark .crest{
+    width:30px;height:30px;display:grid;place-items:center;
+  }
+  .brand-mark .crest svg{width:28px;height:28px}
+  .brand-mark .nm{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+  .brand-mark .nm em{font-style:normal;color:var(--accent);font-weight:500}
+
+  .topnav{display:flex;align-items:center;gap:6px;justify-self:center}
+  .topnav a{
+    position:relative;padding:10px 18px;font-size:14px;font-weight:600;color:#dcdcdc;
+    transition:color .15s;
+  }
+  .topnav a:hover{color:#fff}
+  .topnav a.active{color:#fff}
+  .topnav a.has-dot::after{
+    content:"";position:absolute;top:8px;right:8px;
+    width:5px;height:5px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+  }
+
+  .tb-right{display:flex;align-items:center;gap:10px;justify-self:end}
+  .ic-btn{
+    width:36px;height:36px;border-radius:0;display:grid;place-items:center;color:#c8c8c8;
+    transition:color .15s, background .15s;cursor:pointer;
+  }
+  .ic-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
+  .ic-btn .dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .ic-btn{position:relative}
+  .signup-pill{
+    padding:8px 14px;border:1px solid var(--line-2);font-size:12px;font-weight:600;color:#fff;
+    letter-spacing:.02em;transition:border-color .15s, background .15s;cursor:pointer;
+    border-radius:99px;
+  }
+  .signup-pill:hover{border-color:#fff;background:rgba(255,255,255,.04)}
+  .play-now{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:10px 22px;background:var(--neon);color:#0a1500;
+    font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+    transition:filter .15s, transform .1s;
+    border-radius:2px;
+  }
+  .play-now:hover{filter:brightness(1.06)}
+  .play-now:active{transform:translateY(1px)}
+
+  /* social row */
+  .socials{display:flex;align-items:center;gap:14px;color:#cfcfcf}
+  .socials a{transition:color .15s}
+  .socials a:hover{color:#fff}
+  .socials svg{width:18px;height:18px}
+
+  /* ============ SIDE RAIL (left) ============ */
+  .siderail{
+    position:fixed;left:0;top:0;bottom:0;z-index:40;width:60px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    pointer-events:none;
+  }
+  .siderail .stack{
+    display:flex;flex-direction:column;gap:34px;align-items:center;
+    pointer-events:auto;
+  }
+  .siderail a{
+    writing-mode:vertical-rl;transform:rotate(180deg);
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;
+    font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:#9a9a9a;
+    padding:6px 0;cursor:pointer;
+    transition:color .15s;position:relative;
+  }
+  .siderail a.active{color:#fff}
+  .siderail a.active::before{
+    content:"";position:absolute;left:-12px;top:50%;transform:translateY(-50%);
+    width:4px;height:4px;background:var(--accent);border-radius:50%;
+  }
+  .siderail a:hover{color:#fff}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;height:100vh;min-height:760px;width:100%;
+    overflow:hidden;isolation:isolate;
+  }
+  .hero-bg{
+    position:absolute;inset:-4%;z-index:0;
+    background:url("assets/keyart.jpg") center/cover no-repeat;
+    filter:brightness(.74) saturate(1.05) contrast(1.04);
+    animation:kenburns 26s ease-in-out infinite alternate;
+  }
+  @keyframes kenburns{0%{transform:scale(1.04)}100%{transform:scale(1.12) translate(-1%,-1%)}}
+  .hero-veil{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 50% 40%, transparent 0%, rgba(10,10,10,.4) 65%, rgba(10,10,10,.9) 100%),
+      linear-gradient(180deg, rgba(10,10,10,.5) 0%, rgba(10,10,10,0) 22%, rgba(10,10,10,0) 60%, rgba(10,10,10,.9) 92%, var(--bg) 100%);
+  }
+  .hero-scan{
+    position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.14;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,0) 0 2px, rgba(255,255,255,.04) 2px 3px);
+  }
+
+  /* enormous lowercase title — split across character */
+  .hero-title{
+    position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);
+    z-index:5;display:flex;justify-content:center;align-items:center;
+    pointer-events:none;
+    color:var(--cream);
+  }
+  .hero-title .word{
+    font-family:'DM Serif Display',serif;
+    font-size:clamp(120px, 22vw, 360px);
+    line-height:.85;letter-spacing:-.02em;
+    text-shadow:0 8px 36px rgba(0,0,0,.55);
+    flex-shrink:0;
+  }
+  .hero-title .word.l{padding-right:0;margin-right:-1.2vw;text-align:right}
+  .hero-title .word.r{padding-left:0;margin-left:-1.2vw;text-align:left;opacity:.92}
+  .hero-title .word .pd{color:var(--accent)}
+  /* gap reserved for character/keyart */
+  .hero-title .gap{width:18vw;flex-shrink:0}
+
+  /* darker mask under "siege." simulating the character occluding it */
+  .hero-title-mask{
+    position:absolute;z-index:4;
+    left:50%;top:50%;transform:translate(-15%,-50%);
+    width:36vw;height:80vh;
+    background:radial-gradient(50% 60% at 50% 50%, rgba(10,10,10,.85), rgba(10,10,10,0) 70%);
+    pointer-events:none;
+  }
+
+  .hero-meta{
+    position:absolute;left:50%;bottom:18vh;transform:translateX(-50%);
+    z-index:6;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;
+  }
+  .hero-tag{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;
+    font-size:15px;letter-spacing:.04em;color:#d4d4d4;line-height:1.55;
+    text-shadow:0 2px 12px rgba(0,0,0,.55);
+    max-width:540px;
+  }
+  .hero-tag .accent{color:var(--cream);font-style:italic}
+  .hero-watch{
+    display:inline-flex;align-items:center;gap:14px;cursor:pointer;color:#fff;
+    transition:transform .2s;
+  }
+  .hero-watch:hover{transform:scale(1.04)}
+  .hero-watch .play-disc{
+    width:54px;height:54px;border-radius:50%;
+    background:var(--cream);color:#0a0a0a;
+    display:grid;place-items:center;position:relative;
+  }
+  .hero-watch .play-disc svg{width:14px;height:16px;margin-left:3px}
+  .hero-watch .play-disc::after{
+    content:"";position:absolute;inset:-7px;border:1px solid rgba(239,228,208,.4);border-radius:50%;
+    animation:ring 3s ease-out infinite;
+  }
+  @keyframes ring{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.25);opacity:0}}
+  .hero-watch .lbl{
+    font-family:'Inter',sans-serif;font-weight:500;font-style:italic;
+    font-size:14px;letter-spacing:.04em;color:#e8e8e8;
+  }
+
+  /* corner buttons bottom right (PEGI, options) */
+  .hero-tools{
+    position:absolute;right:28px;bottom:28px;z-index:7;
+    display:flex;gap:6px;
+  }
+  .hero-tools .ic{
+    width:34px;height:34px;border:1px solid var(--line-2);
+    display:grid;place-items:center;color:#dcdcdc;cursor:pointer;
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .hero-tools .ic:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.04)}
+  .hero-tools .ic svg{width:14px;height:14px}
+  .hero-tools .age{
+    background:#ff8a1f;color:#fff;border-color:#ff8a1f;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13px;
+  }
+
+  /* scroll cue bottom-center */
+  .scroll-cue{
+    position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;
+    color:#9a9a9a;display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue .txt{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;
+    font-size:11px;letter-spacing:.5em;text-transform:uppercase;
+  }
+  .scroll-cue .vline{
+    width:1px;height:36px;background:linear-gradient(180deg,#fff, transparent);
+    animation:slide 1.8s ease-in-out infinite;transform-origin:top;
+  }
+  @keyframes slide{0%{transform:scaleY(.1);opacity:.4}50%{transform:scaleY(1);opacity:1}100%{transform:scaleY(.1);opacity:.4;transform-origin:bottom}}
+
+  /* ============ shared section header ============ */
+  .section{position:relative;border-top:1px solid var(--line)}
+  .section-inner{max-width:1640px;margin:0 auto;padding:90px 80px 100px;position:relative}
+  .sec-eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-style:italic;
+    font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:#cfcfcf;
+    margin-bottom:18px;
+  }
+  .sec-eyebrow .dot{width:6px;height:6px;background:var(--accent);transform:rotate(45deg)}
+  .sec-title{
+    font-family:'DM Serif Display',serif;
+    font-size:clamp(72px, 9.6vw, 168px);line-height:.86;letter-spacing:-.02em;
+    color:#fff;margin:0;text-transform:lowercase;
+  }
+  .sec-title .pd{color:var(--accent)}
+
+  /* ============ NEWS ============ */
+  .news{
+    position:relative;overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,.78) 0%, rgba(10,10,10,.92) 100%),
+      url("assets/keyart.jpg") center/cover no-repeat fixed;
+  }
+  .news .section-inner{padding-bottom:120px}
+  .news-rail-head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    margin-top:18px;margin-bottom:32px;
+  }
+  .rail-arrows{display:flex;gap:6px}
+  .rail-arrows button{
+    width:46px;height:46px;border:1px solid var(--line-2);color:#fff;
+    display:grid;place-items:center;cursor:pointer;
+    transition:border-color .15s, background .15s, color .15s;
+  }
+  .rail-arrows button:hover{border-color:var(--cream);background:rgba(255,255,255,.04)}
+  .rail-arrows button svg{width:18px;height:18px}
+
+  .news-rail{
+    display:flex;gap:18px;overflow-x:auto;padding:6px 0 22px;
+    scrollbar-width:thin;scrollbar-color:#3a3a3a transparent;
+  }
+  .news-rail::-webkit-scrollbar{height:6px}
+  .news-rail::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:3px}
+
+  .pn-card{
+    flex:0 0 320px;background:var(--bg-3);border:1px solid var(--line);
+    overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+    transition:transform .25s, border-color .25s, box-shadow .25s;
+  }
+  .pn-card:hover{transform:translateY(-4px);border-color:var(--line-2);box-shadow:0 24px 50px rgba(0,0,0,.5)}
+  .pn-thumb{position:relative;aspect-ratio:16/10;overflow:hidden}
+  .pn-thumb .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s ease}
+  .pn-card:hover .pn-thumb .img{transform:scale(1.06)}
+  .pn-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%, rgba(0,0,0,.55) 100%)}
+  .pn-sticker{
+    position:absolute;top:14px;right:14px;z-index:2;
+    padding:7px 12px;background:var(--neon);color:#0a1500;
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:11px;
+    box-shadow:0 0 0 1px rgba(180,255,59,.6), 0 8px 22px rgba(180,255,59,.25);
+    transform:rotate(2deg);
+  }
+  .pn-sticker.notice{background:var(--cream);color:#1a1408;box-shadow:0 0 0 1px rgba(239,228,208,.6), 0 8px 22px rgba(239,228,208,.18);transform:rotate(-2deg)}
+  .pn-sticker .new{
+    display:inline-block;background:#ff3a3a;color:#fff;font-size:9px;padding:1px 4px;margin-left:6px;letter-spacing:.16em;
+  }
+  .pn-body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:10px}
+  .pn-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--neon-2);
+  }
+  .pn-eyebrow .sq{width:6px;height:6px;background:var(--neon)}
+  .pn-eyebrow.notice{color:var(--cream)}
+  .pn-eyebrow.notice .sq{background:var(--cream)}
+  .pn-title{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;line-height:1.2;
+    color:#fff;letter-spacing:.005em;text-transform:uppercase;
+  }
+  .pn-meta{
+    display:flex;align-items:center;gap:12px;margin-top:auto;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
+  }
+  .pn-meta .pill{padding:3px 8px;border:1px solid var(--line);color:#cfcfcf;letter-spacing:.06em;font-size:10px}
+
+  /* news scroll legend (bottom) */
+  .scroll-tag{
+    position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;
+    font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:#7a7a7a;
+    display:flex;align-items:center;gap:8px;
+  }
+  .scroll-tag .ln{width:18px;height:1px;background:#3a3a3a}
+
+  /* placeholders for news thumbs */
+  .ph-n1{background:linear-gradient(135deg,#2a0c08 0%, #6b1810 50%, #d6451a 100%)}
+  .ph-n2{background:linear-gradient(135deg,#0a1a06 0%, #2a5a14 50%, #6ed62a 100%)}
+  .ph-n3{background:linear-gradient(135deg,#06101a 0%, #1a4a8a 50%, #2bc8f2 100%)}
+  .ph-n4{background:linear-gradient(135deg,#1a0a14 0%, #4a1a3a 50%, #c026d3 100%)}
+  .ph-n5{background:linear-gradient(135deg,#1a1408 0%, #5a3a14 50%, #ffb628 100%)}
+
+  /* ============ FEATURE ============ */
+  .feature{
+    position:relative;height:100vh;min-height:780px;overflow:hidden;isolation:isolate;
+    background:#0a0a0a;
+  }
+  .feature-bg{
+    position:absolute;inset:-4%;z-index:0;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,.35) 0%, transparent 30%, transparent 50%, rgba(10,10,10,.85) 95%),
+      url("assets/keyart.jpg") center/cover no-repeat;
+    filter:brightness(.7) saturate(1.05) contrast(1.04);
+  }
+  .feature-bg.alt{
+    background:
+      linear-gradient(180deg, rgba(10,10,10,.35) 0%, transparent 30%, transparent 50%, rgba(10,10,10,.85) 95%),
+      linear-gradient(135deg,#1f1208 0%, #5a3514 30%, #b06a1e 60%, #ff9a3a 100%);
+  }
+  .feature .section-inner{
+    position:relative;z-index:2;height:100%;padding:120px 80px 70px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .feature-points{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:48px;
+    border-top:1px solid var(--line-2);padding-top:40px;
+  }
+  .fpt{display:flex;flex-direction:column;gap:14px;color:#ebebeb}
+  .fpt .num{
+    font-family:'DM Serif Display',serif;font-size:42px;color:var(--cream);
+    line-height:1;letter-spacing:-.02em;
+    display:flex;align-items:flex-end;gap:0;
+  }
+  .fpt .num .pd{color:var(--accent);font-size:28px;margin-bottom:3px;margin-left:-2px}
+  .fpt .num .dash{
+    display:inline-block;width:42px;height:1px;background:var(--cream);
+    margin-left:14px;margin-bottom:14px;opacity:.7;
+  }
+  .fpt h4{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;
+    font-size:22px;line-height:1.15;letter-spacing:.005em;text-transform:uppercase;color:#fff;margin:0;
+  }
+  .fpt p{
+    margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:14.5px;letter-spacing:.02em;
+    color:#cfcfcf;line-height:1.6;
+  }
+
+  /* ============ THE WORLD ============ */
+  .world{position:relative;background:var(--bg)}
+  .world-stage{
+    position:relative;height:100vh;min-height:780px;overflow:hidden;isolation:isolate;
+  }
+  .world-bg{
+    position:absolute;inset:-4%;z-index:0;background-size:cover;background-position:center;
+    transition:background-image .6s ease, opacity .4s ease;
+    background-image:url("assets/keyart.jpg");
+    filter:brightness(.62) saturate(1.05);
+  }
+  .world-bg::after{
+    content:"";position:absolute;inset:0;background:
+      linear-gradient(90deg, rgba(10,10,10,.85) 0%, rgba(10,10,10,.35) 45%, transparent 75%);
+  }
+  .world-stage .section-inner{
+    position:relative;z-index:2;height:100%;display:flex;align-items:center;padding:120px 80px;
+  }
+  .world-text{max-width:600px}
+  .world-text .sub{
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;
+    letter-spacing:.4em;text-transform:uppercase;color:var(--accent);
+    margin:18px 0 14px;display:block;
+  }
+  .world-text h3{
+    font-family:'DM Serif Display',serif;font-weight:400;font-style:italic;
+    font-size:30px;line-height:1.2;color:#fff;margin:0 0 24px;letter-spacing:-.005em;
+  }
+  .world-text p{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:17px;letter-spacing:.02em;
+    color:#dcdcdc;line-height:1.6;margin:0 0 14px;max-width:480px;
+  }
+  .world-cta{
+    display:inline-flex;align-items:center;gap:14px;margin-top:22px;
+    padding:14px 22px;border:1px solid var(--cream);color:var(--cream);
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;
+    font-size:12px;
+    transition:background .15s, color .15s;
+  }
+  .world-cta:hover{background:var(--cream);color:#0a0a0a}
+  .world-cta svg{width:13px;height:13px}
+
+  /* vertical thumbnail carousel right side */
+  .world-carousel{
+    position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:3;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .wc-thumb{
+    width:120px;height:80px;background-size:cover;background-position:center;
+    cursor:pointer;border:1px solid transparent;position:relative;overflow:hidden;
+    transition:transform .2s, border-color .2s;
+  }
+  .wc-thumb:hover{transform:translateX(-4px)}
+  .wc-thumb.active{border-color:var(--accent);box-shadow:-12px 0 0 -8px var(--accent);transform:translateX(-10px)}
+  .wc-thumb::after{
+    content:"";position:absolute;inset:0;background:rgba(10,10,10,.35);transition:background .2s;
+  }
+  .wc-thumb.active::after{background:transparent}
+  .wc-thumb .ix{
+    position:absolute;left:8px;bottom:6px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:10px;color:#fff;
+    letter-spacing:.1em;text-shadow:0 1px 2px rgba(0,0,0,.6);
+  }
+  .ph-w1{background-image:url("assets/keyart.jpg")}
+  .ph-w2{background-image:linear-gradient(135deg,#3a0d0d 0%, #b04020 60%, #ff7a3a 100%)}
+  .ph-w3{background-image:linear-gradient(135deg,#082a4a 0%, #1a6b8a 60%, #2bc8f2 100%)}
+  .ph-w4{background-image:linear-gradient(135deg,#0a3a22 0%, #1a8a4a 60%, #5ee07e 100%)}
+
+  /* ============ MEDIA ============ */
+  .media{position:relative;background:var(--bg-2)}
+  .media .section-inner{padding-bottom:120px}
+  .media-head-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:36px}
+  .media-head-row .more{
+    display:inline-flex;align-items:center;gap:12px;
+    padding-bottom:8px;border-bottom:1px solid var(--cream);color:var(--cream);
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:12px;
+    transition:gap .15s, color .15s;
+  }
+  .media-head-row .more:hover{gap:18px;color:#fff}
+  .media-head-row .more svg{width:13px;height:13px}
+
+  .media-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;
+  }
+  .m-tile{
+    position:relative;overflow:hidden;cursor:pointer;background:#101010;
+    border:1px solid var(--line);
+    transition:transform .25s, border-color .25s;
+  }
+  .m-tile:hover{transform:translateY(-3px);border-color:var(--line-2)}
+  .m-tile .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s ease, filter .25s}
+  .m-tile:hover .img{transform:scale(1.06);filter:brightness(.78)}
+  .m-tile .play{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:48px;height:48px;border-radius:50%;background:rgba(239,228,208,.92);color:#0a0a0a;
+    display:grid;place-items:center;
+    transition:transform .2s, background .2s;
+  }
+  .m-tile:hover .play{background:var(--cream);transform:translate(-50%,-50%) scale(1.08)}
+  .m-tile .play svg{width:14px;height:16px;margin-left:2px}
+  .m-tile .meta{
+    position:absolute;left:14px;right:14px;bottom:12px;z-index:2;
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;color:#cfcfcf;
+    opacity:0;transform:translateY(8px);transition:opacity .25s, transform .25s;
+  }
+  .m-tile:hover .meta{opacity:1;transform:translateY(0)}
+  .m-tile .meta .ttl{color:#fff;font-weight:700;font-size:14px;letter-spacing:.04em}
+  .m-tile.wide{grid-column:span 2}
+  .m-tile.tall{grid-row:span 2}
+  .m-tile.big{grid-column:span 2;grid-row:span 2}
+  .ph-mm1{background-image:url("assets/keyart.jpg")}
+  .ph-mm2{background:linear-gradient(135deg,#1c0d08 0%, #5a2814 50%, #d6451a 100%)}
+  .ph-mm3{background:linear-gradient(135deg,#081020 0%, #1a3a6b 50%, #5ec8ff 100%)}
+  .ph-mm4{background:linear-gradient(135deg,#08200d 0%, #1a5a2c 50%, #6ee08a 100%)}
+  .ph-mm5{background:linear-gradient(135deg,#1c0820 0%, #3a1a5a 50%, #c026d3 100%)}
+  .ph-mm6{background:linear-gradient(135deg,#1c1408 0%, #5a3a14 50%, #ffb628 100%)}
+  .ph-mm7{background:linear-gradient(135deg,#08081c 0%, #2a2a6b 50%, #6366f1 100%)}
+  .ph-mm8{background:linear-gradient(135deg,#1f0d14 0%, #5a1a28 50%, #ff4a72 100%)}
+
+  /* ============ BOTTOM BAND (enlist. resist style) ============ */
+  .strap{
+    position:relative;height:120px;background:#161616;overflow:hidden;
+    display:flex;align-items:center;border-top:1px solid var(--line);
+  }
+  .strap::before{
+    content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(90deg, transparent 0%, rgba(255,138,43,.06) 50%, transparent 100%),
+      repeating-linear-gradient(45deg, transparent 0 10px, rgba(255,255,255,.025) 10px 11px);
+  }
+  .strap-inner{
+    position:relative;z-index:2;max-width:1640px;margin:0 auto;padding:0 80px;
+    display:flex;align-items:center;gap:36px;width:100%;
+  }
+  .strap-mark{
+    display:flex;align-items:center;gap:12px;
+  }
+  .strap-mark .crest{width:46px;height:46px;display:grid;place-items:center;color:var(--cream)}
+  .strap-mark .crest svg{width:46px;height:46px}
+  .strap-mark .word{
+    font-family:'DM Serif Display',serif;font-size:42px;line-height:1;letter-spacing:-.01em;color:var(--cream);
+  }
+  .strap-mark .word .pd{color:var(--accent)}
+  .strap-tag{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;
+    font-size:14.5px;letter-spacing:.04em;color:#cfcfcf;line-height:1.5;
+    max-width:520px;margin-left:auto;
+  }
+  .strap-tag strong{color:var(--cream);font-weight:700}
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:#080808;border-top:1px solid var(--line);
+    padding:40px 0 28px;color:var(--muted);
+  }
+  .foot-inner{max-width:1640px;margin:0 auto;padding:0 80px;display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+  .partners{display:flex;align-items:center;gap:32px;color:#cfcfcf;flex-wrap:wrap}
+  .partner{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.32em;text-transform:uppercase;color:#cfcfcf;cursor:pointer;
+    transition:color .15s;
+  }
+  .partner:hover{color:#fff}
+  .partner em{font-style:italic;font-weight:300;color:var(--muted-2);margin-left:6px}
+  .foot-spacer{flex:1}
+  .foot-lang{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 14px;border:1px solid var(--line-2);font-size:12px;color:#cfcfcf;cursor:pointer;
+    transition:border-color .15s, color .15s;letter-spacing:.04em;
+  }
+  .foot-lang:hover{border-color:#fff;color:#fff}
+  .foot-back{
+    display:inline-flex;align-items:center;gap:8px;color:#cfcfcf;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:11px;
+    transition:color .15s;
+  }
+  .foot-back:hover{color:#fff}
+
+  .foot-meta{
+    max-width:1640px;margin:24px auto 0;padding:0 80px;
+    display:flex;gap:24px;flex-wrap:wrap;font-size:12px;
+  }
+  .foot-meta a{color:#bcbcbc;transition:color .15s}
+  .foot-meta a:hover{color:#fff}
+
+  .copyright{
+    max-width:1640px;margin:24px auto 0;padding:20px 80px 0;
+    border-top:1px solid var(--line);
+    color:var(--muted-2);font-size:10.5px;line-height:1.7;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1180px){
+    .topnav{display:none}
+    .siderail{display:none}
+    .topbar-inner{grid-template-columns:auto 1fr auto}
+    .hero-title .word{font-size:22vw}
+    .feature-points{grid-template-columns:repeat(2,1fr);gap:36px 28px}
+    .feature{height:auto;min-height:auto;padding-bottom:40px}
+    .feature .section-inner{padding:60px 32px}
+    .world-carousel{position:relative;right:auto;top:auto;transform:none;flex-direction:row;flex-wrap:wrap;margin-top:30px}
+    .world-stage{height:auto;min-height:auto}
+    .world-stage .section-inner{padding:80px 32px;flex-direction:column;align-items:flex-start;gap:24px}
+    .media-grid{grid-template-columns:repeat(3,1fr)}
+    .m-tile.big{grid-column:span 3;grid-row:span 2}
+  }
+  @media (max-width:700px){
+    .topbar-inner{padding:12px 16px}
+    .brand-mark .nm{font-size:16px}
+    .signup-pill,.socials{display:none}
+    .section-inner{padding:60px 20px 70px}
+    .strap-inner{padding:0 20px;flex-direction:column;align-items:flex-start;gap:18px;height:auto;padding:24px 20px}
+    .strap{height:auto}
+    .strap-mark .word{font-size:32px}
+    .strap-tag{margin-left:0}
+    .feature-points{grid-template-columns:1fr}
+    .media-grid{grid-template-columns:1fr 1fr;grid-auto-rows:160px}
+    .m-tile.wide,.m-tile.big{grid-column:span 2}
+    .foot-inner{padding:0 20px}
+    .foot-meta,.copyright{padding-left:20px;padding-right:20px}
+    .hero-title-mask{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <div class="tb-left">
+      <button class="hamburger" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        <span>Menu</span>
+      </button>
+      <a href="#" class="brand-mark" title="Hero Wars Alliance">
+        <span class="crest">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M16 3 L28 10 L28 22 L16 29 L4 22 L4 10 Z"/>
+            <path d="M16 3 L16 29 M4 10 L28 22 M28 10 L4 22" stroke-width="1" opacity=".45"/>
+          </svg>
+        </span>
+        <span class="nm">Hero Wars<em>·</em>Alliance</span>
+      </a>
+    </div>
+    <nav class="topnav">
+      <a href="#" class="active">Game</a>
+      <a href="#news" class="has-dot">News</a>
+      <a href="#media">Media</a>
+      <a href="#world">Community</a>
+      <a href="#">Support</a>
+    </nav>
+    <div class="tb-right">
+      <div class="socials">
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 4.7c-1.4-.7-3-1.1-4.6-1.4-.2.4-.4.8-.6 1.2-1.7-.3-3.4-.3-5.1 0-.2-.4-.4-.8-.6-1.2-1.6.3-3.2.8-4.6 1.4C1.1 9 .3 13.2.7 17.4 2.6 18.8 4.5 19.7 6.3 20.2c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.8.1-.1.3-.2.4-.3 3.3 1.5 6.8 1.5 10.1 0 .1.1.3.2.4.3-.5.3-1.1.6-1.7.8.3.7.7 1.3 1.1 1.9 1.9-.5 3.7-1.4 5.6-2.8.5-4.8-.8-9-3.5-12.7zM8.5 14.2c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2zm7 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2c-.2-1-.9-1.7-1.9-1.9C17.9 5 12 5 12 5s-5.9 0-7.7.3c-1 .2-1.7.9-1.9 1.9C2 9 2 12 2 12s0 3 .3 4.8c.2 1 .9 1.7 1.9 1.9C6 19 12 19 12 19s5.9 0 7.7-.3c1-.2 1.7-.9 1.9-1.9.3-1.8.3-4.8.3-4.8s0-3-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 4l-4.2 5.7L19 21h-3.5l-3.4-5.4L7.6 21H5l4.5-6.1L4.5 4h3.6l3 5 3.7-5H18z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      </div>
+      <button class="signup-pill">Sign up</button>
+      <a href="#" class="play-now">Play Now
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 2l4 4-4 4"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SIDE RAIL ============ -->
+<aside class="siderail">
+  <div class="stack">
+    <a class="active" data-section="hero">News</a>
+    <a data-section="feature">Feature</a>
+    <a data-section="world">World</a>
+    <a data-section="media">Media</a>
+  </div>
+</aside>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-scan"></div>
+
+  <div class="hero-title-mask"></div>
+
+  <div class="hero-title" aria-label="forge. siege.">
+    <span class="word l">forge<span class="pd">.</span></span>
+    <span class="gap" aria-hidden="true"></span>
+    <span class="word r">siege<span class="pd">.</span></span>
+  </div>
+
+  <div class="hero-meta">
+    <p class="hero-tag">
+      <span class="accent">A realm cracked open. An alliance reforged.</span><br/>
+      The journey to take back the gates of the Astaroth begins now.
+    </p>
+    <a href="#" class="hero-watch">
+      <span class="play-disc">
+        <svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg>
+      </span>
+      <span class="lbl">watch trailer</span>
+    </a>
+  </div>
+
+  <div class="hero-tools">
+    <div class="ic age">12</div>
+    <button class="ic" aria-label="Compass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2 6-6 2 2-6 6-2z" fill="currentColor"/></svg></button>
+    <button class="ic" aria-label="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M16 8a5 5 0 010 8"/></svg></button>
+    <button class="ic" aria-label="Fullscreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+
+  <div class="scroll-cue">
+    <span class="vline"></span>
+    <span class="txt">Scroll</span>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+<section class="section news" id="news">
+  <div class="section-inner">
+    <div class="sec-eyebrow"><span class="dot"></span> Dispatches from the front</div>
+    <h2 class="sec-title">news<span class="pd">.</span></h2>
+
+    <div class="news-rail-head">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:16px;letter-spacing:.02em;color:#cfcfcf;max-width:520px;line-height:1.55">
+        Patch notes, balance changes and field reports — every line shipped by the Hero Wars team.
+      </div>
+      <div class="rail-arrows">
+        <button data-rail="prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button data-rail="next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+
+    <div class="news-rail" id="newsRail">
+      <article class="pn-card">
+        <div class="pn-thumb">
+          <div class="img ph-n1"></div>
+          <div class="pn-sticker">Patch Notes <span class="new">NEW</span></div>
+        </div>
+        <div class="pn-body">
+          <div class="pn-eyebrow"><span class="sq"></span> Patch Notes</div>
+          <div class="pn-title">Patch 12.8.0 — Echoes of the Astaroth</div>
+          <div class="pn-meta">
+            <span class="pill">1 day ago</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="pn-card">
+        <div class="pn-thumb">
+          <div class="img ph-n2"></div>
+          <div class="pn-sticker notice">Notice</div>
+        </div>
+        <div class="pn-body">
+          <div class="pn-eyebrow notice"><span class="sq"></span> Notice</div>
+          <div class="pn-title">Our work on a fair playing field for all heroes</div>
+          <div class="pn-meta">
+            <span class="pill">6 days ago</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="pn-card">
+        <div class="pn-thumb">
+          <div class="img ph-n3"></div>
+          <div class="pn-sticker">Patch Notes</div>
+        </div>
+        <div class="pn-body">
+          <div class="pn-eyebrow"><span class="sq"></span> Patch Notes</div>
+          <div class="pn-title">Patch 12.7.0 — Arena rebalance &amp; new map</div>
+          <div class="pn-meta">
+            <span class="pill">2026.05.05</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="pn-card">
+        <div class="pn-thumb">
+          <div class="img ph-n4"></div>
+          <div class="pn-sticker">Patch Notes</div>
+        </div>
+        <div class="pn-body">
+          <div class="pn-eyebrow"><span class="sq"></span> Patch Notes</div>
+          <div class="pn-title">Hotfix 1.26.1 — Server stability</div>
+          <div class="pn-meta">
+            <span class="pill">2026.05.05</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="pn-card">
+        <div class="pn-thumb">
+          <div class="img ph-n5"></div>
+          <div class="pn-sticker notice">Event</div>
+        </div>
+        <div class="pn-body">
+          <div class="pn-eyebrow notice"><span class="sq"></span> Event</div>
+          <div class="pn-title">Founders Pack — emblem &amp; 5★ shards live</div>
+          <div class="pn-meta">
+            <span class="pill">2026.05.03</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="scroll-tag"><span class="ln"></span>Scroll<span class="ln"></span></div>
+  </div>
+</section>
+
+<!-- ============ FEATURE ============ -->
+<section class="section feature" id="feature">
+  <div class="feature-bg"></div>
+  <div class="section-inner">
+    <div>
+      <div class="sec-eyebrow"><span class="dot"></span> What you'll fight for</div>
+      <h2 class="sec-title">feature<span class="pd">.</span></h2>
+    </div>
+
+    <div class="feature-points">
+      <div class="fpt">
+        <div class="num">01<span class="pd">.</span><span class="dash"></span></div>
+        <h4>Siege the Astaroth Gates</h4>
+        <p>Coordinated alliance combat at scale — bring ten heroes, breach a fortress, split the relic before the rival alliance closes the breach.</p>
+      </div>
+      <div class="fpt">
+        <div class="num">02<span class="pd">.</span><span class="dash"></span></div>
+        <h4>A new genre of alliance combat</h4>
+        <p>The tension of competitive PvP woven into a 75+ hero roster RPG. Stalk in stealth, ambush at the crossroads, or commit to the long siege.</p>
+      </div>
+      <div class="fpt">
+        <div class="num">03<span class="pd">.</span><span class="dash"></span></div>
+        <h4>Realistic graphical fidelity</h4>
+        <p>Built in Unreal Engine 5 — every banner, every dent, every spark from a clashing blade hand-tuned. A grim fantasy with feature-film polish.</p>
+      </div>
+      <div class="fpt">
+        <div class="num">04<span class="pd">.</span><span class="dash"></span></div>
+        <h4>Express who you are</h4>
+        <p>Hundreds of skill paths, alliance crests, banner colors, voice lines. Hero Wars is a stage — yours to claim and yours to leave a mark on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE WORLD ============ -->
+<section class="section world" id="world">
+  <div class="world-stage">
+    <div class="world-bg" id="worldBg"></div>
+    <div class="section-inner">
+      <div class="world-text">
+        <div class="sec-eyebrow"><span class="dot"></span> Set in a cracked realm</div>
+        <h2 class="sec-title">the world<span class="pd">.</span></h2>
+        <span class="sub">Overview</span>
+        <h3>Find hope in the storm of survival.</h3>
+        <p>Begin your journey in a sundered land where endless exploration meets endless challenge. Between the looming Astaroth and the rival alliances cutting paths across the realm, every choice is strategic — and every choice is yours.</p>
+        <p>Engage head-on or slip through unseen. Loot a fallen siege. Fortify your stronghold. Raise a banner. Write your own legend.</p>
+        <a href="#" class="world-cta">Read more
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="world-carousel" id="worldCarousel">
+      <button class="wc-thumb ph-w1 active" data-bg='url("assets/keyart.jpg")' data-ix="01"><span class="ix">01 · Astaroth Gate</span></button>
+      <button class="wc-thumb ph-w2" data-bg='linear-gradient(135deg,#3a0d0d 0%, #b04020 60%, #ff7a3a 100%)' data-ix="02"><span class="ix">02 · Ember Wastes</span></button>
+      <button class="wc-thumb ph-w3" data-bg='linear-gradient(135deg,#082a4a 0%, #1a6b8a 60%, #2bc8f2 100%)' data-ix="03"><span class="ix">03 · Frostbound Pass</span></button>
+      <button class="wc-thumb ph-w4" data-bg='linear-gradient(135deg,#0a3a22 0%, #1a8a4a 60%, #5ee07e 100%)' data-ix="04"><span class="ix">04 · Verdant Hollow</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEDIA ============ -->
+<section class="section media" id="media">
+  <div class="section-inner">
+    <div class="media-head-row">
+      <div>
+        <div class="sec-eyebrow"><span class="dot"></span> Sights of the realm</div>
+        <h2 class="sec-title">media<span class="pd">.</span></h2>
+      </div>
+      <a href="#" class="more">/media library
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="media-grid">
+      <div class="m-tile big">
+        <div class="img ph-mm1"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Cinematic Reveal</span><span>02:14</span></div>
+      </div>
+      <div class="m-tile">
+        <div class="img ph-mm2"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Astaroth Gate</span><span>Key Art</span></div>
+      </div>
+      <div class="m-tile">
+        <div class="img ph-mm3"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Frostbound</span><span>Screenshot</span></div>
+      </div>
+      <div class="m-tile tall">
+        <div class="img ph-mm4"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Verdant Hollow</span><span>Concept</span></div>
+      </div>
+      <div class="m-tile">
+        <div class="img ph-mm5"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Morrigan</span><span>00:38</span></div>
+      </div>
+      <div class="m-tile">
+        <div class="img ph-mm6"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Founders Banner</span><span>4K</span></div>
+      </div>
+      <div class="m-tile wide">
+        <div class="img ph-mm7"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Sunken Citadel</span><span>Screenshot</span></div>
+      </div>
+      <div class="m-tile">
+        <div class="img ph-mm8"></div>
+        <div class="play"><svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="currentColor"/></svg></div>
+        <div class="meta"><span class="ttl">Crimson Rite</span><span>Wallpaper</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STRAP (forge. siege.) ============ -->
+<div class="strap">
+  <div class="strap-inner">
+    <div class="strap-mark">
+      <span class="crest">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M24 4 L42 14 L42 34 L24 44 L6 34 L6 14 Z"/>
+          <path d="M24 4 L24 44 M6 14 L42 34 M42 14 L6 34" stroke-width="1" opacity=".4"/>
+        </svg>
+      </span>
+      <span class="word">forge<span class="pd">.</span> siege<span class="pd">.</span></span>
+    </div>
+    <p class="strap-tag">
+      Prove your worth across the harsh expanse of the cracked realm.
+      Stand against the relentless Astaroth and the rival alliances that block your path —
+      <strong>fight a war the realm will remember</strong>.
+    </p>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-inner">
+    <div class="partners">
+      <span class="partner">NightForge<em>Studios</em></span>
+      <span class="partner">Unreal Engine<em>5</em></span>
+      <span class="partner">PEGI 12</span>
+      <span class="partner">ESRB Teen</span>
+    </div>
+    <div class="foot-spacer"></div>
+    <button class="foot-lang">English
+      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg>
+    </button>
+    <button class="foot-back" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4-4 4 4"/></svg>
+    </button>
+  </div>
+  <div class="foot-meta">
+    <a href="#">Press &amp; Media</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Security</a>
+    <a href="#">Cookie Settings</a>
+  </div>
+  <div class="copyright">
+    HERO WARS ALLIANCE © 2021–2026 NightForge Studios AB. HERO WARS, the HERO WARS logo and the Alliance crest are trademarks or registered trademarks of NightForge Studios AB. All other trademarks and trade names are the property of their respective owners. This site is a design study and is not affiliated with any real-world game, studio or franchise.
+  </div>
+</footer>
+
+<script>
+  // top bar scroll
+  const topbarEl = document.getElementById('topbar');
+  window.addEventListener('scroll', ()=>{
+    topbarEl.classList.toggle('scrolled', window.scrollY > 32);
+  });
+
+  // news rail arrows
+  const rail = document.getElementById('newsRail');
+  document.querySelectorAll('[data-rail]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dx = btn.dataset.rail === 'next' ? 1 : -1;
+      rail.scrollBy({left: dx * 360, behavior:'smooth'});
+    });
+  });
+
+  // world carousel — clicking a thumb swaps the background
+  const wbg = document.getElementById('worldBg');
+  document.querySelectorAll('#worldCarousel .wc-thumb').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#worldCarousel .wc-thumb').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const bg = btn.dataset.bg;
+      // smooth swap
+      wbg.style.transition = 'opacity .25s ease';
+      wbg.style.opacity = '0';
+      setTimeout(()=>{
+        wbg.style.backgroundImage = bg;
+        wbg.style.opacity = '1';
+      }, 200);
+    });
+  });
+
+  // side rail active section
+  const sections = ['hero','news','feature','world','media']
+    .map(id => ({id, el: document.getElementById(id)}))
+    .filter(s => s.el);
+  const railLinks = [...document.querySelectorAll('.siderail a')];
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + window.innerHeight*0.4;
+    let active = sections[0].id;
+    for(const s of sections){ if(s.el.offsetTop <= y) active = s.id }
+    railLinks.forEach(a => a.classList.toggle('active', a.dataset.section === active));
+  });
+  railLinks.forEach(a => a.addEventListener('click', ()=>{
+    const s = sections.find(x => x.id === a.dataset.section);
+    if(s) window.scrollTo({top: s.el.offsetTop - 20, behavior:'smooth'});
+  }));
+</script>
+
+</body>
+</html>

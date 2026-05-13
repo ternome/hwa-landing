@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero Wars Alliance — Echoes of the Astaroth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:        #1c1c1c;
+    --bg-2:      #161616;
+    --surface:   #2a2a2a;
+    --surface-2: #333333;
+    --surface-3: #3a3a3a;
+    --line:      rgba(255,255,255,.06);
+    --line-2:    rgba(255,255,255,.10);
+    --text:      #f3f3f3;
+    --muted:     #9d9d9d;
+    --muted-2:   #6f6f6f;
+    --accent:    #f5e23a;    /* signature CTA yellow */
+    --accent-2:  #fff05c;
+    --step:      #3a7bff;    /* blue step bar */
+    --step-fill: #1a2e5a;
+    --ok:        #4ad281;
+    --warn:      #ff7a3a;
+    --maxw:      1280px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  /* ============= TOP NAV ============= */
+  .topbar{
+    position:sticky;top:0;z-index:50;background:var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1480px;margin:0 auto;
+    display:flex;align-items:center;gap:18px;
+    padding:12px 24px;
+  }
+  .logo-block{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 12px 6px 10px;border-radius:8px;cursor:pointer;
+    transition:background .15s;
+  }
+  .logo-block:hover{background:var(--surface)}
+  .logo-mark{
+    width:30px;height:30px;border-radius:6px;
+    background:linear-gradient(135deg,#f5e23a 0%,#e0c000 100%);
+    display:grid;place-items:center;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;color:#1a1500;letter-spacing:.04em;
+  }
+  .logo-block .chev{color:#fff;opacity:.7}
+  .wordmark{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:22px;letter-spacing:.02em;text-transform:uppercase;
+    color:#fff;margin-left:6px;
+  }
+
+  .topnav{display:flex;align-items:center;gap:2px;margin-left:10px}
+  .topnav a{
+    padding:8px 14px;border-radius:6px;font-size:14px;font-weight:500;color:#dcdcdc;
+    transition:background .15s, color .15s;
+  }
+  .topnav a:hover{background:var(--surface);color:#fff}
+  .topnav a.with-chev::after{content:" ⌄";opacity:.6;margin-left:2px}
+  .grow{flex:1}
+
+  .search{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface);border:1px solid var(--line);
+    padding:8px 14px;border-radius:8px;
+    width:260px;color:var(--muted);font-size:14px;
+    transition:border-color .15s, background .15s;
+  }
+  .search:hover{border-color:var(--line-2)}
+  .search svg{width:16px;height:16px;flex-shrink:0}
+
+  .icon-btn{
+    width:36px;height:36px;border-radius:8px;
+    display:grid;place-items:center;color:#dcdcdc;
+    transition:background .15s, color .15s;
+  }
+  .icon-btn:hover{background:var(--surface);color:#fff}
+
+  .signin{
+    padding:9px 16px;font-size:14px;font-weight:600;color:#fff;border-radius:6px;
+    transition:background .15s;
+  }
+  .signin:hover{background:var(--surface)}
+
+  .cta-pill{
+    padding:9px 18px;border-radius:6px;
+    background:var(--accent);color:#1a1500;
+    font-weight:700;font-size:14px;letter-spacing:.01em;
+    transition:filter .15s, transform .1s;
+  }
+  .cta-pill:hover{filter:brightness(1.05)}
+  .cta-pill:active{transform:translateY(1px)}
+
+  /* ============= PAGE WRAP ============= */
+  .page{max-width:var(--maxw);margin:0 auto;padding:24px 24px 0}
+
+  /* ============= HERO CARD ============= */
+  .hero{
+    display:grid;grid-template-columns:380px 1fr;gap:0;
+    border-radius:12px;overflow:hidden;
+    background:#0e0e0e;
+    min-height:480px;
+  }
+  /* LEFT meta panel */
+  .hero-meta{
+    padding:30px 28px;display:flex;flex-direction:column;gap:20px;
+    background:linear-gradient(180deg,#1f1f1f 0%, #161616 100%);
+    border-right:1px solid var(--line);
+  }
+  .game-title-stack{display:flex;flex-direction:column;gap:6px}
+  .game-title-stack .name{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:30px;line-height:.96;letter-spacing:.01em;text-transform:uppercase;color:#fff;
+  }
+  .by-creator{
+    display:inline-flex;align-items:center;gap:6px;
+    align-self:flex-start;
+    padding:6px 12px;border-radius:99px;
+    background:var(--surface);border:1px solid var(--line-2);
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;font-weight:700;
+    cursor:pointer;transition:background .15s;
+  }
+  .by-creator:hover{background:var(--surface-2)}
+  .by-creator svg{width:11px;height:11px}
+
+  .rating-strip{
+    display:flex;align-items:center;gap:14px;
+    background:rgba(255,255,255,.03);border:1px solid var(--line);
+    padding:12px 14px;border-radius:8px;
+    align-self:flex-start;
+  }
+  .rating-strip .age{
+    width:46px;height:46px;border-radius:4px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:#ff8a1f;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    flex-shrink:0;
+  }
+  .rating-strip .age .num{font-size:22px;line-height:1}
+  .rating-strip .age .url{font-size:7px;letter-spacing:.04em;margin-top:1px}
+  .rating-strip .descrs{display:flex;flex-direction:column;gap:2px;font-size:13px;color:#dcdcdc}
+
+  .hero-actions{display:flex;align-items:center;gap:10px}
+  .download-btn{
+    flex:1;
+    padding:14px 18px;border-radius:6px;
+    background:var(--accent);color:#1a1500;
+    font-weight:800;letter-spacing:.06em;font-size:14px;text-transform:uppercase;
+    transition:filter .15s, transform .1s;
+  }
+  .download-btn:hover{filter:brightness(1.06)}
+  .download-btn:active{transform:translateY(1px)}
+  .pill-icon{
+    width:44px;height:44px;border-radius:6px;
+    display:grid;place-items:center;color:#dcdcdc;
+    background:var(--surface);border:1px solid var(--line);
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .pill-icon:hover{background:var(--surface-2);color:#fff;border-color:var(--line-2)}
+  .pill-icon.active{color:var(--accent);border-color:rgba(245,226,58,.4)}
+  .helper-note{font-size:12px;color:var(--muted);margin-top:-8px}
+
+  /* RIGHT visual */
+  .hero-visual{
+    position:relative;overflow:hidden;isolation:isolate;
+    background:#0a0a0a;
+  }
+  .hero-visual .key{
+    position:absolute;inset:0;
+    background:url("assets/keyart.jpg") center/cover no-repeat;
+    transform:scale(1.06);
+    transition:transform 8s ease;
+  }
+  .hero-visual:hover .key{transform:scale(1.12)}
+  .hero-visual::after{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(80% 60% at 30% 80%, rgba(0,0,0,.55), transparent 70%),
+      linear-gradient(90deg, rgba(14,14,14,.6) 0%, transparent 30%, transparent 70%, rgba(14,14,14,.35) 100%);
+    pointer-events:none;
+  }
+  .hero-titlewrap{
+    position:absolute;right:36px;top:50%;transform:translateY(-50%);
+    z-index:2;text-align:right;max-width:62%;
+    filter:drop-shadow(0 8px 24px rgba(0,0,0,.6));
+  }
+  .hero-titlewrap .pre{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:32px;
+    letter-spacing:.12em;color:#f3f3f3;text-transform:uppercase;
+    line-height:1;margin-bottom:6px;
+  }
+  .hero-titlewrap .big{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(64px, 9.5vw, 138px);line-height:.84;
+    letter-spacing:.01em;text-transform:uppercase;color:#fff;
+    /* grunge texture via mask */
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -.55'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>"),
+      #fff;
+    background-blend-mode:lighten;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,.12);
+  }
+  .hero-titlewrap .underline{
+    height:6px;margin-top:14px;margin-left:auto;width:78%;
+    background:
+      repeating-linear-gradient(90deg, #fff 0 16px, transparent 16px 22px),
+      linear-gradient(90deg, #fff 0%, transparent 100%);
+    opacity:.85;
+  }
+
+  /* ============= 2-COL: ABOUT + ACTIVE ============= */
+  .row-2{
+    display:grid;grid-template-columns:1fr 280px;gap:18px;
+    margin-top:22px;
+  }
+  .card{
+    background:#262626;border:1px solid var(--line);border-radius:10px;
+    padding:24px 28px;
+  }
+  .card h3{
+    margin:0 0 14px;font-size:20px;font-weight:700;letter-spacing:.005em;color:#fff;
+  }
+  .about-body{color:#cfcfcf;font-size:14.5px;line-height:1.6}
+  .about-body p{margin:0 0 14px}
+  .about-body p.small{font-size:12.5px;color:var(--muted);line-height:1.55}
+
+  .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .tag{
+    padding:6px 13px;border-radius:6px;
+    background:var(--surface-2);color:#dcdcdc;
+    font-size:12.5px;font-weight:600;letter-spacing:.01em;
+    transition:background .15s, color .15s;cursor:pointer;
+  }
+  .tag:hover{background:var(--surface-3);color:#fff}
+
+  .code-row{
+    display:flex;align-items:center;gap:10px;margin-top:18px;
+    font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:#fff;
+    letter-spacing:.02em;
+  }
+  .code-row .copy{
+    width:24px;height:24px;display:grid;place-items:center;
+    color:var(--muted);transition:color .15s;cursor:pointer;
+  }
+  .code-row .copy:hover{color:#fff}
+
+  .active-card{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    padding:24px;background:#262626;border-radius:10px;border:1px solid var(--line);
+  }
+  .active-card .glyph{
+    width:46px;height:46px;display:grid;place-items:center;color:#cfcfcf;
+    margin-bottom:4px;
+  }
+  .active-card .v{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:42px;
+    color:#fff;line-height:1;letter-spacing:.005em;
+  }
+  .active-card .l{font-size:14px;color:#dcdcdc;font-weight:600;letter-spacing:.02em}
+  .active-card .pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 0 3px rgba(74,210,129,.18);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 7px rgba(74,210,129,0)}}
+
+  /* ============= MEDIA GALLERY ============= */
+  .section-title{
+    font-size:20px;font-weight:700;margin:36px 0 16px;color:#fff;
+  }
+  .gallery{
+    display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;
+    scrollbar-width:thin;scrollbar-color:#444 transparent;
+  }
+  .gallery::-webkit-scrollbar{height:6px}
+  .gallery::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:3px}
+  .thumb{
+    position:relative;flex:0 0 232px;aspect-ratio:16/10;border-radius:8px;overflow:hidden;
+    cursor:pointer;isolation:isolate;border:1px solid var(--line);
+    transition:transform .2s, border-color .2s;
+  }
+  .thumb:hover{transform:translateY(-2px);border-color:var(--line-2)}
+  .thumb .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s ease}
+  .thumb:hover .img{transform:scale(1.05)}
+  .thumb .play{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:40px;height:40px;border-radius:50%;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(2px);
+    display:grid;place-items:center;color:#fff;
+    transition:background .2s, transform .2s;
+  }
+  .thumb:hover .play{background:rgba(0,0,0,.78);transform:translate(-50%,-50%) scale(1.06)}
+  .thumb .duration{
+    position:absolute;right:8px;bottom:8px;
+    padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.7);
+    font-size:11px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums;
+  }
+  /* gradient placeholders for media tiles */
+  .ph-g1{background:url("assets/keyart.jpg") center/cover}
+  .ph-g2{background:linear-gradient(135deg,#3a0d6b 0%,#6b1ad9 50%,#c026d3 100%)}
+  .ph-g3{background:linear-gradient(135deg,#062a4a 0%,#0e6b9a 50%,#2bc8f2 100%)}
+  .ph-g4{background:linear-gradient(135deg,#4a0808 0%,#a02a1a 50%,#ff5a2e 100%)}
+  .ph-g5{background:linear-gradient(135deg,#0a4a22 0%,#1a8a4a 50%,#5ee07e 100%)}
+  .ph-g6{background:linear-gradient(135deg,#3a1a08 0%,#8a4a10 50%,#ffb628 100%)}
+
+  /* ============= CREATOR PANEL ============= */
+  .creator-panel{
+    margin-top:22px;
+    background:#262626;border:1px solid var(--line);border-radius:10px;
+    padding:28px;
+  }
+  .creator-head{
+    display:flex;align-items:center;gap:14px;margin-bottom:22px;
+  }
+  .creator-avatar{
+    width:48px;height:48px;border-radius:8px;flex-shrink:0;
+    background:linear-gradient(135deg,#f5e23a,#c8a000);
+    display:grid;place-items:center;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:#1a1500;letter-spacing:.02em;
+  }
+  .creator-name{font-size:18px;font-weight:700;color:#fff}
+  .creator-head .grow{flex:1}
+  .go-community{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:9px 16px;border-radius:6px;
+    background:var(--accent);color:#1a1500;
+    font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .go-community:hover{filter:brightness(1.05)}
+  .more-menu{
+    width:34px;height:34px;border-radius:6px;color:#dcdcdc;
+    display:grid;place-items:center;
+    transition:background .15s;cursor:pointer;
+  }
+  .more-menu:hover{background:var(--surface-2)}
+
+  .creator-stats{display:flex;align-items:center;gap:36px;margin-bottom:26px}
+  .cstat{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+  .cstat .ic{
+    width:26px;height:26px;border-radius:6px;
+    background:var(--surface-2);display:grid;place-items:center;color:#dcdcdc;
+  }
+  .cstat .v{color:#fff;font-weight:700;font-size:15px;letter-spacing:.005em;margin-right:2px}
+
+  .panel-sub{font-size:14px;font-weight:700;color:#fff;letter-spacing:.005em;margin:0 0 12px}
+
+  /* Community Highlights card */
+  .highlight-card{
+    width:280px;
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;
+  }
+  .highlight-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+  .highlight-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%, rgba(0,0,0,.65) 100%)}
+  .highlight-thumb .img{position:absolute;inset:0;background-size:cover;background-position:center}
+  .highlight-thumb .post-by{
+    position:absolute;top:10px;left:10px;z-index:2;
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;color:#fff;font-weight:600;
+  }
+  .highlight-thumb .post-by .av{
+    width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#f5e23a,#c8a000);
+  }
+  .highlight-thumb .post-by .dot{opacity:.6}
+  .highlight-body{padding:14px 16px 14px}
+  .highlight-body .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#cfcfcf;margin-bottom:6px}
+  .highlight-body .ttl{font-size:15px;font-weight:700;color:#fff;line-height:1.3}
+  .highlight-body .ttl .chev{color:var(--muted);margin-left:4px}
+  .highlight-body .desc{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:6px}
+  .reactions{
+    display:flex;align-items:center;gap:14px;
+    padding:10px 16px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--muted);
+  }
+  .reactions .r{display:inline-flex;align-items:center;gap:6px}
+  .reactions .grow{flex:1}
+
+  /* Community channels table */
+  .channels{margin-top:26px}
+  .channel-table{
+    width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;
+  }
+  .channel-table thead th{
+    text-align:left;padding:12px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;
+    background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .channel-table thead th:first-child{border-top-left-radius:8px}
+  .channel-table thead th:last-child{border-top-right-radius:8px;text-align:right}
+  .channel-table tbody td{padding:16px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .channel-table tbody tr:hover td{background:rgba(255,255,255,.02)}
+  .channel-table .ch-name{color:#fff;font-weight:600}
+  .channel-table .ic-lite{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+  .channel-table .latest{display:flex;align-items:center;gap:8px}
+  .channel-table .latest .av{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#f5e23a,#c8a000);flex-shrink:0}
+  .channel-table .latest .meta{display:flex;flex-direction:column;font-size:12.5px}
+  .channel-table .latest .meta .t{color:#fff;font-weight:600;line-height:1.2}
+  .channel-table .latest .meta .s{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .channel-table .row-menu{text-align:right;color:var(--muted)}
+  .view-channels-row{
+    display:flex;justify-content:center;padding:18px 0 0;
+  }
+  .view-channels{
+    padding:11px 26px;border-radius:6px;
+    background:var(--surface-2);color:#fff;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    transition:background .15s;
+  }
+  .view-channels:hover{background:var(--surface-3)}
+
+  /* ============= MORE BY CREATOR ============= */
+  .more-row-head{display:flex;align-items:center;gap:8px;margin:42px 0 16px}
+  .more-row-head h3{margin:0;font-size:20px;font-weight:700;color:#fff}
+  .more-row-head .arrow{color:var(--muted);font-size:18px}
+  .more-rail{
+    display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;
+    scrollbar-width:thin;scrollbar-color:#444 transparent;
+  }
+  .more-rail::-webkit-scrollbar{height:6px}
+  .more-rail::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:3px}
+  .gcard{flex:0 0 196px;cursor:pointer}
+  .gcard .pic{
+    position:relative;aspect-ratio:1/1;border-radius:8px;overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .gcard:hover .pic{border-color:var(--line-2)}
+  .gcard .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s ease}
+  .gcard:hover .img{transform:scale(1.05)}
+  .gcard .age-badge{
+    position:absolute;top:8px;right:8px;
+    width:24px;height:24px;border-radius:4px;
+    background:#ff8a1f;color:#fff;display:grid;place-items:center;
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:12px;
+  }
+  .gcard .plays{
+    position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:4px;
+    padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.65);
+    font-size:11px;font-weight:600;color:#fff;
+  }
+  .gcard .ttl{
+    margin-top:10px;font-size:14px;font-weight:600;color:#fff;line-height:1.3;
+  }
+  .ph-game1{background:linear-gradient(135deg,#222 0%,#553a14 60%,#1a1a1a 100%), url("assets/keyart.jpg") center/cover;background-blend-mode:multiply}
+  .ph-game2{background:linear-gradient(135deg,#062a4a 0%,#0e6b9a 100%)}
+  .ph-game3{background:linear-gradient(135deg,#4a0808 0%,#a02a1a 100%)}
+  .ph-game4{background:linear-gradient(135deg,#0a3a2a 0%,#1a8a5a 100%)}
+  .ph-game5{background:linear-gradient(135deg,#3a1a08 0%,#8a4a10 100%)}
+  .ph-game6{background:linear-gradient(135deg,#2a0930 0%,#6b1ad9 100%)}
+
+  /* ============= HOW TO PLAY ============= */
+  .steps-head{margin:42px 0 16px;font-size:20px;font-weight:700;color:#fff}
+  .steps{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  }
+  .step{
+    position:relative;background:#262626;border:1px solid var(--line);border-radius:10px;
+    padding:24px 24px 22px;overflow:hidden;
+  }
+  .step::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--step) 0%, var(--step) 35%, var(--step-fill) 35%);
+  }
+  .step .num{
+    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:8px;display:block;
+  }
+  .step h4{margin:0 0 8px;font-size:18px;font-weight:700;color:#fff}
+  .step p{margin:0;font-size:13.5px;line-height:1.55;color:#cfcfcf}
+
+  /* ============= REPORT ============= */
+  .report-row{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    margin:42px 0 8px;
+  }
+  .report-btn{
+    padding:11px 22px;border-radius:6px;
+    background:var(--surface-2);color:#fff;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    transition:background .15s;
+  }
+  .report-btn:hover{background:var(--surface-3)}
+  .report-row .note{font-size:12px;color:var(--muted)}
+
+  /* ============= FOOTER ============= */
+  footer{margin-top:60px;background:#161616;border-top:1px solid var(--line);padding:36px 0 24px}
+  .foot-1{max-width:1480px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px}
+  .foot-1 .brand-mk{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;letter-spacing:.04em;color:#fff;text-transform:uppercase}
+  .foot-1 .grow{flex:1}
+  .socials{display:flex;gap:16px;color:#cfcfcf}
+  .socials a{transition:color .15s}
+  .socials a:hover{color:#fff}
+  .socials svg{width:18px;height:18px}
+
+  .foot-2{
+    max-width:1480px;margin:30px auto 0;padding:0 24px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:36px;
+  }
+  .fcol h5{margin:0 0 14px;font-size:15px;font-weight:700;color:#fff}
+  .fcol ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  .fcol a{color:#cfcfcf;font-size:13.5px;transition:color .15s}
+  .fcol a:hover{color:#fff}
+
+  .platforms-strip{
+    max-width:1480px;margin:36px auto 0;padding:24px 24px 0;
+    border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  }
+  .platforms-strip .icons{display:flex;align-items:center;gap:18px;color:var(--muted-2);flex-wrap:wrap}
+  .platforms-strip .icons span{font-size:11px;letter-spacing:.1em;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;color:#7a7a7a}
+  .pg-card{
+    margin-left:auto;
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px;border-radius:6px;background:var(--surface-2);
+    font-size:12.5px;color:#dcdcdc;
+  }
+  .pg-card .warn{
+    width:34px;height:34px;border-radius:4px;background:#f5b400;color:#1a1500;
+    display:grid;place-items:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;
+  }
+
+  .legal{
+    max-width:1480px;margin:28px auto 0;padding:0 24px;
+    color:var(--muted-2);font-size:11.5px;line-height:1.7;
+  }
+  .legal .links{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+  .legal .links a{color:#cfcfcf;transition:color .15s}
+  .legal .links a:hover{color:#fff}
+
+  /* ============= RESPONSIVE ============= */
+  @media (max-width:1100px){
+    .hero{grid-template-columns:1fr;min-height:auto}
+    .hero-visual{aspect-ratio:16/9}
+    .hero-meta{border-right:0;border-bottom:1px solid var(--line)}
+    .row-2{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .foot-2{grid-template-columns:1fr 1fr}
+    .topnav{display:none}
+    .search{width:180px}
+  }
+  @media (max-width:640px){
+    .page{padding:14px 14px 0}
+    .hero-meta{padding:22px 18px}
+    .card{padding:18px 18px}
+    .topbar-inner{padding:10px 14px;gap:10px}
+    .wordmark, .search, .signin{display:none}
+    .hero-titlewrap{right:18px;max-width:80%}
+    .creator-panel{padding:20px 18px}
+    .creator-stats{gap:18px}
+    .channel-table thead{display:none}
+    .channel-table tbody td{display:block;padding:8px 12px;border-bottom:0}
+    .channel-table tbody tr{display:block;border-bottom:1px solid var(--line);padding:8px 0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============= TOP BAR ============= -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-block" title="Switch hub">
+      <span class="logo-mark">HW</span>
+      <svg class="chev" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg>
+    </div>
+    <a href="#" class="wordmark">Hero Wars</a>
+    <nav class="topnav">
+      <a href="#">Discover</a>
+      <a href="#">My Library</a>
+      <a href="#">Communities</a>
+      <a href="#" class="with-chev">Create</a>
+      <a href="#">Item Shop</a>
+      <a href="#" class="with-chev">More</a>
+    </nav>
+    <div class="grow"></div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Search</span>
+    </div>
+    <button class="icon-btn" aria-label="Region">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+    </button>
+    <a href="#" class="signin">Sign in</a>
+    <a href="#" class="cta-pill">Get Hero Wars</a>
+  </div>
+</header>
+
+<!-- ============= PAGE ============= -->
+<main class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">
+      <div class="game-title-stack">
+        <div class="name">Hero Wars<br/>Alliance</div>
+        <a href="#" class="by-creator">
+          By NightForge Studios
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2l4 4-4 4"/></svg>
+        </a>
+      </div>
+
+      <div class="rating-strip">
+        <div class="age">
+          <span class="num">12</span>
+          <span class="url">www.pegi.info</span>
+        </div>
+        <div class="descrs">
+          <span>Moderate Violence</span>
+          <span>Online Interactions</span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <button class="download-btn">Download Now</button>
+        <button class="pill-icon active" aria-label="Favorite" title="Add to favorites">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0112 6a5.5 5.5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        </button>
+        <button class="pill-icon" aria-label="Share" title="Share">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        </button>
+      </div>
+      <div class="helper-note">You must be signed in to add this game to your favorites.</div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="key"></div>
+      <div class="hero-titlewrap">
+        <div class="pre">Hero Wars</div>
+        <div class="big">Echoes<br/>of the<br/>Astaroth</div>
+        <div class="underline"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT + ACTIVE -->
+  <section class="row-2">
+    <div class="card">
+      <h3>About this game</h3>
+      <div class="about-body">
+        <p>Raise an alliance of 75+ legendary champions, plunge into massive PvP raids and crack the gates of the Astaroth. Customize your team, master your hero's signature combos, and fight for control of the realm in 10v10 alliance combat. Climb the ladder and you may earn the chance to be remembered as a legend.</p>
+        <p class="small">All characters, names and visuals are original works of NightForge Studios. This material is not affiliated with any third-party franchise. Some content shown may not appear in the final release.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag">RPG</span>
+        <span class="tag">PvP</span>
+        <span class="tag">Alliance</span>
+        <span class="tag">10v10</span>
+        <span class="tag">Free to Play</span>
+        <span class="tag">Fantasy</span>
+      </div>
+      <div class="code-row">
+        <span>S12·4892·0461</span>
+        <button class="copy" title="Copy code">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="active-card">
+      <div class="glyph">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.5-7 7-7s7 3 7 7"/><circle cx="17" cy="7" r="3"/><path d="M22 18c0-3-2.5-5-5-5"/></svg>
+      </div>
+      <div class="v">253.4K</div>
+      <div class="l"><span class="pulse"></span>Active now</div>
+    </div>
+  </section>
+
+  <!-- MEDIA GALLERY -->
+  <h3 class="section-title">Media gallery</h3>
+  <div class="gallery">
+    <div class="thumb"><div class="img ph-g1"></div>
+      <div class="play"><svg width="14" height="14" viewBox="0 0 12 14"><path d="M0 0 L12 7 L0 14 Z" fill="#fff"/></svg></div>
+      <div class="duration">1:42</div>
+    </div>
+    <div class="thumb"><div class="img ph-g2"></div>
+      <div class="play"><svg width="14" height="14" viewBox="0 0 12 14"><path d="M0 0 L12 7 L0 14 Z" fill="#fff"/></svg></div>
+      <div class="duration">0:38</div>
+    </div>
+    <div class="thumb"><div class="img ph-g3"></div></div>
+    <div class="thumb"><div class="img ph-g4"></div></div>
+    <div class="thumb"><div class="img ph-g5"></div></div>
+    <div class="thumb"><div class="img ph-g6"></div></div>
+  </div>
+
+  <!-- CREATOR PANEL -->
+  <section class="creator-panel">
+    <div class="creator-head">
+      <div class="creator-avatar">NF</div>
+      <div class="creator-name">NightForge Studios</div>
+      <div class="grow"></div>
+      <a href="#" class="go-community">Go to Community
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 2l4 4-4 4"/></svg>
+      </a>
+      <button class="more-menu" aria-label="More">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+      </button>
+    </div>
+
+    <div class="creator-stats">
+      <div class="cstat">
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.5-7 7-7s7 3 7 7"/><circle cx="17" cy="7" r="3"/></svg></span>
+        <span><span class="v">593.6K</span>Followers</span>
+      </div>
+      <div class="cstat">
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11a8 8 0 01-1.2 4.2L21 21l-5.8-1.2A8 8 0 1121 11z"/></svg></span>
+        <span><span class="v">3</span>Posts</span>
+      </div>
+    </div>
+
+    <h4 class="panel-sub">Community Highlights</h4>
+    <div class="highlight-card">
+      <div class="highlight-thumb">
+        <div class="img ph-g1"></div>
+        <div class="post-by">
+          <span class="av"></span>
+          NightForge Studios
+          <span class="dot">·</span>
+          <span style="opacity:.85">5 days ago</span>
+        </div>
+      </div>
+      <div class="highlight-body">
+        <div class="eyebrow">Echoes of the Astaroth</div>
+        <div class="ttl">New Map: Sunken Citadel <span class="chev">›</span></div>
+        <div class="desc">We've launched a new map where the alliance war rages on between two factions on the edge of a drowned city. Drop in this weekend.</div>
+      </div>
+      <div class="reactions">
+        <span class="r">👍 1.5K</span>
+        <span class="r">💬 12</span>
+        <span class="grow"></span>
+        <button class="more-menu" aria-label="More">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="channels">
+      <h4 class="panel-sub">Community Channels</h4>
+      <table class="channel-table">
+        <thead>
+          <tr>
+            <th>Channels</th>
+            <th>Posts</th>
+            <th>Replies</th>
+            <th>Latest</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ch-name">Echoes of the Astaroth</td>
+            <td><span class="ic-lite"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11a8 8 0 01-1.2 4.2L21 21l-5.8-1.2A8 8 0 1121 11z"/></svg> 1</span></td>
+            <td><span class="ic-lite"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11a8 8 0 011.2-4.2L3 1l5.8 1.2A8 8 0 113 11z" transform="translate(0 6)"/></svg> 12</span></td>
+            <td>
+              <div class="latest">
+                <span class="av"></span>
+                <div class="meta">
+                  <span class="t">New Map: Sunken Citadel</span>
+                  <span class="s">NightForge · 5 days ago</span>
+                </div>
+              </div>
+            </td>
+            <td class="row-menu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+            </td>
+          </tr>
+          <tr>
+            <td class="ch-name">Arena & Ranked</td>
+            <td><span class="ic-lite">7</span></td>
+            <td><span class="ic-lite">48</span></td>
+            <td>
+              <div class="latest">
+                <span class="av" style="background:linear-gradient(135deg,#2bc8f2,#0e6b9a)"></span>
+                <div class="meta">
+                  <span class="t">Tier list refresh — Patch 12.0</span>
+                  <span class="s">marrow_hands · 2 days ago</span>
+                </div>
+              </div>
+            </td>
+            <td class="row-menu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+            </td>
+          </tr>
+          <tr>
+            <td class="ch-name">Guild Recruiting</td>
+            <td><span class="ic-lite">24</span></td>
+            <td><span class="ic-lite">131</span></td>
+            <td>
+              <div class="latest">
+                <span class="av" style="background:linear-gradient(135deg,#5ee07e,#1a8a4a)"></span>
+                <div class="meta">
+                  <span class="t">[EU] Iron Crown · LF 3 heavies</span>
+                  <span class="s">aurelius · 6h ago</span>
+                </div>
+              </div>
+            </td>
+            <td class="row-menu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="view-channels-row">
+        <button class="view-channels">View Channels</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE BY CREATOR -->
+  <div class="more-row-head">
+    <h3>More by NightForge</h3>
+    <span class="arrow">›</span>
+  </div>
+  <div class="more-rail">
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game1"></div><span class="age-badge">12</span><span class="plays">▶ 38.1K</span></div>
+      <div class="ttl">Hero Wars Arena</div>
+    </div>
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game2"></div><span class="age-badge">12</span><span class="plays">▶ 1.8K</span></div>
+      <div class="ttl">Frostfall Sieges</div>
+    </div>
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game3"></div><span class="age-badge">12</span><span class="plays">▶ 623</span></div>
+      <div class="ttl">Dungeon Crawl</div>
+    </div>
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game4"></div><span class="age-badge">12</span><span class="plays">▶ 4.4K</span></div>
+      <div class="ttl">Guild Wars</div>
+    </div>
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game5"></div><span class="age-badge">12</span><span class="plays">▶ 870</span></div>
+      <div class="ttl">Saga: First Light</div>
+    </div>
+    <div class="gcard">
+      <div class="pic"><div class="img ph-game6"></div><span class="age-badge">12</span><span class="plays">▶ 2.0K</span></div>
+      <div class="ttl">Mythic Trials</div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY -->
+  <h3 class="steps-head">How to Play Hero Wars</h3>
+  <div class="steps">
+    <div class="step">
+      <span class="num">Step 1</span>
+      <h4>Create your account</h4>
+      <p>Sign up for free in 30 seconds. Cross-platform progress on web, iOS, Android and Steam — your alliance follows you anywhere.</p>
+    </div>
+    <div class="step">
+      <span class="num">Step 2</span>
+      <h4>Recruit your first heroes</h4>
+      <p>Open three starter summons and pick a class to lead. You'll get Galahad and a free 5★ shard pack to kick off your roster.</p>
+    </div>
+    <div class="step">
+      <span class="num">Step 3</span>
+      <h4>Join an alliance</h4>
+      <p>Tap "Find Alliance" and we'll match you with an active guild near your skill level. Now you're ready for the realm.</p>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="report-row">
+    <button class="report-btn">Report Game</button>
+    <div class="note">Sign in to report this game</div>
+  </div>
+
+</main>
+
+<!-- ============= FOOTER ============= -->
+<footer>
+  <div class="foot-1">
+    <div class="brand-mk">Hero Wars</div>
+    <div class="grow"></div>
+    <div class="socials">
+      <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 4l-4.2 5.7L19 21h-3.5l-3.4-5.4L7.6 21H5l4.5-6.1L4.5 4h3.6l3 5 3.7-5H18z"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2c-.2-1-.9-1.7-1.9-1.9C17.9 5 12 5 12 5s-5.9 0-7.7.3c-1 .2-1.7.9-1.9 1.9C2 9 2 12 2 12s0 3 .3 4.8c.2 1 .9 1.7 1.9 1.9C6 19 12 19 12 19s5.9 0 7.7-.3c1-.2 1.7-.9 1.9-1.9.3-1.8.3-4.8.3-4.8s0-3-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+      <a href="#" aria-label="Twitch"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2l-1.5 4v15h5v3h3l3-3h4l6-6V2H4zm17 12l-3 3h-5l-3 3v-3H6V4h15v10zM18 7h-2v5h2V7zm-5 0h-2v5h2V7z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 4.7c-1.4-.7-3-1.1-4.6-1.4-.2.4-.4.8-.6 1.2-1.7-.3-3.4-.3-5.1 0-.2-.4-.4-.8-.6-1.2-1.6.3-3.2.8-4.6 1.4C1.1 9 .3 13.2.7 17.4 2.6 18.8 4.5 19.7 6.3 20.2c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.8.1-.1.3-.2.4-.3 3.3 1.5 6.8 1.5 10.1 0 .1.1.3.2.4.3-.5.3-1.1.6-1.7.8.3.7.7 1.3 1.1 1.9 1.9-.5 3.7-1.4 5.6-2.8.5-4.8-.8-9-3.5-12.7zM8.5 14.2c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2zm7 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2z"/></svg></a>
+      <a href="#" aria-label="Reddit"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="12" r="1" fill="#161616"/><circle cx="15" cy="12" r="1" fill="#161616"/><path d="M8.5 15c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5" stroke="#161616" stroke-width="1.4" fill="none"/></svg></a>
+    </div>
+  </div>
+
+  <div class="foot-2">
+    <div class="fcol">
+      <h5>Main</h5>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Battle Pass</a></li>
+        <li><a href="#">Watch</a></li>
+        <li><a href="#">Get Hero Wars</a></li>
+        <li><a href="#">News</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h5>More</h5>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Competitive</a></li>
+        <li><a href="#">Gem Cards</a></li>
+        <li><a href="#">Returns & Cancellations</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h5>Support</h5>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Community Guidelines</a></li>
+        <li><a href="#">Partner Program</a></li>
+        <li><a href="#">Press Kit</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="platforms-strip">
+    <div class="icons">
+      <span>iOS</span>
+      <span>·</span>
+      <span>Android</span>
+      <span>·</span>
+      <span>PC</span>
+      <span>·</span>
+      <span>Mac</span>
+      <span>·</span>
+      <span>Steam</span>
+      <span>·</span>
+      <span>Web</span>
+      <span>·</span>
+      <span>Cloud</span>
+    </div>
+    <div class="pg-card">
+      <div class="warn">!</div>
+      <div>Parental guidance recommended<br/><span style="color:var(--muted);font-size:11px">www.pegi.info</span></div>
+    </div>
+  </div>
+
+  <div class="legal">
+    © 2026 NightForge Studios. All rights reserved. Hero Wars, the Hero Wars logo and the Alliance crest are trademarks of NightForge Studios in the EU and elsewhere. All other trademarks are the property of their respective owners.
+    <div class="links">
+      <a href="#">Terms of service</a>
+      <a href="#">Privacy policy</a>
+      <a href="#">Safety & security</a>
+      <a href="#">Cookies settings</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // tiny: copy code chip
+  document.querySelectorAll('.code-row .copy').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const code = btn.parentElement.querySelector('span').textContent;
+      try{ await navigator.clipboard.writeText(code);
+        btn.style.color = '#f5e23a';
+        setTimeout(()=>{btn.style.color = ''}, 900);
+      }catch(e){}
+    });
+  });
+  // favorite toggle
+  document.querySelectorAll('.pill-icon').forEach(b=>{
+    if(b.getAttribute('aria-label')==='Favorite'){
+      b.addEventListener('click',()=>b.classList.toggle('active'));
+    }
+  });
+</script>
+
+</body>
+</html>

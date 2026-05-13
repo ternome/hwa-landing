@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<template id="__bundler_thumbnail" data-bg-color="#06060a">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ffd166"/>
+        <stop offset="55%" stop-color="#ffb628"/>
+        <stop offset="100%" stop-color="#8a4a08"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1a1a26"/>
+        <stop offset="100%" stop-color="#06060a"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="800" fill="url(#g2)"/>
+    <g transform="translate(600 400)">
+      <!-- crossed swords mark -->
+      <g stroke="url(#g1)" stroke-width="22" stroke-linecap="round" fill="none">
+        <line x1="-160" y1="-160" x2="160" y2="160"/>
+        <line x1="160" y1="-160" x2="-160" y2="160"/>
+      </g>
+      <circle r="38" fill="#06060a" stroke="url(#g1)" stroke-width="10"/>
+    </g>
+    <text x="600" y="640" font-family="Impact, sans-serif" font-size="64" font-weight="900"
+          text-anchor="middle" fill="#f5f5f7" letter-spacing="4">HERO WARS</text>
+    <text x="600" y="700" font-family="Impact, sans-serif" font-size="34" font-weight="900"
+          text-anchor="middle" fill="url(#g1)" letter-spacing="6">ALLIANCE</text>
+  </svg>
+</template>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero Wars Alliance — Forge Your Legend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:        #06060a;
+    --bg-2:      #0c0c14;
+    --surface:   #14141f;
+    --surface-2: #1c1c2a;
+    --line:      rgba(255,255,255,.08);
+    --line-2:    rgba(255,255,255,.16);
+    --text:      #f5f5f7;
+    --muted:     #9a9aaa;
+    --gold:      #ffb628;
+    --gold-2:    #ffd166;
+    --cyan:      #2bc8f2;
+    --magenta:   #c026d3;
+    --magenta-2: #d946ef;
+    --green:     #38c172;
+    --green-2:   #5ee07e;
+    --danger:    #ff3a3a;
+    --maxw:      1440px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  /* ---------- TOP NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .25s ease, backdrop-filter .25s ease, border-color .25s ease;
+    border-bottom:1px solid transparent;
+  }
+  .nav.scrolled{
+    background:rgba(6,6,10,.78);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom-color:var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin:0 auto;
+    display:flex;align-items:center;gap:36px;
+    padding:18px 40px;
+  }
+  .brand{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .brand img{height:46px;width:auto;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5))}
+  .nav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+  .nav-link{
+    position:relative;padding:10px 16px;border-radius:8px;
+    font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;
+    color:#cfcfdb;transition:color .2s ease, background .2s ease;
+  }
+  .nav-link:hover{color:#fff;background:rgba(255,255,255,.06)}
+  .nav-link.active{color:#fff}
+  .nav-link.active::after{
+    content:"";position:absolute;left:16px;right:16px;bottom:4px;height:2px;
+    background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:2px;
+  }
+  .nav-spacer{flex:1}
+  .online{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 14px;border-radius:99px;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);
+  }
+  .online .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--green-2);
+    box-shadow:0 0 0 4px rgba(94,224,126,.18);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(94,224,126,0)}}
+  .online .num{font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.06em;font-size:14px}
+  .online .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    border-radius:6px;cursor:pointer;transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn-primary{
+    color:#0a0a0f;font-size:15px;padding:14px 28px;
+    background:linear-gradient(180deg,#ffd166 0%,#ffb628 55%,#f59e0b 100%);
+    box-shadow:0 6px 0 #8a5a07, 0 14px 30px rgba(255,180,40,.35), inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-primary:active{box-shadow:0 2px 0 #8a5a07, 0 6px 14px rgba(255,180,40,.3), inset 0 1px 0 rgba(255,255,255,.5)}
+  .btn-ghost{
+    color:#fff;font-size:13px;padding:12px 22px;
+    background:rgba(255,255,255,.06);border:1px solid var(--line-2);backdrop-filter:blur(8px);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+  .btn-enter{
+    color:#fff;font-size:13px;padding:11px 22px;
+    background:linear-gradient(180deg,#3ddc7d,#1ea659);
+    box-shadow:0 4px 0 #0d6b39, 0 10px 22px rgba(45,200,100,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .btn-enter:hover{filter:brightness(1.06)}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;height:100vh;min-height:780px;width:100%;
+    overflow:hidden;isolation:isolate;
+  }
+  .hero-video{position:absolute;inset:0;z-index:0;overflow:hidden;background:#06060a}
+  /* keyart fallback — always there, gentle ken-burns so it feels alive even without video */
+  .hero-poster{
+    position:absolute;inset:-4%;
+    background:url("assets/keyart.jpg") center/cover no-repeat;
+    filter:brightness(.72) saturate(1.08);
+    transform-origin:center;
+    animation:kenburns 22s ease-in-out infinite alternate;
+  }
+  @keyframes kenburns{
+    0%  {transform:scale(1.05) translate(0,0)}
+    100%{transform:scale(1.14) translate(-1.2%, -1.4%)}
+  }
+  .hero-video iframe{
+    position:absolute;top:50%;left:50%;
+    width:max(177.77vh,100%);
+    height:max(56.25vw,100%);
+    min-width:177.77vh;min-height:56.25vw;
+    transform:translate(-50%,-50%) scale(1.05);
+    border:0;pointer-events:none;
+    opacity:0;transition:opacity .8s ease;
+  }
+  .hero-video.video-ready iframe{opacity:1}
+  .hero-veil{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 50% 20%, transparent 0%, rgba(6,6,10,.45) 70%, rgba(6,6,10,.95) 100%),
+      linear-gradient(180deg, rgba(6,6,10,.55) 0%, rgba(6,6,10,0) 22%, rgba(6,6,10,0) 55%, rgba(6,6,10,.85) 88%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(6,6,10,.85) 0%, rgba(6,6,10,.2) 45%, transparent 70%);
+  }
+  .hero-noise{
+    position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.08;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .hero-inner{
+    position:relative;z-index:3;height:100%;
+    max-width:var(--maxw);margin:0 auto;
+    padding:140px 40px 64px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:6px 12px 6px 8px;border-radius:99px;
+    background:rgba(255,180,40,.12);border:1px solid rgba(255,180,40,.4);
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2);font-weight:700;
+    width:fit-content;
+  }
+  .eyebrow .tag{
+    background:var(--gold);color:#1a1108;padding:2px 8px;border-radius:99px;
+    font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.14em;font-size:10px;
+  }
+  .hero h1{
+    font-family:'Anton',sans-serif;font-weight:400;
+    margin:18px 0 12px;
+    font-size:clamp(56px, 9vw, 156px);
+    line-height:.86;letter-spacing:-.01em;text-transform:uppercase;
+    color:#fff;
+    text-shadow:0 6px 30px rgba(0,0,0,.55);
+  }
+  .hero h1 .gold{
+    background:linear-gradient(180deg,#ffe9a8 0%,#ffb628 45%,#f59e0b 75%,#b86b00 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 4px 0 rgba(0,0,0,.35));
+  }
+  .hero .kicker{
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(14px,1.2vw,17px);
+    text-transform:uppercase;letter-spacing:.42em;color:#cfcfdb;
+    display:flex;align-items:center;gap:14px;
+  }
+  .hero .kicker .bar{width:48px;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .hero p.lede{
+    max-width:580px;margin:18px 0 32px;
+    font-size:17px;line-height:1.55;color:#d4d4dd;
+    text-shadow:0 2px 12px rgba(0,0,0,.5);
+  }
+  .cta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .btn-play{
+    color:#0a0a0f;font-size:18px;padding:18px 38px 18px 32px;border-radius:8px;
+    background:linear-gradient(180deg,#5ee07e 0%,#38c172 45%,#1ea659 100%);
+    box-shadow:0 6px 0 #0e5e34, 0 18px 40px rgba(45,200,100,.45), inset 0 1px 0 rgba(255,255,255,.4);
+    font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:14px;border:0;cursor:pointer;
+    transition:transform .15s ease, filter .2s ease;
+  }
+  .btn-play:hover{transform:translateY(-2px);filter:brightness(1.06)}
+  .btn-play .icn{
+    width:22px;height:22px;display:grid;place-items:center;
+    background:rgba(0,0,0,.18);border-radius:50%;
+  }
+  .btn-trailer{
+    display:inline-flex;align-items:center;gap:12px;
+    color:#fff;font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.18em;
+    font-size:14px;text-transform:uppercase;
+    padding:16px 24px;border-radius:8px;
+    background:rgba(255,255,255,.06);border:1px solid var(--line-2);
+    backdrop-filter:blur(8px);
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .btn-trailer:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.32)}
+  .btn-trailer .icn{
+    width:30px;height:30px;border-radius:50%;
+    background:rgba(255,255,255,.12);
+    display:grid;place-items:center;
+  }
+
+  .hero-meta{
+    margin-top:36px;display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;
+  }
+  .platforms{display:flex;align-items:center;gap:24px;color:#cfcfdb}
+  .platforms .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--muted)}
+  .platforms .icons{display:flex;align-items:center;gap:18px}
+  .platforms svg{width:22px;height:22px;fill:#e9e9f1;opacity:.9;transition:opacity .2s, transform .2s}
+  .platforms a:hover svg{opacity:1;transform:translateY(-1px)}
+  .rating{
+    display:flex;align-items:center;gap:12px;color:#cfcfdb;font-size:13px;font-weight:500
+  }
+  .rating .stars{color:var(--gold)}
+  .rating .div{width:1px;height:14px;background:var(--line-2)}
+
+  .hero-side{
+    position:absolute;right:40px;top:50%;transform:translateY(-50%);z-index:3;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .hero-side .chip{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 14px;border-radius:10px;
+    background:rgba(20,20,32,.7);border:1px solid var(--line);backdrop-filter:blur(10px);
+  }
+  .hero-side .chip .icn{
+    width:36px;height:36px;border-radius:8px;display:grid;place-items:center;
+    background:linear-gradient(180deg,rgba(255,180,40,.22),rgba(255,180,40,.04));
+    color:var(--gold-2);font-family:'Oswald',sans-serif;font-weight:700;
+  }
+  .hero-side .chip .t{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.18em}
+  .hero-side .chip .v{font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:.04em}
+
+  .scroll-cue{
+    position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;
+    color:#cfcfdb;font-size:10px;letter-spacing:.32em;text-transform:uppercase;
+    display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.7;
+  }
+  .scroll-cue .line{width:1px;height:34px;background:linear-gradient(180deg,#fff,transparent);animation:slide 1.8s ease-in-out infinite}
+  @keyframes slide{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px}
+  .section-head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    margin:0 0 28px;
+  }
+  .section-head .titles{display:flex;flex-direction:column;gap:8px}
+  .section-head .kicker{
+    font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.36em;text-transform:uppercase;
+    color:var(--gold);font-size:12px;display:flex;align-items:center;gap:12px;
+  }
+  .section-head .kicker .bar{width:32px;height:2px;background:var(--gold)}
+  .section-head h2{
+    font-family:'Anton',sans-serif;font-weight:400;
+    font-size:clamp(36px,4.4vw,64px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;
+    margin:0;
+  }
+  .section-head .actions{display:flex;gap:8px}
+  .arrow-btn{
+    width:44px;height:44px;border-radius:10px;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);color:#e9e9f1;
+    display:grid;place-items:center;transition:background .2s, border-color .2s, transform .15s;
+  }
+  .arrow-btn:hover{background:rgba(255,255,255,.1);border-color:var(--line-2)}
+  .arrow-btn:active{transform:scale(.96)}
+
+  /* HEROES carousel */
+  .heroes{padding:110px 0 50px;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%)}
+  .hero-rail{
+    display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scroll-padding-left:40px;
+    padding:6px 40px 32px;margin:0 -40px;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .hero-rail::-webkit-scrollbar{display:none}
+  .hero-card{
+    position:relative;flex:0 0 280px;height:420px;border-radius:14px;overflow:hidden;
+    scroll-snap-align:start;cursor:pointer;isolation:isolate;
+    background:#0f0f17;border:1px solid var(--line);
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .25s, box-shadow .35s;
+  }
+  .hero-card:hover{
+    transform:translateY(-6px) scale(1.015);
+    border-color:rgba(255,180,40,.45);
+    box-shadow:0 24px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,180,40,.15);
+  }
+  .hero-card .art{
+    position:absolute;inset:0;background-size:cover;background-position:center;
+    transition:transform .6s ease, filter .35s ease;
+  }
+  .hero-card:hover .art{transform:scale(1.06);filter:saturate(1.15)}
+  .hero-card .gradient{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.0) 30%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.92) 100%);
+  }
+  .hero-card .rank{
+    position:absolute;top:14px;left:14px;z-index:2;
+    display:flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:6px;
+    background:rgba(0,0,0,.6);border:1px solid var(--line);backdrop-filter:blur(6px);
+    font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  }
+  .hero-card .rank .pip{width:6px;height:6px;border-radius:50%}
+  .hero-card .role{
+    position:absolute;top:14px;right:14px;z-index:2;
+    padding:6px 10px;border-radius:6px;
+    background:rgba(0,0,0,.6);border:1px solid var(--line);backdrop-filter:blur(6px);
+    font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#e9e9f1;
+  }
+  .hero-card .meta{
+    position:absolute;left:0;right:0;bottom:0;padding:18px 18px 20px;z-index:2;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .hero-card .meta .nm{font-family:'Anton',sans-serif;font-size:30px;letter-spacing:.02em;line-height:1;text-transform:uppercase}
+  .hero-card .meta .sub{font-size:12px;color:#cfcfdb;text-transform:uppercase;letter-spacing:.18em}
+  .hero-card .stats{
+    display:flex;gap:8px;margin-top:6px;
+    opacity:0;transform:translateY(8px);transition:opacity .25s, transform .25s;
+  }
+  .hero-card:hover .stats{opacity:1;transform:translateY(0)}
+  .stat{
+    flex:1;border-radius:6px;background:rgba(255,255,255,.08);
+    padding:6px 8px;border:1px solid var(--line);
+  }
+  .stat .lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.16em}
+  .stat .bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:4px;overflow:hidden}
+  .stat .bar i{display:block;height:100%;border-radius:2px}
+
+  /* MODES */
+  .modes{padding:80px 0 110px;background:var(--bg-2)}
+  .mode-grid{
+    display:grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap:18px;
+  }
+  .mode{
+    position:relative;border-radius:16px;overflow:hidden;isolation:isolate;
+    background:#0f0f17;border:1px solid var(--line);cursor:pointer;
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .25s, box-shadow .35s;
+  }
+  .mode:hover{transform:translateY(-4px);border-color:var(--line-2);box-shadow:0 22px 48px rgba(0,0,0,.5)}
+  .mode .art{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s ease;}
+  .mode:hover .art{transform:scale(1.07)}
+  .mode .grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%, rgba(0,0,0,.85) 100%)}
+  .mode .content{
+    position:absolute;inset:0;padding:24px;z-index:2;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
+  }
+  .mode .badge{
+    position:absolute;top:18px;left:18px;
+    font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    font-size:11px;padding:6px 10px;border-radius:4px;
+    background:rgba(0,0,0,.55);border:1px solid var(--line);
+  }
+  .mode .badge.hot{background:rgba(255,58,58,.18);border-color:rgba(255,58,58,.55);color:#ffb6b6}
+  .mode .badge.new{background:rgba(45,200,100,.18);border-color:rgba(45,200,100,.55);color:#aef2c4}
+  .mode h3{
+    font-family:'Anton',sans-serif;margin:0;font-size:42px;line-height:.95;text-transform:uppercase;letter-spacing:-.005em;
+  }
+  .mode .desc{color:#cfcfdb;font-size:14px;max-width:520px}
+  .mode.feature{grid-row:span 2}
+  .mode.feature h3{font-size:64px}
+  .mode .cta-mini{
+    display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+    font-family:'Oswald',sans-serif;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--gold-2);
+  }
+
+  /* STATS strip */
+  .stats-strip{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#0a0a12,#08080e);
+  }
+  .stats-row{
+    max-width:var(--maxw);margin:0 auto;padding:36px 40px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+  }
+  .stat-big{display:flex;flex-direction:column;gap:6px;border-left:2px solid var(--gold);padding-left:18px}
+  .stat-big .v{font-family:'Anton',sans-serif;font-size:54px;line-height:1;letter-spacing:-.01em}
+  .stat-big .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.22em}
+  .stat-big.cyan{border-color:var(--cyan)}
+  .stat-big.magenta{border-color:var(--magenta-2)}
+  .stat-big.green{border-color:var(--green-2)}
+
+  /* NEWS */
+  .news{padding:110px 0}
+  .news-grid{
+    display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:18px;
+  }
+  .news-card{
+    position:relative;border-radius:14px;overflow:hidden;isolation:isolate;
+    background:#0f0f17;border:1px solid var(--line);cursor:pointer;
+    transition:transform .35s, border-color .25s, box-shadow .25s;
+    display:flex;flex-direction:column;
+  }
+  .news-card:hover{transform:translateY(-4px);border-color:var(--line-2);box-shadow:0 22px 48px rgba(0,0,0,.55)}
+  .news-card.featured{grid-row:span 2}
+  .news-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+  .news-card.featured .news-thumb{aspect-ratio:16/10}
+  .news-thumb .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s ease}
+  .news-card:hover .news-thumb .img{transform:scale(1.06)}
+  .news-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%, rgba(0,0,0,.7) 100%)}
+  .news-tag{
+    position:absolute;top:14px;left:14px;z-index:2;
+    font-family:'Oswald',sans-serif;letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:10px;
+    padding:6px 10px;border-radius:4px;background:rgba(0,0,0,.6);border:1px solid var(--line);
+  }
+  .news-tag.update{background:rgba(43,200,242,.18);border-color:rgba(43,200,242,.55);color:#aee5f7}
+  .news-tag.event{background:rgba(192,38,211,.2);border-color:rgba(192,38,211,.55);color:#f0baf7}
+  .news-tag.guide{background:rgba(255,180,40,.18);border-color:rgba(255,180,40,.55);color:#ffe0a8}
+  .news-body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .news-date{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--muted)}
+  .news-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;line-height:1.2;letter-spacing:.01em}
+  .news-card.featured .news-title{font-size:28px;line-height:1.15}
+  .news-excerpt{color:#9fa0ad;font-size:13px;line-height:1.55;margin-top:auto}
+
+  /* CALL TO ACTION strip */
+  .cta-strip{
+    position:relative;padding:120px 0;overflow:hidden;
+    background:linear-gradient(180deg,var(--bg-2) 0%, #0a0a12 100%);
+    border-top:1px solid var(--line);
+  }
+  .cta-strip::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(60% 80% at 80% 50%, rgba(192,38,211,.35), transparent 60%),
+      radial-gradient(50% 70% at 20% 50%, rgba(43,200,242,.25), transparent 60%);
+    opacity:.55;
+  }
+  .cta-inner{position:relative;max-width:var(--maxw);margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+  .cta-inner h2{font-family:'Anton',sans-serif;font-size:clamp(40px,5vw,84px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:0}
+  .cta-inner p{color:#cfcfdb;font-size:16px;max-width:560px;margin:14px 0 0}
+  .cta-inner .right{display:flex;flex-direction:column;align-items:flex-end;gap:16px}
+  .cta-inner .stores{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .store{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.06);
+    border:1px solid var(--line-2);transition:background .2s, transform .15s, border-color .2s;
+  }
+  .store:hover{background:rgba(255,255,255,.12);transform:translateY(-1px);border-color:rgba(255,255,255,.35)}
+  .store svg{width:24px;height:24px;fill:#fff}
+  .store .lbl{display:flex;flex-direction:column;line-height:1.1}
+  .store .lbl .s{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .store .lbl .b{font-family:'Oswald',sans-serif;font-weight:600;font-size:14px}
+
+  /* FOOTER */
+  footer{background:#04040a;border-top:1px solid var(--line);padding:60px 0 30px;color:#9a9aaa;font-size:13px}
+  .foot{max-width:var(--maxw);margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px}
+  .foot .brand img{height:54px;margin-bottom:14px}
+  .foot p{color:#7d7d8c;font-size:13px;line-height:1.6;max-width:300px}
+  .foot h4{color:#fff;font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.22em;font-size:12px;margin:0 0 14px}
+  .foot ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  .foot a{color:#bcbcc7;transition:color .2s}
+  .foot a:hover{color:#fff}
+  .socials{display:flex;gap:10px;margin-top:18px}
+  .socials a{
+    width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);transition:background .2s, border-color .2s;
+  }
+  .socials a:hover{background:rgba(255,255,255,.1);border-color:var(--line-2)}
+  .socials svg{width:18px;height:18px;fill:#cfcfdb}
+  .legal{
+    max-width:var(--maxw);margin:40px auto 0;padding:20px 40px 0;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+    color:#666673;font-size:12px;
+  }
+  .legal .links{display:flex;gap:18px}
+
+  /* ---------- placeholder art via gradients ---------- */
+  .ph{ background:#1a1a26; }
+  .ph-galahad{background-image:url("assets/keyart.jpg")}
+  .ph-h1{background-image:radial-gradient(70% 80% at 60% 40%, #6b2bd9 0%, #1a0a3a 70%), linear-gradient(180deg,#3b1a6b,#0a0418)}
+  .ph-h2{background-image:radial-gradient(70% 80% at 50% 45%, #e25a4a 0%, #3a0a1a 70%), linear-gradient(180deg,#6b2a1a,#180404)}
+  .ph-h3{background-image:radial-gradient(70% 80% at 55% 40%, #2bc8f2 0%, #07304a 70%), linear-gradient(180deg,#0c4262,#020a14)}
+  .ph-h4{background-image:radial-gradient(70% 80% at 50% 45%, #38c172 0%, #07301a 70%), linear-gradient(180deg,#0c4222,#02100a)}
+  .ph-h5{background-image:radial-gradient(70% 80% at 50% 40%, #ffb628 0%, #3a200a 70%), linear-gradient(180deg,#5e3a0a,#180c02)}
+  .ph-h6{background-image:radial-gradient(70% 80% at 55% 45%, #c026d3 0%, #2a0930 70%), linear-gradient(180deg,#4a1454,#180420)}
+  .ph-h7{background-image:radial-gradient(70% 80% at 45% 45%, #ff7a3a 0%, #3a1a08 70%), linear-gradient(180deg,#6b2e10,#180a04)}
+  .ph-m1{background:linear-gradient(135deg,#3a0d6b 0%,#6b1ad9 50%,#c026d3 100%)}
+  .ph-m2{background:linear-gradient(135deg,#062a4a 0%,#0e6b9a 50%,#2bc8f2 100%)}
+  .ph-m3{background:linear-gradient(135deg,#4a0808 0%,#a02a1a 50%,#ff5a2e 100%)}
+  .ph-m4{background:linear-gradient(135deg,#0a4a22 0%,#1a8a4a 50%,#5ee07e 100%)}
+  .ph-m5{background:linear-gradient(135deg,#3a1a08 0%,#8a4a10 50%,#ffb628 100%)}
+  .ph-n1{background:linear-gradient(135deg,#1a0a3a 0%,#4a1a8a 50%,#c026d3 100%)}
+  .ph-n2{background:linear-gradient(135deg,#0a2a3a 0%,#1a6b8a 50%,#2bc8f2 100%)}
+  .ph-n3{background:linear-gradient(135deg,#3a0808 0%,#8a2a1a 50%,#ff5a2e 100%)}
+  .ph-n4{background:linear-gradient(135deg,#0a3a2a 0%,#1a8a5a 50%,#5ee07e 100%)}
+
+  /* ---------- TWEAKABLE: palettes ---------- */
+  body.vibe-inferno{
+    --gold:#ff7a3a; --gold-2:#ffae6e;
+    --magenta:#ff3a3a; --magenta-2:#ff5a4a;
+    --cyan:#ffb628;
+  }
+  body.vibe-frostfall{
+    --gold:#2bc8f2; --gold-2:#7be5ff;
+    --magenta:#6366f1; --magenta-2:#8b8ef5;
+    --cyan:#c0c8d8;
+  }
+  body.vibe-verdant{
+    --gold:#ffd166; --gold-2:#ffe199;
+    --magenta:#38c172; --magenta-2:#5ee07e;
+    --cyan:#a3e635;
+  }
+  /* ---------- TWEAKABLE: cinema intensity ---------- */
+  body.cinema-calm .hero-veil{
+    background:
+      radial-gradient(120% 80% at 50% 30%, transparent 0%, rgba(6,6,10,.3) 80%, rgba(6,6,10,.85) 100%),
+      linear-gradient(180deg, rgba(6,6,10,.35) 0%, rgba(6,6,10,0) 28%, rgba(6,6,10,0) 60%, rgba(6,6,10,.7) 92%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(6,6,10,.6) 0%, rgba(6,6,10,.1) 50%, transparent 80%);
+  }
+  body.cinema-calm .hero-noise{display:none}
+  body.cinema-calm .hero-poster{animation-duration:40s;filter:brightness(.82) saturate(1.02)}
+  body.cinema-maximum .hero-veil{
+    background:
+      radial-gradient(110% 70% at 50% 15%, transparent 0%, rgba(6,6,10,.6) 60%, rgba(6,6,10,1) 100%),
+      linear-gradient(180deg, rgba(6,6,10,.75) 0%, rgba(6,6,10,.1) 24%, rgba(6,6,10,.1) 48%, rgba(6,6,10,.95) 85%, var(--bg) 100%),
+      linear-gradient(90deg, rgba(6,6,10,.95) 0%, rgba(6,6,10,.3) 40%, transparent 65%);
+  }
+  body.cinema-maximum .hero-noise{opacity:.18}
+  body.cinema-maximum .hero-poster{animation-duration:14s;filter:brightness(.62) saturate(1.25) contrast(1.08)}
+  /* ---------- TWEAKABLE: video off ---------- */
+  body.no-video .hero-video iframe{display:none !important}
+
+  /* responsive */
+  @media (max-width:1100px){
+    .mode-grid{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,280px)}
+    .mode.feature{grid-row:span 1}
+    .mode.feature h3{font-size:42px}
+    .news-grid{grid-template-columns:1fr 1fr}
+    .news-card.featured{grid-row:span 2;grid-column:span 2}
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .foot{grid-template-columns:1fr 1fr}
+    .hero-side{display:none}
+  }
+  @media (max-width:700px){
+    .nav-links{display:none}
+    .online .lbl{display:none}
+    .nav-inner{padding:14px 18px;gap:12px}
+    .hero-inner{padding:110px 18px 28px}
+    .wrap, .stats-row, .foot, .legal{padding-left:18px;padding-right:18px}
+    .mode-grid{grid-template-columns:1fr;grid-template-rows:repeat(5,240px)}
+    .news-grid{grid-template-columns:1fr}
+    .news-card.featured{grid-column:span 1;grid-row:span 1}
+    .stats-row{grid-template-columns:1fr 1fr}
+    .cta-inner{grid-template-columns:1fr}
+    .cta-inner .right{align-items:flex-start}
+    .cta-inner .stores{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand"><img src="assets/logo.png" alt="Hero Wars Alliance" /></a>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">Home</a>
+      <a href="#heroes" class="nav-link">Heroes</a>
+      <a href="#modes" class="nav-link">Modes</a>
+      <a href="#news" class="nav-link">News</a>
+      <a href="#" class="nav-link">Shop</a>
+      <a href="#" class="nav-link">Bonuses</a>
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="online">
+      <span class="dot"></span>
+      <div style="display:flex;flex-direction:column;line-height:1.1">
+        <span class="num">253,434</span>
+        <span class="lbl">Online now</span>
+      </div>
+    </div>
+    <a href="#" class="btn btn-enter">Enter</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-video" id="heroVideo">
+    <div class="hero-poster"></div>
+    <iframe id="bgVideo" src="" title="background" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <div class="hero-veil"></div>
+  <div class="hero-noise"></div>
+
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <span class="tag">New</span>
+      Season 12 · Echoes of the Astaroth
+    </div>
+    <div class="kicker"><span class="bar"></span> Hero Wars Alliance</div>
+    <h1>Forge Your <span class="gold">Legend</span></h1>
+    <p class="lede">
+      Raise an alliance of 75+ legendary champions, plunge into massive PvP raids,
+      and crack the gates of the Astaroth. The realm needs its hero — that's you.
+    </p>
+
+    <div class="cta-row">
+      <button class="btn-play">
+        <span class="icn"><svg width="11" height="13" viewBox="0 0 11 13"><path d="M0 0 L11 6.5 L0 13 Z" fill="#0a0a0f"/></svg></span>
+        Play Free Now
+      </button>
+      <button class="btn-trailer">
+        <span class="icn"><svg width="10" height="12" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z" fill="#fff"/></svg></span>
+        Watch trailer
+      </button>
+    </div>
+
+    <div class="hero-meta">
+      <div class="platforms">
+        <span class="lbl">Available on</span>
+        <div class="icons">
+          <a href="#" title="Web"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.93 6h-3.04c-.32-1.36-.78-2.6-1.36-3.66A8.04 8.04 0 0118.93 8zM12 4c.96 1.04 1.74 2.42 2.27 4H9.73c.53-1.58 1.31-2.96 2.27-4zM4.26 14a8.03 8.03 0 010-4h3.4c-.1.66-.16 1.32-.16 2s.06 1.34.16 2H4.26zm.81 2h3.04c.32 1.36.78 2.6 1.36 3.66A8.04 8.04 0 015.07 16zm3.04-8H5.07a8.04 8.04 0 014.4-3.66c-.58 1.06-1.04 2.3-1.36 3.66zM12 20c-.96-1.04-1.74-2.42-2.27-4h4.54c-.53 1.58-1.31 2.96-2.27 4zm2.69-6H9.31c-.11-.66-.18-1.32-.18-2s.07-1.34.18-2h5.38c.11.66.18 1.32.18 2s-.07 1.34-.18 2zm.45 5.66c.58-1.06 1.04-2.3 1.36-3.66h3.04a8.04 8.04 0 01-4.4 3.66zM16.5 14c.1-.66.16-1.32.16-2s-.06-1.34-.16-2h3.4a8.03 8.03 0 010 4h-3.4z"/></svg></a>
+          <a href="#" title="iOS"><svg viewBox="0 0 24 24"><path d="M16.5 12.6c0-2.3 1.9-3.4 2-3.4-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.3.9-1.3 1.2-2.6 1.2-2.7 0 0-2.4-.9-2.4-3.8zM14.4 5.7c.6-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg></a>
+          <a href="#" title="Android"><svg viewBox="0 0 24 24"><path d="M17.6 9.5l1.6-2.8c.1-.2 0-.4-.1-.5s-.4 0-.5.1l-1.6 2.8C15.9 8.5 14 8 12 8s-3.9.5-5 1.1L5.4 6.3c-.1-.2-.3-.2-.5-.1s-.2.3-.1.5l1.6 2.8C4 11 2.3 13.5 2 16.5h20c-.3-3-2-5.5-4.4-7zm-9.6 4.7c-.4 0-.8-.3-.8-.8s.3-.8.8-.8.8.3.8.8-.4.8-.8.8zm8 0c-.4 0-.8-.3-.8-.8s.3-.8.8-.8.8.3.8.8-.4.8-.8.8z"/></svg></a>
+          <a href="#" title="Steam"><svg viewBox="0 0 24 24"><path d="M12 2C6.6 2 2.2 6.3 2 11.5l5.4 2.2c.5-.3 1-.5 1.7-.5h.2l2.4-3.5v-.1c0-2.1 1.7-3.8 3.8-3.8s3.8 1.7 3.8 3.8c0 2.1-1.7 3.8-3.8 3.8h-.1L11.8 15c0 1.6-1.3 3-3 3-1.4 0-2.6-1-2.9-2.4L2.4 14C3.6 18.6 7.4 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zM9.4 17.6l-1.2-.5c.2.4.6.8 1.1 1 1.1.5 2.3 0 2.7-1 .2-.5.2-1.1 0-1.6s-.6-.9-1.1-1.1c-.5-.2-1-.2-1.5 0l1.2.5c.8.3 1.2 1.2.8 2.1-.3.9-1.2 1.3-2 .6zm5.5-4.2c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5 2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5zm-.6-2.5c0-.7.6-1.3 1.3-1.3.7 0 1.3.6 1.3 1.3s-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3z"/></svg></a>
+        </div>
+      </div>
+      <div class="rating">
+        <span class="stars">★ ★ ★ ★ ★</span>
+        <span>4.8</span>
+        <span class="div"></span>
+        <span>1.2M reviews</span>
+        <span class="div"></span>
+        <span style="color:var(--gold-2);font-weight:700">Editor's Choice</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-side">
+    <div class="chip">
+      <div class="icn">🏆</div>
+      <div>
+        <div class="t">Top guild</div>
+        <div class="v">Iron Crown</div>
+      </div>
+    </div>
+    <div class="chip">
+      <div class="icn">⚔</div>
+      <div>
+        <div class="t">Battles today</div>
+        <div class="v">14.2 M</div>
+      </div>
+    </div>
+    <div class="chip">
+      <div class="icn">★</div>
+      <div>
+        <div class="t">Heroes</div>
+        <div class="v">75+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    Scroll
+    <span class="line"></span>
+  </div>
+</header>
+
+<!-- HEROES carousel -->
+<section class="heroes" id="heroes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="titles">
+        <div class="kicker"><span class="bar"></span> Roster</div>
+        <h2>Choose Your Champion</h2>
+      </div>
+      <div class="actions">
+        <button class="arrow-btn" data-rail="prev" aria-label="Scroll left">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="arrow-btn" data-rail="next" aria-label="Scroll right">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-rail" id="heroRail">
+
+      <article class="hero-card">
+        <div class="art ph ph-galahad"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--gold)"></span> Legendary</div>
+        <div class="role">Tank</div>
+        <div class="meta">
+          <div class="sub">Hero · 01</div>
+          <div class="nm">Galahad</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:72%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:94%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:48%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h1"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--magenta-2)"></span> Mythic</div>
+        <div class="role">Mage</div>
+        <div class="meta">
+          <div class="sub">Hero · 02</div>
+          <div class="nm">Morrigan</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:88%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:36%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:96%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h2"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--danger)"></span> Epic</div>
+        <div class="role">Marksman</div>
+        <div class="meta">
+          <div class="sub">Hero · 03</div>
+          <div class="nm">Lars</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:90%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:42%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:30%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h3"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--cyan)"></span> Rare</div>
+        <div class="role">Support</div>
+        <div class="meta">
+          <div class="sub">Hero · 04</div>
+          <div class="nm">Astaroth</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:46%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:78%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:84%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h4"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--green-2)"></span> Common</div>
+        <div class="role">Assassin</div>
+        <div class="meta">
+          <div class="sub">Hero · 05</div>
+          <div class="nm">Krista</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:84%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:40%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:68%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h5"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--gold)"></span> Legendary</div>
+        <div class="role">Berserker</div>
+        <div class="meta">
+          <div class="sub">Hero · 06</div>
+          <div class="nm">Aurora</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:92%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:58%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:50%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h6"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--magenta-2)"></span> Mythic</div>
+        <div class="role">Warlock</div>
+        <div class="meta">
+          <div class="sub">Hero · 07</div>
+          <div class="nm">Nebula</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:74%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:32%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:98%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-card">
+        <div class="art ph ph-h7"></div>
+        <div class="gradient"></div>
+        <div class="rank"><span class="pip" style="background:var(--danger)"></span> Epic</div>
+        <div class="role">Bruiser</div>
+        <div class="meta">
+          <div class="sub">Hero · 08</div>
+          <div class="nm">Helios</div>
+          <div class="stats">
+            <div class="stat"><div class="lbl">ATK</div><div class="bar"><i style="width:86%;background:var(--danger)"></i></div></div>
+            <div class="stat"><div class="lbl">DEF</div><div class="bar"><i style="width:70%;background:var(--gold)"></i></div></div>
+            <div class="stat"><div class="lbl">MAG</div><div class="bar"><i style="width:44%;background:var(--magenta-2)"></i></div></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS strip -->
+<div class="stats-strip">
+  <div class="stats-row">
+    <div class="stat-big">
+      <div class="v">120M+</div>
+      <div class="l">Players worldwide</div>
+    </div>
+    <div class="stat-big cyan">
+      <div class="v">75+</div>
+      <div class="l">Heroes to recruit</div>
+    </div>
+    <div class="stat-big magenta">
+      <div class="v">240</div>
+      <div class="l">Story campaigns</div>
+    </div>
+    <div class="stat-big green">
+      <div class="v">4.8★</div>
+      <div class="l">Editor's choice</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODES -->
+<section class="modes" id="modes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="titles">
+        <div class="kicker"><span class="bar"></span> Battlegrounds</div>
+        <h2>Pick Your Battle</h2>
+      </div>
+    </div>
+
+    <div class="mode-grid">
+
+      <article class="mode feature">
+        <div class="art ph ph-m1"></div>
+        <div class="grad"></div>
+        <div class="badge hot">Live · Season 12</div>
+        <div class="content">
+          <h3>Astaroth's Gate</h3>
+          <p class="desc">A 60-player raid through a collapsing realm. Time-limited rewards, mythic shards and a chance to claim the new legendary Morrigan.</p>
+          <span class="cta-mini">Enter the gate
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </article>
+
+      <article class="mode">
+        <div class="art ph ph-m2"></div>
+        <div class="grad"></div>
+        <div class="badge">PvP</div>
+        <div class="content">
+          <h3>Arena</h3>
+          <p class="desc">Climb the ranked ladder in 5v5 hero battles.</p>
+        </div>
+      </article>
+
+      <article class="mode">
+        <div class="art ph ph-m3"></div>
+        <div class="grad"></div>
+        <div class="badge new">New</div>
+        <div class="content">
+          <h3>Dungeon Crawl</h3>
+          <p class="desc">Procedurally-generated dungeons with elite bosses.</p>
+        </div>
+      </article>
+
+      <article class="mode">
+        <div class="art ph ph-m4"></div>
+        <div class="grad"></div>
+        <div class="badge">Co-op</div>
+        <div class="content">
+          <h3>Guild Wars</h3>
+          <p class="desc">Lead your alliance in weekly territory battles.</p>
+        </div>
+      </article>
+
+      <article class="mode">
+        <div class="art ph ph-m5"></div>
+        <div class="grad"></div>
+        <div class="badge">Campaign</div>
+        <div class="content">
+          <h3>Saga</h3>
+          <p class="desc">240+ story missions across the realm.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news" id="news">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="titles">
+        <div class="kicker"><span class="bar"></span> Latest</div>
+        <h2>News & Updates</h2>
+      </div>
+      <a href="#" class="btn btn-ghost">All news →</a>
+    </div>
+
+    <div class="news-grid">
+
+      <article class="news-card featured">
+        <div class="news-thumb">
+          <div class="img ph ph-n1"></div>
+          <div class="news-tag update">Patch 12.0</div>
+        </div>
+        <div class="news-body">
+          <div class="news-date">May 11, 2026 · 6 min read</div>
+          <div class="news-title">Echoes of Astaroth — Season 12 patch notes, new hero Morrigan & balance changes</div>
+          <p class="news-excerpt">The biggest update of the year reshapes raids, rebalances 18 heroes and introduces a long-awaited cross-server alliance system. Here's everything that changes today.</p>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-thumb">
+          <div class="img ph ph-n2"></div>
+          <div class="news-tag event">Event</div>
+        </div>
+        <div class="news-body">
+          <div class="news-date">May 09, 2026</div>
+          <div class="news-title">Weekend Arena Rush: triple rewards Fri–Sun</div>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-thumb">
+          <div class="img ph ph-n3"></div>
+          <div class="news-tag guide">Guide</div>
+        </div>
+        <div class="news-body">
+          <div class="news-date">May 07, 2026</div>
+          <div class="news-title">Best team comps for the new Dungeon Crawl mode</div>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-thumb">
+          <div class="img ph ph-n4"></div>
+          <div class="news-tag event">Event</div>
+        </div>
+        <div class="news-body">
+          <div class="news-date">May 03, 2026</div>
+          <div class="news-title">Founders Pack — free emblem & 5★ shards for returning players</div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="cta-strip">
+  <div class="cta-inner">
+    <div>
+      <h2>Your alliance<br/>is waiting.</h2>
+      <p>Play instantly in the browser or take the realm with you on mobile. Free to play. No spoilers.</p>
+    </div>
+    <div class="right">
+      <button class="btn btn-primary">Play Free Now</button>
+      <div class="stores">
+        <a href="#" class="store">
+          <svg viewBox="0 0 24 24"><path d="M16.5 12.6c0-2.3 1.9-3.4 2-3.4-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.3.9-1.3 1.2-2.6 1.2-2.7 0 0-2.4-.9-2.4-3.8zM14.4 5.7c.6-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg>
+          <span class="lbl"><span class="s">Download on</span><span class="b">App Store</span></span>
+        </a>
+        <a href="#" class="store">
+          <svg viewBox="0 0 24 24"><path d="M3.6 20.4c-.4-.4-.6-1-.6-1.6V5.2c0-.6.2-1.2.6-1.6L13 12l-9.4 8.4zm10.5-7.4l3 3-9.2 5.3c-.3.2-.6.2-.9.2L14.1 13zM5 3.5c.3 0 .6.1.9.2l9.2 5.3-3 3L5 3.5zm14.6 6.9c.6.3 1.4 1 1.4 1.6s-.8 1.3-1.4 1.6l-2.6 1.5-3.1-3.1 3.1-3.1 2.6 1.5z"/></svg>
+          <span class="lbl"><span class="s">Get it on</span><span class="b">Google Play</span></span>
+        </a>
+        <a href="#" class="store">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.6 2 2.2 6.3 2 11.5l5.4 2.2c.5-.3 1-.5 1.7-.5h.2l2.4-3.5c0-2.1 1.7-3.8 3.8-3.8s3.8 1.7 3.8 3.8c0 2.1-1.7 3.8-3.8 3.8h-.1L11.8 15c0 1.6-1.3 3-3 3-1.4 0-2.6-1-2.9-2.4L2.4 14C3.6 18.6 7.4 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          <span class="lbl"><span class="s">Available on</span><span class="b">Steam</span></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot">
+    <div>
+      <div class="brand"><img src="assets/logo.png" alt="Hero Wars Alliance" /></div>
+      <p>Hero Wars Alliance — an epic free-to-play RPG. Build your alliance, master 75+ heroes and rule the realm.</p>
+      <div class="socials">
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M21.6 7.2c-.2-1-.9-1.7-1.9-1.9C17.9 5 12 5 12 5s-5.9 0-7.7.3c-1 .2-1.7.9-1.9 1.9C2 9 2 12 2 12s0 3 .3 4.8c.2 1 .9 1.7 1.9 1.9C6 19 12 19 12 19s5.9 0 7.7-.3c1-.2 1.7-.9 1.9-1.9.3-1.8.3-4.8.3-4.8s0-3-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24"><path d="M19.5 4.7c-1.4-.7-3-1.1-4.6-1.4-.1 0-.2 0-.2.1-.2.4-.4.8-.6 1.2-1.7-.3-3.4-.3-5.1 0-.2-.4-.4-.8-.6-1.2 0-.1-.1-.1-.2-.1-1.6.3-3.2.8-4.6 1.4 0 0-.1 0-.1.1-2.9 4.3-3.7 8.5-3.3 12.7 0 .1.1.1.1.2 1.9 1.4 3.8 2.3 5.6 2.8.1 0 .2 0 .2-.1.4-.6.8-1.2 1.1-1.9 0-.1 0-.2-.1-.2-.6-.2-1.2-.5-1.7-.8-.1-.1-.1-.2 0-.3.1-.1.2-.2.4-.2 3.3 1.5 6.8 1.5 10.1 0 .1 0 .3.1.4.2.1.1.1.2 0 .3-.5.3-1.1.6-1.7.8-.1 0-.1.1-.1.2.3.6.7 1.3 1.1 1.9 0 .1.1.1.2.1 1.9-.6 3.7-1.4 5.6-2.8.1 0 .1-.1.1-.2.5-4.8-.8-9-3.5-12.7 0-.1-.1-.1-.1-.1zM8.5 14.2c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2zm7 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2z"/></svg></a>
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M18 4l-4.2 5.7L19 21h-3.5l-3.4-5.4L7.6 21H5l4.5-6.1L4.5 4h3.6l3 5 3.7-5H18zm-1.4 15.4h1.4L7.8 5.5H6.3l10.3 13.9z"/></svg></a>
+        <a href="#" aria-label="Twitch"><svg viewBox="0 0 24 24"><path d="M4 2l-1.5 4v15h5v3h3l3-3h4l6-6V2H4zm17 12l-3 3h-5l-3 3v-3H6V4h15v10zM18 7h-2v5h2V7zm-5 0h-2v5h2V7z"/></svg></a>
+        <a href="#" aria-label="Reddit"><svg viewBox="0 0 24 24"><path d="M22 12c0-1.1-.9-2-2-2-.6 0-1.1.2-1.4.6-1.4-.9-3.3-1.5-5.4-1.6l1-4.4 3 .7c0 .8.6 1.4 1.4 1.4S20 6.1 20 5.3s-.7-1.4-1.4-1.4c-.5 0-1 .3-1.2.8l-3.4-.8c-.1 0-.2 0-.3.1 0 .1-.1.1-.1.2l-1.1 5C10.4 9.3 8.4 9.9 7 10.7c-.4-.4-.9-.6-1.5-.6-1.1 0-2 .9-2 2 0 .8.5 1.5 1.2 1.8 0 .2-.1.4-.1.6 0 3 3.4 5.5 7.6 5.5s7.6-2.5 7.6-5.5c0-.2 0-.4-.1-.6.5-.4 1.1-1.1 1.1-1.9zM8 13.4c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4zm6.8 3.7c-.8.8-2.4.9-2.8.9-.4 0-1.9-.1-2.8-.9-.1-.1-.1-.3 0-.4.1-.1.3-.1.4 0 .5.5 1.6.7 2.4.7s1.9-.2 2.4-.7c.1-.1.3-.1.4 0 .1.1.1.3 0 .4zm-.2-2.3c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4>Game</h4>
+      <ul>
+        <li><a href="#">Heroes</a></li>
+        <li><a href="#">Modes</a></li>
+        <li><a href="#">Patch notes</a></li>
+        <li><a href="#">Roadmap</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Community</h4>
+      <ul>
+        <li><a href="#">Forum</a></li>
+        <li><a href="#">Discord</a></li>
+        <li><a href="#">Creators</a></li>
+        <li><a href="#">Tournaments</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help center</a></li>
+        <li><a href="#">Account</a></li>
+        <li><a href="#">Report a bug</a></li>
+        <li><a href="#">Contact us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Nexters</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Partners</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <div>© 2026 Nexters Global Ltd. All rights reserved.</div>
+    <div class="links">
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+      <a href="#">Age rating 12+</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // shrink nav on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // hero rail arrows
+  const rail = document.getElementById('heroRail');
+  document.querySelectorAll('[data-rail]').forEach(b => {
+    b.addEventListener('click', () => {
+      const dir = b.dataset.rail === 'next' ? 1 : -1;
+      rail.scrollBy({left: dir * (rail.clientWidth * 0.85), behavior:'smooth'});
+    });
+  });
+
+  // load YouTube background video AFTER first paint, with proper origin param
+  // and a fallback to keyart if YouTube blocks the embed (error 153 etc.)
+  const YT_ID = 'aUljHX1XmY0';
+  const ytIframe = document.getElementById('bgVideo');
+  const ytWrap   = document.getElementById('heroVideo');
+  function ytParams(){
+    return new URLSearchParams({
+      autoplay:'1', mute:'1', controls:'0', loop:'1',
+      playlist:YT_ID, modestbranding:'1', playsinline:'1',
+      rel:'0', showinfo:'0', iv_load_policy:'3', disablekb:'1',
+      enablejsapi:'1', origin:window.location.origin
+    });
+  }
+  window.__hwSetVideoBg = function(on){
+    if(on){
+      document.body.classList.remove('no-video');
+      if(!ytIframe.src){
+        ytIframe.src = `https://www.youtube.com/embed/${YT_ID}?${ytParams().toString()}`;
+        ytIframe.addEventListener('load', () => {
+          setTimeout(() => ytWrap.classList.add('video-ready'), 600);
+        }, {once:true});
+      } else {
+        ytWrap.classList.add('video-ready');
+      }
+    } else {
+      document.body.classList.add('no-video');
+      ytWrap.classList.remove('video-ready');
+      ytIframe.src = '';   // stop playback, free network
+    }
+  };
+  window.addEventListener('load', () => {
+    // default: video on, but only kick the iframe load after first paint
+    if(!document.body.classList.contains('no-video')) window.__hwSetVideoBg(true);
+  });
+
+  // count-up players online
+  const numEl = document.querySelector('.online .num');
+  let n = 253434;
+  setInterval(() => {
+    n += Math.floor(Math.random()*9) - 4;
+    numEl.textContent = n.toLocaleString('en-US');
+  }, 2200);
+</script>
+
+<!-- ===== TWEAKS PANEL ===== -->
+<div id="tweaks-mount"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "videoBg": false,
+    "vibe": "verdant",
+    "cinema": "cinematic"
+  }/*EDITMODE-END*/;
+
+  const VIBES   = ['astaroth','inferno','frostfall','verdant'];
+  const CINEMAS = ['calm','cinematic','maximum'];
+
+  function applyTweaks(t){
+    // palette
+    VIBES.forEach(v => document.body.classList.remove('vibe-'+v));
+    document.body.classList.add('vibe-' + t.vibe);
+    // cinema
+    CINEMAS.forEach(c => document.body.classList.remove('cinema-'+c));
+    document.body.classList.add('cinema-' + t.cinema);
+    // video
+    if (window.__hwSetVideoBg) window.__hwSetVideoBg(t.videoBg);
+  }
+
+  function HWTweaks(){
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    React.useEffect(() => applyTweaks(t), [t]);
+    return (
+      <TweaksPanel title="Hero Wars · Tweaks">
+        <TweakSection label="Background" />
+        <TweakToggle label="Video background" value={t.videoBg}
+                     onChange={v => setTweak('videoBg', v)} />
+        <TweakSection label="Vibe" />
+        <TweakSelect label="Palette" value={t.vibe} options={[
+          {value:'astaroth',  label:'Astaroth · gold + magenta'},
+          {value:'inferno',   label:'Inferno · red + ember'},
+          {value:'frostfall', label:'Frostfall · cyan + indigo'},
+          {value:'verdant',   label:'Verdant · emerald + lime'}
+        ]} onChange={v => setTweak('vibe', v)} />
+        <TweakSection label="Cinema mood" />
+        <TweakRadio label="Intensity" value={t.cinema}
+                    options={CINEMAS}
+                    onChange={v => setTweak('cinema', v)} />
+      </TweaksPanel>
+    );
+  }
+
+  // Apply initial defaults to the page even before the panel is opened
+  applyTweaks(TWEAK_DEFAULTS);
+  ReactDOM.createRoot(document.getElementById('tweaks-mount')).render(<HWTweaks/>);
+</script>
+
+</body>
+</html>

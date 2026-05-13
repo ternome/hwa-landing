@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hero Wars Alliance — Echoes of the Astaroth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500;1,700;1,900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:        #08090a;
+    --bg-2:      #0d0e10;
+    --panel:     #15161a;
+    --panel-2:   #1c1e22;
+    --line:      rgba(255,255,255,.07);
+    --line-2:    rgba(255,255,255,.14);
+    --text:      #ececec;
+    --muted:     #9c9c9c;
+    --muted-2:   #6a6a6a;
+    --accent:    #ff6a1a;    /* ember orange */
+    --accent-2:  #ffb46a;
+    --warm:      #d2b182;
+    --ok:        #58e08a;
+    --rule:      rgba(210,177,130,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  /* ============ FILM GRAIN OVERLAY ============ */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:200;pointer-events:none;mix-blend-mode:overlay;opacity:.06;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ============ TOP NAV ============ */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    transition:background .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+    border-bottom:1px solid transparent;
+  }
+  .topbar.scrolled{
+    background:rgba(8,9,10,.78);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom-color:var(--line);
+  }
+  .topbar-inner{
+    max-width:1640px;margin:0 auto;
+    display:flex;align-items:center;gap:24px;
+    padding:18px 40px;
+  }
+  .logo-mark{
+    display:flex;align-items:center;gap:0;cursor:pointer;
+  }
+  .logo-mark .crest{
+    width:38px;height:38px;border-radius:0;
+    position:relative;display:grid;place-items:center;
+    color:#fff;
+  }
+  .logo-mark .crest svg{width:38px;height:38px}
+  .logo-mark .name{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:18px;letter-spacing:.32em;text-transform:uppercase;color:#fff;
+    margin-left:12px;
+  }
+  .logo-mark .name .alt{color:var(--warm);font-style:italic;font-weight:500;letter-spacing:.18em;display:block;font-size:10px;margin-top:1px}
+
+  .topnav{display:flex;align-items:center;gap:4px;margin-left:32px}
+  .topnav > a{
+    position:relative;
+    padding:10px 18px;font-size:12px;font-weight:600;color:#dcdcdc;
+    letter-spacing:.22em;text-transform:uppercase;
+    transition:color .15s;
+  }
+  .topnav > a:hover{color:#fff}
+  .topnav > a.active{color:var(--accent-2)}
+  .topnav > a.active::after{
+    content:"";position:absolute;left:50%;bottom:0;width:18px;height:1px;
+    background:var(--accent);transform:translateX(-50%);
+  }
+  .grow{flex:1}
+
+  .topright{display:flex;align-items:center;gap:18px}
+  .socials{display:flex;align-items:center;gap:14px}
+  .socials a{
+    width:28px;height:28px;display:grid;place-items:center;
+    color:#a0a0a0;transition:color .15s;
+  }
+  .socials a:hover{color:#fff}
+  .socials svg{width:16px;height:16px}
+  .lang-pick{
+    display:flex;align-items:center;gap:8px;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#cfcfcf;
+    padding:8px 14px;border:1px solid var(--line-2);border-radius:0;cursor:pointer;
+    transition:border-color .15s, color .15s;
+  }
+  .lang-pick:hover{color:#fff;border-color:var(--warm)}
+
+  /* ============ SIDE RAIL ============ */
+  .siderail{
+    position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:55;
+    display:flex;flex-direction:column;align-items:center;gap:18px;
+    font-family:'Barlow Condensed',sans-serif;
+  }
+  .siderail .dot{
+    width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);
+    transition:background .2s;cursor:pointer;
+  }
+  .siderail .dot.active{background:var(--accent);box-shadow:0 0 0 4px rgba(255,106,26,.18)}
+  .siderail .label{
+    writing-mode:vertical-rl;transform:rotate(180deg);
+    font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:#7a7a7a;
+    margin:8px 0;
+  }
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;height:100vh;min-height:780px;width:100%;
+    overflow:hidden;isolation:isolate;
+  }
+  .hero-bg{
+    position:absolute;inset:-4%;z-index:0;
+    background:url("assets/keyart.jpg") center/cover no-repeat;
+    filter:brightness(.55) saturate(1.05) contrast(1.06);
+    animation:kenburns 28s ease-in-out infinite alternate;
+  }
+  @keyframes kenburns{
+    0%{transform:scale(1.05) translate(0,0)}
+    100%{transform:scale(1.14) translate(-1%, -1.4%)}
+  }
+  .hero-veil{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 50% 40%, transparent 0%, rgba(8,9,10,.4) 65%, rgba(8,9,10,.95) 100%),
+      linear-gradient(180deg, rgba(8,9,10,.6) 0%, rgba(8,9,10,0) 26%, rgba(8,9,10,0) 60%, rgba(8,9,10,.95) 92%, var(--bg) 100%);
+  }
+  .hero-scan{
+    position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.15;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,0) 0 2px, rgba(255,255,255,.04) 2px 3px);
+  }
+
+  .hero-inner{
+    position:relative;z-index:5;height:100%;max-width:1640px;margin:0 auto;
+    padding:140px 80px 80px;
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  }
+  .hero-pretitle{
+    display:flex;align-items:center;gap:14px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-style:italic;
+    font-size:14px;letter-spacing:.32em;text-transform:uppercase;color:var(--warm);
+    margin-bottom:18px;
+  }
+  .hero-pretitle .rule{width:48px;height:1px;background:var(--rule)}
+
+  .hero h1{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(72px,11vw,196px);line-height:.84;letter-spacing:-.005em;
+    text-transform:uppercase;margin:0;color:#fff;
+    text-shadow:0 6px 30px rgba(0,0,0,.65);
+  }
+  .hero h1 .light{font-weight:300;color:rgba(255,255,255,.85);font-style:italic;letter-spacing:.01em;}
+  .hero h1 .em{
+    background:linear-gradient(180deg,#ffd1a0 0%, #ff9a4a 60%, #ff6a1a 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-tag{
+    margin-top:28px;max-width:560px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:18px;
+    letter-spacing:.04em;color:#e4e4e4;line-height:1.5;
+  }
+  .hero-tag .line{display:block}
+
+  .hero-watch{
+    display:inline-flex;align-items:center;gap:14px;margin-top:38px;
+    cursor:pointer;color:#fff;
+    transition:transform .2s;
+  }
+  .hero-watch:hover{transform:translateX(4px)}
+  .hero-watch .play-disc{
+    width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.8);
+    display:grid;place-items:center;position:relative;
+  }
+  .hero-watch .play-disc::after{
+    content:"";position:absolute;inset:-6px;border:1px solid rgba(255,255,255,.18);border-radius:50%;
+    animation:spin 18s linear infinite;
+    background:
+      conic-gradient(from 0deg, transparent 0%, transparent 92%, rgba(255,255,255,.5) 95%, transparent 100%);
+    -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%);
+            mask: radial-gradient(circle, transparent 60%, #000 61%);
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hero-watch .play-disc svg{width:13px;height:14px;margin-left:3px}
+  .hero-watch .lbl{
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.36em;
+    font-size:14px;text-transform:uppercase;
+  }
+
+  /* PLAY NOW bottom bar */
+  .play-bar{
+    position:absolute;left:0;right:0;bottom:0;z-index:6;
+    border-top:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(8,9,10,.0) 0%, rgba(8,9,10,.78) 50%, rgba(8,9,10,.95) 100%);
+    backdrop-filter:blur(8px);
+  }
+  .play-bar-inner{
+    max-width:1640px;margin:0 auto;padding:20px 40px;
+    display:flex;align-items:center;gap:28px;
+  }
+  .play-label{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;
+    letter-spacing:.22em;text-transform:uppercase;color:#fff;
+    position:relative;padding-right:18px;
+  }
+  .play-label::after{
+    content:"";position:absolute;right:-8px;top:50%;transform:translateY(-50%);
+    width:6px;height:6px;background:var(--accent);border-radius:50%;
+    box-shadow:0 0 14px var(--accent);
+  }
+  .play-bar .platforms{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+  .pf-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;border:1px solid var(--line-2);
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    font-size:13px;color:#fff;
+    transition:border-color .15s, background .15s, color .15s;
+    position:relative;
+  }
+  .pf-btn:hover{border-color:var(--accent);background:rgba(255,106,26,.08);color:var(--accent-2)}
+  .pf-btn svg{width:18px;height:18px}
+  .pf-btn.primary{
+    background:linear-gradient(180deg, var(--accent) 0%, #d04e0e 100%);
+    border-color:transparent;color:#fff;
+  }
+  .pf-btn.primary:hover{filter:brightness(1.06);color:#fff;background:linear-gradient(180deg, #ff7a30 0%, #e25a18 100%)}
+
+  /* scroll cue */
+  .scroll-cue{
+    position:absolute;right:40px;top:50%;transform:translateY(-50%);z-index:6;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    color:#bcbcbc;
+  }
+  .scroll-cue .vline{
+    width:1px;height:60px;
+    background:linear-gradient(180deg,transparent, #fff, transparent);
+    animation:slide 2s ease-in-out infinite;
+  }
+  @keyframes slide{
+    0%,100%{transform:scaleY(.2);transform-origin:top;opacity:.4}
+    50%{transform:scaleY(1);opacity:1}
+  }
+  .scroll-cue .txt{
+    writing-mode:vertical-rl;font-family:'Barlow Condensed',sans-serif;font-weight:500;
+    font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:#bcbcbc;
+  }
+
+  /* ============ EVENT TIMER STRIP ============ */
+  .timer{
+    position:relative;background:var(--bg-2);border-top:1px solid var(--line);
+    padding:50px 0 60px;
+  }
+  .wrap{max-width:1640px;margin:0 auto;padding:0 80px}
+  .timer-head{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    gap:24px;margin-bottom:32px;
+  }
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-style:italic;
+    font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--warm);
+  }
+  .eyebrow .dot{width:6px;height:6px;background:var(--accent);transform:rotate(45deg)}
+  .timer-head h2{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:clamp(36px,4vw,56px);letter-spacing:-.005em;text-transform:uppercase;
+    margin:8px 0 0;color:#fff;line-height:.95;
+  }
+  .timer-tabs{display:flex;align-items:center;gap:0;border:1px solid var(--line-2)}
+  .timer-tabs button{
+    padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;
+    letter-spacing:.22em;text-transform:uppercase;color:#cfcfcf;
+    border-right:1px solid var(--line);transition:background .15s, color .15s;
+  }
+  .timer-tabs button:last-child{border-right:0}
+  .timer-tabs button.on{background:var(--accent);color:#1a0900}
+  .timer-tabs button:not(.on):hover{color:#fff;background:rgba(255,255,255,.04)}
+
+  .timer-section + .timer-section{margin-top:36px}
+  .timer-section h4{
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;
+    letter-spacing:.32em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 16px;display:flex;align-items:center;gap:12px;
+  }
+  .timer-section h4::before{content:"";width:18px;height:1px;background:var(--rule)}
+  .timer-section .descr{margin-left:auto;font-style:italic;font-weight:400;color:var(--muted-2);letter-spacing:.18em}
+
+  .timer-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .ev-card{
+    position:relative;background:var(--panel);border:1px solid var(--line);
+    overflow:hidden;display:flex;flex-direction:column;cursor:pointer;
+    transition:border-color .2s, transform .2s;
+  }
+  .ev-card:hover{border-color:var(--warm);transform:translateY(-2px)}
+  .ev-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+  .ev-thumb .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s ease}
+  .ev-card:hover .ev-thumb .img{transform:scale(1.06)}
+  .ev-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%, rgba(0,0,0,.6) 100%)}
+  .ev-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px}
+  .ev-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#fff}
+  .ev-loc{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .ev-time{
+    display:flex;align-items:baseline;gap:10px;margin-top:8px;
+    font-family:'JetBrains Mono',monospace;font-weight:500;color:#fff;
+  }
+  .ev-time .num{font-size:24px;letter-spacing:.05em}
+  .ev-time .sep{color:var(--accent);font-size:24px;font-weight:600;animation:blink 1s steps(2,end) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .ev-time .lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-family:'Inter',sans-serif}
+
+  /* placeholder thumbs for events */
+  .ph-ev1{background:linear-gradient(135deg,#1a0f06 0%, #5a2a0a 50%, #ff7a3a 100%)}
+  .ph-ev2{background:linear-gradient(135deg,#06121a 0%, #0e3a6b 50%, #2bc8f2 100%)}
+  .ph-ev3{background:linear-gradient(135deg,#0a1a08 0%, #1a5a2a 50%, #5ee07e 100%)}
+  .ph-ev4{background:linear-gradient(135deg,#1a0508 0%, #5a0a14 50%, #c026d3 100%)}
+  .ph-ev5{background:linear-gradient(135deg,#1a1006 0%, #6b4014 50%, #ffd166 100%)}
+  .ph-ev6{background:linear-gradient(135deg,#0a0d1a 0%, #2a2a6b 50%, #6366f1 100%)}
+
+  /* ============ NEWS BAND ============ */
+  .news{
+    position:relative;padding:120px 0;overflow:hidden;
+    border-top:1px solid var(--line);
+  }
+  .news-bg{
+    position:absolute;inset:0;z-index:0;
+    background:url("assets/keyart.jpg") right center/cover no-repeat;
+    filter:brightness(.4) saturate(1.1) hue-rotate(-10deg);
+  }
+  .news::after{
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg, var(--bg) 0%, rgba(8,9,10,.7) 50%, transparent 100%);
+  }
+  .news-inner{position:relative;z-index:2;max-width:1640px;margin:0 auto;padding:0 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  .news-left h2{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(56px,7vw,128px);line-height:.84;text-transform:lowercase;letter-spacing:-.01em;
+    margin:18px 0 28px;color:#fff;
+  }
+  .news-left h2 .pd{color:var(--accent)}
+  .news-list{display:flex;flex-direction:column}
+  .news-row{
+    display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
+    padding:22px 0;border-top:1px solid var(--line);
+    transition:padding-left .2s;cursor:pointer;
+  }
+  .news-row:last-child{border-bottom:1px solid var(--line)}
+  .news-row:hover{padding-left:14px}
+  .news-row:hover .news-title{color:var(--accent-2)}
+  .news-cat{
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;
+    font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--warm);
+    padding:5px 10px;border:1px solid var(--rule);min-width:108px;text-align:center;
+  }
+  .news-cat.evt{color:#ffb6b6;border-color:rgba(255,90,46,.4)}
+  .news-cat.upd{color:#aee5f7;border-color:rgba(43,200,242,.4)}
+  .news-title{font-size:18px;font-weight:600;color:#fff;line-height:1.4;transition:color .15s}
+  .news-date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.04em;white-space:nowrap}
+
+  .news-cta{
+    display:inline-flex;align-items:center;gap:14px;margin-top:32px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.36em;
+    font-size:13px;text-transform:uppercase;color:#fff;
+    padding:14px 22px;border:1px solid var(--line-2);
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .news-cta:hover{border-color:var(--accent);color:var(--accent-2);background:rgba(255,106,26,.06)}
+
+  /* ============ FEATURE STACK ============ */
+  .feature{position:relative;border-top:1px solid var(--line)}
+  .feature-head{padding:100px 0 40px;background:var(--bg)}
+  .feature-head h2{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(56px,7vw,128px);line-height:.84;text-transform:lowercase;letter-spacing:-.01em;
+    margin:18px 0 0;color:#fff;
+  }
+  .feature-head h2 .pd{color:var(--accent)}
+
+  .feat-slab{
+    position:relative;min-height:80vh;overflow:hidden;display:grid;
+    grid-template-columns:1fr 1fr;align-items:center;gap:0;
+    border-top:1px solid var(--line);
+  }
+  .feat-slab .bgimg{
+    position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+    transform:scale(1.05);
+    transition:transform 1.2s ease;
+  }
+  .feat-slab:hover .bgimg{transform:scale(1.08)}
+  .feat-slab::after{
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  }
+  .feat-slab.right::after{background:linear-gradient(90deg, transparent 0%, rgba(8,9,10,.4) 35%, rgba(8,9,10,.95) 70%)}
+  .feat-slab.left::after{background:linear-gradient(90deg, rgba(8,9,10,.95) 30%, rgba(8,9,10,.4) 65%, transparent 100%)}
+  .feat-content{
+    position:relative;z-index:2;padding:120px 80px;
+    display:flex;flex-direction:column;gap:18px;max-width:680px;
+  }
+  .feat-slab.right .feat-content{margin-left:auto}
+  .feat-num{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:96px;line-height:.9;color:var(--accent);
+    letter-spacing:-.02em;
+  }
+  .feat-num .pd{color:#fff;opacity:.4;font-size:48px;vertical-align:super;margin-left:-6px}
+  .feat-title{
+    font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:48px;line-height:1.02;letter-spacing:-.005em;text-transform:uppercase;color:#fff;margin:0;
+  }
+  .feat-desc{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:18px;letter-spacing:.02em;
+    color:#cfcfcf;line-height:1.55;max-width:540px;
+  }
+  .feat-thumb{
+    position:absolute;z-index:3;border:1px solid var(--line-2);
+    width:280px;height:180px;background-size:cover;background-position:center;
+    box-shadow:0 24px 60px rgba(0,0,0,.55);
+  }
+  .feat-slab.right .feat-thumb{right:80px;bottom:80px}
+  .feat-slab.left .feat-thumb{left:80px;bottom:80px}
+
+  .ph-f1{background-image:url("assets/keyart.jpg");background-size:cover;background-position:center}
+  .ph-f2{background:linear-gradient(135deg,#1a0a08 0%, #5a1a1a 35%, #b04020 70%, #ff7a3a 100%)}
+  .ph-f3{background:linear-gradient(135deg,#080d1a 0%, #1a2a5a 40%, #2a5ab4 70%, #5ec8ff 100%)}
+  .ph-f4{background:linear-gradient(135deg,#0a1a0a 0%, #1a4a2a 40%, #2a8a4a 70%, #6ee08a 100%)}
+
+  /* ============ THE WORLD ============ */
+  .world{
+    position:relative;padding:140px 0 160px;border-top:1px solid var(--line);
+    background:
+      radial-gradient(60% 50% at 80% 80%, rgba(255,106,26,.12), transparent 60%),
+      var(--bg);
+  }
+  .world-inner{max-width:1640px;margin:0 auto;padding:0 80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .world-text h2{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(56px,7vw,128px);line-height:.84;text-transform:lowercase;letter-spacing:-.01em;
+    margin:18px 0 24px;color:#fff;
+    display:flex;align-items:baseline;flex-wrap:wrap;
+  }
+  .world-text h2 .art-stars{
+    color:var(--accent);font-style:italic;font-weight:500;
+    margin:0 4px;font-size:.7em;
+  }
+  .world-text .sub{
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;
+    font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--warm);
+    margin-bottom:14px;display:block;
+  }
+  .world-text h3{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;
+    font-size:32px;line-height:1.15;color:#fff;margin:0 0 20px;text-transform:uppercase;letter-spacing:-.005em;
+  }
+  .world-text p{
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:17px;letter-spacing:.02em;
+    color:#cfcfcf;line-height:1.6;margin:0 0 18px;max-width:520px;
+  }
+  .more-link{
+    display:inline-flex;align-items:center;gap:14px;
+    margin-top:14px;color:#fff;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;
+    font-size:13px;padding-bottom:10px;border-bottom:1px solid var(--rule);
+    transition:color .15s, border-color .15s, gap .15s;
+  }
+  .more-link:hover{color:var(--accent-2);border-color:var(--accent);gap:20px}
+  .more-link svg{width:14px;height:14px}
+
+  .world-image{
+    position:relative;aspect-ratio:5/6;overflow:hidden;
+    background:url("assets/keyart.jpg") center/cover no-repeat;
+    border:1px solid var(--line);
+  }
+  .world-image::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, transparent 40%, rgba(8,9,10,.5) 100%);
+  }
+  .world-image .corner{
+    position:absolute;right:18px;bottom:18px;z-index:2;color:#fff;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-style:italic;
+    font-size:13px;letter-spacing:.32em;text-transform:uppercase;
+  }
+  .world-image .corner::before{content:"";display:inline-block;width:18px;height:1px;background:var(--rule);vertical-align:middle;margin-right:10px}
+
+  /* region carousel inside world */
+  .regions{margin-top:60px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .region{
+    position:relative;aspect-ratio:3/4;overflow:hidden;cursor:pointer;
+    border:1px solid var(--line);
+    transition:border-color .2s, transform .2s;
+  }
+  .region:hover{border-color:var(--warm);transform:translateY(-3px)}
+  .region .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s ease}
+  .region:hover .img{transform:scale(1.08)}
+  .region::after{
+    content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%, rgba(8,9,10,.92) 100%);
+  }
+  .region .meta{
+    position:absolute;left:18px;right:18px;bottom:18px;z-index:2;
+  }
+  .region .ix{
+    font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;color:var(--warm);
+    letter-spacing:.16em;
+  }
+  .region .nm{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;
+    letter-spacing:.005em;text-transform:uppercase;color:#fff;line-height:1.05;margin-top:4px;
+  }
+  .ph-r1{background:linear-gradient(180deg, #1a0a08 0%, #6b1a14 60%, #ff7a3a 100%)}
+  .ph-r2{background:linear-gradient(180deg, #08101a 0%, #0e3a6b 60%, #2bc8f2 100%)}
+  .ph-r3{background:linear-gradient(180deg, #0a1a0c 0%, #1a5a2c 60%, #5ee07e 100%)}
+  .ph-r4{background:linear-gradient(180deg, #1a0a1a 0%, #4a1a5a 60%, #c026d3 100%)}
+
+  /* ============ MEDIA GRID ============ */
+  .media-section{
+    padding:140px 0 120px;border-top:1px solid var(--line);
+    background:linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  }
+  .media-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px}
+  .media-head h2{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(56px,7vw,128px);line-height:.84;text-transform:lowercase;letter-spacing:-.01em;
+    margin:18px 0 0;color:#fff;
+  }
+  .media-head h2 .pd{color:var(--accent)}
+  .media-grid{
+    display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:160px;gap:14px;
+  }
+  .m-cell{
+    position:relative;overflow:hidden;cursor:pointer;background:#111;
+    border:1px solid var(--line);
+    transition:border-color .2s, transform .2s;
+  }
+  .m-cell:hover{border-color:var(--warm);transform:translateY(-3px)}
+  .m-cell .img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s ease}
+  .m-cell:hover .img{transform:scale(1.08)}
+  .m-cell::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%, rgba(0,0,0,.7) 100%);opacity:0;transition:opacity .2s}
+  .m-cell:hover::after{opacity:1}
+  .m-cell .badge{
+    position:absolute;top:12px;left:12px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-weight:500;font-size:10px;
+    letter-spacing:.18em;text-transform:uppercase;color:#fff;
+    padding:4px 8px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  }
+  .m-cell .lab{
+    position:absolute;left:14px;right:14px;bottom:14px;z-index:2;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:18px;
+    color:#fff;letter-spacing:.005em;text-transform:uppercase;line-height:1.1;
+    opacity:0;transform:translateY(8px);transition:opacity .2s, transform .2s;
+  }
+  .m-cell:hover .lab{opacity:1;transform:translateY(0)}
+  .m-cell.big{grid-column:span 3;grid-row:span 2}
+  .m-cell.wide{grid-column:span 2}
+  .m-cell.tall{grid-row:span 2}
+  .ph-m1{background-image:url("assets/keyart.jpg")}
+  .ph-m2{background:linear-gradient(135deg,#1a0a08 0%, #5a1a1a 50%, #ff7a3a 100%)}
+  .ph-m3{background:linear-gradient(135deg,#08101a 0%, #0e3a6b 50%, #2bc8f2 100%)}
+  .ph-m4{background:linear-gradient(135deg,#0a1a0c 0%, #1a5a2c 50%, #5ee07e 100%)}
+  .ph-m5{background:linear-gradient(135deg,#1a0a1a 0%, #4a1a5a 50%, #c026d3 100%)}
+  .ph-m6{background:linear-gradient(135deg,#1a1206 0%, #6b4a0e 50%, #ffd166 100%)}
+  .ph-m7{background:linear-gradient(135deg,#0e0e1a 0%, #2a2a6b 50%, #6366f1 100%)}
+
+  /* ============ FOOTER ============ */
+  footer{
+    position:relative;padding:110px 0 36px;
+    background:#050506;
+    border-top:1px solid var(--line);
+    overflow:hidden;
+  }
+  .foot-mark{
+    font-family:'Barlow Condensed',sans-serif;font-weight:900;
+    font-size:clamp(80px,12vw,196px);line-height:.84;text-transform:uppercase;
+    letter-spacing:-.01em;color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,.12);
+    margin-bottom:36px;
+  }
+  .foot-mark em{font-style:italic;font-weight:500;color:rgba(210,177,130,.55);-webkit-text-stroke:0}
+  .foot-inner{max-width:1640px;margin:0 auto;padding:0 80px}
+  .foot-tagline{
+    max-width:760px;
+    font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:18px;letter-spacing:.02em;
+    color:#cfcfcf;line-height:1.6;margin-bottom:48px;
+  }
+  .foot-tagline strong{color:var(--accent-2);font-weight:700}
+
+  .partners{
+    display:flex;align-items:center;gap:36px;flex-wrap:wrap;
+    padding-bottom:36px;border-bottom:1px solid var(--line);
+  }
+  .partner{
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;
+    letter-spacing:.32em;text-transform:uppercase;color:#cfcfcf;
+    padding:14px 22px;border:1px solid var(--line-2);
+    transition:color .15s, border-color .15s;cursor:pointer;
+  }
+  .partner:hover{color:#fff;border-color:var(--warm)}
+  .partner span.thin{font-weight:300;font-style:italic;font-size:11px;letter-spacing:.16em;margin-left:8px;opacity:.7}
+
+  .foot-bottom{
+    display:flex;align-items:center;gap:40px;margin-top:36px;
+    color:var(--muted);font-size:12px;flex-wrap:wrap;
+  }
+  .foot-bottom .links{display:flex;gap:24px;flex-wrap:wrap}
+  .foot-bottom a{color:#bcbcbc;transition:color .15s}
+  .foot-bottom a:hover{color:#fff}
+  .foot-bottom .back{
+    margin-left:auto;display:inline-flex;align-items:center;gap:10px;color:#bcbcbc;cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:11px;
+    transition:color .15s;
+  }
+  .foot-bottom .back:hover{color:#fff}
+
+  .copyright{
+    max-width:1640px;margin:36px auto 0;padding:24px 80px 0;
+    border-top:1px solid var(--line);
+    color:var(--muted-2);font-size:11px;line-height:1.7;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1100px){
+    .topnav{display:none}
+    .siderail{display:none}
+    .hero-inner, .wrap, .news-inner, .feat-content, .world-inner, .foot-inner, .copyright{padding-left:32px;padding-right:32px}
+    .news-inner{grid-template-columns:1fr;gap:40px}
+    .feat-slab{grid-template-columns:1fr;min-height:auto;padding-bottom:60px}
+    .feat-slab .feat-content{padding:60px 32px 24px}
+    .feat-thumb{position:relative;left:auto !important;right:auto !important;bottom:auto !important;margin:0 32px}
+    .world-inner{grid-template-columns:1fr;gap:40px}
+    .regions{grid-template-columns:repeat(2,1fr)}
+    .media-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:140px}
+    .m-cell.big{grid-column:span 3;grid-row:span 2}
+    .play-bar-inner{flex-wrap:wrap;gap:14px}
+    .play-bar .platforms{justify-content:flex-start}
+    .timer-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:680px){
+    .topbar-inner{padding:14px 20px;gap:10px}
+    .logo-mark .name{font-size:14px;letter-spacing:.2em}
+    .lang-pick{display:none}
+    .hero-inner{padding:110px 20px 60px}
+    .hero h1{font-size:64px}
+    .play-bar-inner{padding:14px 20px}
+    .play-label{font-size:18px}
+    .pf-btn{padding:10px 14px;font-size:11px}
+    .scroll-cue{display:none}
+    .timer-grid{grid-template-columns:1fr}
+    .timer-head{flex-direction:column;align-items:flex-start}
+    .news{padding:80px 0}
+    .feature-head{padding:60px 0 20px}
+    .feat-content{padding:40px 20px 20px}
+    .world{padding:80px 0}
+    .regions{grid-template-columns:1fr 1fr;gap:8px}
+    .media-section{padding:80px 0}
+    .media-grid{grid-template-columns:1fr 1fr;grid-auto-rows:120px}
+    .m-cell.big{grid-column:span 2;grid-row:span 2}
+    .foot-mark{font-size:64px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="logo-mark">
+      <span class="crest">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M20 3 L36 12 L36 28 L20 37 L4 28 L4 12 Z"/>
+          <path d="M20 3 L20 37 M4 12 L36 28 M36 12 L4 28" stroke-width="1" opacity=".4"/>
+        </svg>
+      </span>
+      <span class="name">Hero Wars<span class="alt">alliance.</span></span>
+    </a>
+    <nav class="topnav">
+      <a href="#" class="active">Game</a>
+      <a href="#news">News</a>
+      <a href="#media">Media</a>
+      <a href="#world">World</a>
+      <a href="#">Community</a>
+      <a href="#">Support</a>
+    </nav>
+    <div class="grow"></div>
+    <div class="topright">
+      <div class="socials">
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 4.7c-1.4-.7-3-1.1-4.6-1.4-.2.4-.4.8-.6 1.2-1.7-.3-3.4-.3-5.1 0-.2-.4-.4-.8-.6-1.2-1.6.3-3.2.8-4.6 1.4C1.1 9 .3 13.2.7 17.4 2.6 18.8 4.5 19.7 6.3 20.2c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.8.1-.1.3-.2.4-.3 3.3 1.5 6.8 1.5 10.1 0 .1.1.3.2.4.3-.5.3-1.1.6-1.7.8.3.7.7 1.3 1.1 1.9 1.9-.5 3.7-1.4 5.6-2.8.5-4.8-.8-9-3.5-12.7zM8.5 14.2c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2zm7 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2c1.1 0 2 1 2 2.2 0 1.2-.9 2.2-2 2.2z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2c-.2-1-.9-1.7-1.9-1.9C17.9 5 12 5 12 5s-5.9 0-7.7.3c-1 .2-1.7.9-1.9 1.9C2 9 2 12 2 12s0 3 .3 4.8c.2 1 .9 1.7 1.9 1.9C6 19 12 19 12 19s5.9 0 7.7-.3c1-.2 1.7-.9 1.9-1.9.3-1.8.3-4.8.3-4.8s0-3-.3-4.8zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 4l-4.2 5.7L19 21h-3.5l-3.4-5.4L7.6 21H5l4.5-6.1L4.5 4h3.6l3 5 3.7-5H18z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      </div>
+      <button class="lang-pick">EN <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SIDE RAIL ============ -->
+<aside class="siderail">
+  <div class="dot active" data-section="hero" title="Main"></div>
+  <div class="dot" data-section="timer" title="Events"></div>
+  <div class="dot" data-section="news" title="News"></div>
+  <div class="dot" data-section="feature" title="Feature"></div>
+  <div class="dot" data-section="world" title="World"></div>
+  <div class="dot" data-section="media" title="Media"></div>
+  <div class="label">scroll</div>
+</aside>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-scan"></div>
+
+  <div class="hero-inner">
+    <div class="hero-pretitle">
+      <span class="rule"></span>
+      Season 12 · Now Live
+    </div>
+    <h1>
+      <span class="light">Hero Wars</span><br/>
+      Echoes <span class="light em">of the</span><br/>
+      <span class="em">Astaroth</span>
+    </h1>
+    <p class="hero-tag">
+      <span class="line">A realm cracked open. An alliance reforged.</span>
+      <span class="line">Raise 75+ legendary champions and lead the siege on the gates of the Astaroth.</span>
+    </p>
+    <a href="#" class="hero-watch">
+      <span class="play-disc">
+        <svg viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z" fill="#fff"/></svg>
+      </span>
+      <span class="lbl">Watch trailer</span>
+    </a>
+  </div>
+
+  <div class="scroll-cue">
+    <span class="vline"></span>
+    <span class="txt">Scroll</span>
+  </div>
+
+  <div class="play-bar">
+    <div class="play-bar-inner">
+      <span class="play-label">Play Now</span>
+      <div class="platforms">
+        <a href="#" class="pf-btn primary">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.6 2 2.2 6.3 2 11.5l5.4 2.2c.5-.3 1-.5 1.7-.5h.2l2.4-3.5c0-2.1 1.7-3.8 3.8-3.8s3.8 1.7 3.8 3.8c0 2.1-1.7 3.8-3.8 3.8h-.1L11.8 15c0 1.6-1.3 3-3 3-1.4 0-2.6-1-2.9-2.4L2.4 14C3.6 18.6 7.4 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          Steam
+        </a>
+        <a href="#" class="pf-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.4l-9-5.2c-.4-.2-.8-.2-1.2 0l-9 5.2c-.4.2-.6.6-.6 1v10.2c0 .4.2.8.6 1l9 5.2c.4.2.8.2 1.2 0l9-5.2c.4-.2.6-.6.6-1V8.4c0-.4-.2-.8-.6-1zM12 17.5l-7-4V8.6l7 4v4.9zm0-6.6L5.4 7l6.6-3.8L18.6 7 12 10.9z"/></svg>
+          Epic Games
+        </a>
+        <a href="#" class="pf-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 4l5 0c.6 0 1.1.4 1.3 1l3 8c.1.3.1.6 0 .9L17 16h-4l-.5-2H9l-.5 2H4.5l-1.8-2.1c-.1-.3-.1-.6 0-.9l3-8c.2-.6.7-1 1.3-1h1.5zm.2 4.5L9 11h4l-.7-2.5h-2.6z"/></svg>
+          PlayStation
+        </a>
+        <a href="#" class="pf-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 4.5c2-2.3 4.7-2.5 7.5-2.5s5.5.2 7.5 2.5C16.6 3.3 14.4 3 12 3s-4.6.3-7.5 1.5zM3 6c0 5 4 9 9 9s9-4 9-9c-1.6 4-5 7-9 7S4.6 10 3 6zm9 11c4 0 7.4-2.4 9-6 0 5-4 10-9 10S3 16 3 11c1.6 3.6 5 6 9 6z"/></svg>
+          Xbox
+        </a>
+        <a href="#" class="pf-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12.6c0-2.3 1.9-3.4 2-3.4-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.6 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.3.9-1.3 1.2-2.6 1.2-2.7 0 0-2.4-.9-2.4-3.8z"/></svg>
+          App Store
+        </a>
+        <a href="#" class="pf-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 20.4c-.4-.4-.6-1-.6-1.6V5.2c0-.6.2-1.2.6-1.6L13 12l-9.4 8.4zM5 3.5c.3 0 .6.1.9.2l9.2 5.3-3 3L5 3.5zm10.5 15.7L6.3 22c-.3.2-.6.2-.9.2L14.1 13l3 3-1.6 2.2z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVENT TIMER ============ -->
+<section class="timer" id="timer">
+  <div class="wrap">
+    <div class="timer-head">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Live Operations</div>
+        <h2>Event Timer</h2>
+      </div>
+      <div class="timer-tabs">
+        <button class="on" data-tab="active">Active</button>
+        <button data-tab="upcoming">Upcoming</button>
+      </div>
+    </div>
+
+    <div class="timer-section" data-pane="active">
+      <h4>Active Events <span class="descr">— ends in</span></h4>
+      <div class="timer-grid">
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev1"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Ember Run</div>
+            <div class="ev-loc">Astaroth's Gate</div>
+            <div class="ev-time"><span class="num" id="t1a">08</span><span class="sep">:</span><span class="num" id="t1b">42</span><span class="sep">:</span><span class="num" id="t1c">14</span><span class="lbl">remaining</span></div>
+          </div>
+        </div>
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev2"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Night Raid</div>
+            <div class="ev-loc">Blue Gate</div>
+            <div class="ev-time"><span class="num" id="t2a">02</span><span class="sep">:</span><span class="num" id="t2b">11</span><span class="sep">:</span><span class="num" id="t2c">36</span><span class="lbl">remaining</span></div>
+          </div>
+        </div>
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev3"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Harvest Season</div>
+            <div class="ev-loc">Cleft Tides</div>
+            <div class="ev-time"><span class="num" id="t3a">14</span><span class="sep">:</span><span class="num" id="t3b">22</span><span class="sep">:</span><span class="num" id="t3c">05</span><span class="lbl">remaining</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timer-section" data-pane="upcoming" hidden>
+      <h4>Upcoming Events <span class="descr">— starts in</span></h4>
+      <div class="timer-grid">
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev5"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Harvest Season</div>
+            <div class="ev-loc">Sunken Citadel</div>
+            <div class="ev-time"><span class="num">22</span><span class="sep">:</span><span class="num">08</span><span class="sep">:</span><span class="num">41</span><span class="lbl">starts in</span></div>
+          </div>
+        </div>
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev4"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Matriarch</div>
+            <div class="ev-loc">Dam Battlefield</div>
+            <div class="ev-time"><span class="num">36</span><span class="sep">:</span><span class="num">19</span><span class="sep">:</span><span class="num">52</span><span class="lbl">starts in</span></div>
+          </div>
+        </div>
+        <div class="ev-card">
+          <div class="ev-thumb"><div class="img ph-ev6"></div></div>
+          <div class="ev-body">
+            <div class="ev-name">Night Raid</div>
+            <div class="ev-loc">Dam Battlefield</div>
+            <div class="ev-time"><span class="num">52</span><span class="sep">:</span><span class="num">04</span><span class="sep">:</span><span class="num">10</span><span class="lbl">starts in</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+<section class="news" id="news">
+  <div class="news-bg"></div>
+  <div class="news-inner">
+    <div class="news-left">
+      <div class="eyebrow"><span class="dot"></span> Dispatches from the front</div>
+      <h2>news<span class="pd">.</span></h2>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:17px;letter-spacing:.02em;color:#cfcfcf;line-height:1.6;max-width:480px;margin:0">
+        Patch notes, balance changes, world events and tournament dispatches — every line shipped by the Hero Wars team.
+      </p>
+      <a href="#" class="news-cta">
+        View all news
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="news-list">
+      <div class="news-row">
+        <span class="news-cat upd">Patch · 12.0</span>
+        <div class="news-title">Echoes of the Astaroth — full patch notes, hero rebalance &amp; new gate event</div>
+        <div class="news-date">2026.05.11</div>
+      </div>
+      <div class="news-row">
+        <span class="news-cat evt">Event</span>
+        <div class="news-title">Weekend Arena Rush returns: triple rewards Friday through Sunday</div>
+        <div class="news-date">2026.05.09</div>
+      </div>
+      <div class="news-row">
+        <span class="news-cat">Notice</span>
+        <div class="news-title">Scheduled server maintenance — EU/NA regions, Tuesday 04:00 UTC</div>
+        <div class="news-date">2026.05.07</div>
+      </div>
+      <div class="news-row">
+        <span class="news-cat">Guide</span>
+        <div class="news-title">Best team comps for the new Dungeon Crawl mode by region tier</div>
+        <div class="news-date">2026.05.04</div>
+      </div>
+      <div class="news-row">
+        <span class="news-cat evt">Event</span>
+        <div class="news-title">Founders Pack — emblem, 5★ shards &amp; cosmetic for returning players</div>
+        <div class="news-date">2026.05.03</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE STACK ============ -->
+<section class="feature" id="feature">
+  <div class="feature-head wrap">
+    <div class="eyebrow"><span class="dot"></span> What you'll fight for</div>
+    <h2>feature<span class="pd">.</span></h2>
+  </div>
+
+  <article class="feat-slab right">
+    <div class="bgimg ph-f1"></div>
+    <div class="feat-content">
+      <div class="feat-num">01<span class="pd">.</span></div>
+      <h3 class="feat-title">Siege the gates of the Astaroth</h3>
+      <p class="feat-desc">Coordinated alliance combat at scale. Bring 10 heroes, breach a fortress, and split the relic before the rival alliance closes the breach. Every gate is a one-shot opportunity — fail and the realm shifts.</p>
+    </div>
+    <div class="feat-thumb ph-f2"></div>
+  </article>
+
+  <article class="feat-slab left">
+    <div class="bgimg ph-f3" style="background-position:right center"></div>
+    <div class="feat-content">
+      <div class="feat-num">02<span class="pd">.</span></div>
+      <h3 class="feat-title">A new genre of alliance combat</h3>
+      <p class="feat-desc">The tension of competitive PvP woven into a 75+ hero roster RPG. Stalk the open realm in stealth, ambush at the crossroads, or commit to the long siege — the strategy is yours, the consequences are permanent.</p>
+    </div>
+    <div class="feat-thumb ph-f4"></div>
+  </article>
+
+  <article class="feat-slab right">
+    <div class="bgimg ph-f3"></div>
+    <div class="feat-content">
+      <div class="feat-num">03<span class="pd">.</span></div>
+      <h3 class="feat-title">Realistic graphical fidelity</h3>
+      <p class="feat-desc">Built in Unreal Engine 5 — every banner, every dent, every spark from a clashing blade is hand-tuned. A grim fantasy world rendered with the production value of a feature film.</p>
+    </div>
+    <div class="feat-thumb ph-f1"></div>
+  </article>
+
+  <article class="feat-slab left">
+    <div class="bgimg ph-f4"></div>
+    <div class="feat-content">
+      <div class="feat-num">04<span class="pd">.</span></div>
+      <h3 class="feat-title">Express who you are</h3>
+      <p class="feat-desc">75+ heroes, hundreds of skill paths, alliance crests, banner colors, voice lines. How far will you go to make your mark? Hero Wars is a stage — yours to claim.</p>
+    </div>
+    <div class="feat-thumb ph-f2"></div>
+  </article>
+</section>
+
+<!-- ============ THE WORLD ============ -->
+<section class="world" id="world">
+  <div class="world-inner">
+    <div class="world-text">
+      <div class="eyebrow"><span class="dot"></span> Set in a cracked realm</div>
+      <h2>the<span class="art-stars">*</span>world<span class="art-stars">*</span><span style="color:var(--accent)">.</span></h2>
+      <span class="sub">Overview</span>
+      <h3>Find hope in the storm of survival</h3>
+      <p>Begin your journey in a sundered land where endless exploration meets endless challenge. Between the looming Astaroth and the rival alliances cutting paths across the realm, every choice is strategic — and every choice is yours.</p>
+      <p>Engage the war head-on or slip through unseen, paying the price for whichever path you pick. Loot a fallen siege, fortify your stronghold, raise a banner. Inside the brutal survival contest, write your own legend.</p>
+      <a href="#" class="more-link">
+        Read more
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="world-image">
+      <div class="corner">Stronghold · The Cracked Realm</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="regions">
+      <div class="region">
+        <div class="img ph-r1"></div>
+        <div class="meta">
+          <div class="ix">REGION · 01</div>
+          <div class="nm">Astaroth's Gate</div>
+        </div>
+      </div>
+      <div class="region">
+        <div class="img ph-r2"></div>
+        <div class="meta">
+          <div class="ix">REGION · 02</div>
+          <div class="nm">Frostbound Pass</div>
+        </div>
+      </div>
+      <div class="region">
+        <div class="img ph-r3"></div>
+        <div class="meta">
+          <div class="ix">REGION · 03</div>
+          <div class="nm">Verdant Hollow</div>
+        </div>
+      </div>
+      <div class="region">
+        <div class="img ph-r4"></div>
+        <div class="meta">
+          <div class="ix">REGION · 04</div>
+          <div class="nm">Sunken Citadel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEDIA ============ -->
+<section class="media-section" id="media">
+  <div class="wrap">
+    <div class="media-head">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Sights of the realm</div>
+        <h2>media<span class="pd">.</span></h2>
+      </div>
+      <a href="#" class="news-cta">
+        Media library
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="media-grid">
+      <div class="m-cell big">
+        <div class="img ph-m1"></div>
+        <span class="badge">Trailer · 02:14</span>
+        <span class="lab">Echoes of the Astaroth — Cinematic Reveal</span>
+      </div>
+      <div class="m-cell wide">
+        <div class="img ph-m2"></div>
+        <span class="badge">Key Art</span>
+        <span class="lab">Astaroth's Gate</span>
+      </div>
+      <div class="m-cell tall">
+        <div class="img ph-m3"></div>
+        <span class="badge">Screenshot</span>
+        <span class="lab">Frostbound Pass at dusk</span>
+      </div>
+      <div class="m-cell">
+        <div class="img ph-m4"></div>
+        <span class="badge">Concept</span>
+        <span class="lab">Verdant Hollow</span>
+      </div>
+      <div class="m-cell wide">
+        <div class="img ph-m5"></div>
+        <span class="badge">Trailer · 00:38</span>
+        <span class="lab">Morrigan unleashes</span>
+      </div>
+      <div class="m-cell">
+        <div class="img ph-m6"></div>
+        <span class="badge">Wallpaper · 4K</span>
+        <span class="lab">Founders Banner</span>
+      </div>
+      <div class="m-cell">
+        <div class="img ph-m7"></div>
+        <span class="badge">Screenshot</span>
+        <span class="lab">Sunken Citadel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-mark">Hero<em>*</em>Wars<em>*</em>Alliance</div>
+    <p class="foot-tagline">
+      In the cracked realm of the Astaroth, the only thing that lasts is the alliance you forge.
+      Rally heroes, breach the gates, and <strong>write a legend the realm will remember</strong>.
+    </p>
+    <div class="partners">
+      <div class="partner">NightForge<span class="thin">Studios</span></div>
+      <div class="partner">Unreal Engine<span class="thin">5</span></div>
+      <div class="partner">PEGI 12</div>
+      <div class="partner">ESRB Teen</div>
+    </div>
+
+    <div class="foot-bottom">
+      <div class="links">
+        <a href="#">Press &amp; Media</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Security</a>
+        <a href="#">Cookie Settings</a>
+      </div>
+      <button class="back" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        Back to Top
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4-4 4 4"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="copyright">
+    HERO WARS ALLIANCE © 2021–2026 NightForge Studios AB. HERO WARS, the HERO WARS logo and the Alliance crest are trademarks or registered trademarks of NightForge Studios AB.
+    All other trademarks and trade names are the property of their respective owners. This site is a design study and is not affiliated with any real-world game, studio, or franchise.
+  </div>
+</footer>
+
+<script>
+  // topbar scroll state
+  const topbarEl = document.getElementById('topbar');
+  window.addEventListener('scroll', () => {
+    topbarEl.classList.toggle('scrolled', window.scrollY > 32);
+  });
+
+  // event-timer tabs
+  document.querySelectorAll('.timer-tabs button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.timer-tabs button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      const which = b.dataset.tab;
+      document.querySelectorAll('[data-pane]').forEach(p => p.hidden = (p.dataset.pane !== which));
+    });
+  });
+
+  // countdown tick (cosmetic)
+  function pad(n){return String(n).padStart(2,'0')}
+  let tick = 0;
+  setInterval(()=>{
+    tick++;
+    const cards = document.querySelectorAll('[data-pane="active"] .ev-time');
+    cards.forEach((row, idx) => {
+      const nums = row.querySelectorAll('.num');
+      if(nums.length<3) return;
+      let h = +nums[0].textContent, m = +nums[1].textContent, s = +nums[2].textContent;
+      s--;
+      if(s<0){s=59;m--}
+      if(m<0){m=59;h--}
+      if(h<0){h=0;m=0;s=0}
+      nums[0].textContent = pad(h);
+      nums[1].textContent = pad(m);
+      nums[2].textContent = pad(s);
+    });
+  }, 1000);
+
+  // side rail active dot follows scroll
+  const sections = ['hero','timer','news','feature','world','media']
+    .map(id => ({id, el: document.getElementById(id)}))
+    .filter(s => s.el);
+  const dots = [...document.querySelectorAll('.siderail .dot')];
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + window.innerHeight*0.4;
+    let active = sections[0].id;
+    for(const s of sections){
+      if(s.el.offsetTop <= y) active = s.id;
+    }
+    dots.forEach(d => d.classList.toggle('active', d.dataset.section === active));
+  });
+  dots.forEach(d => d.addEventListener('click', () => {
+    const s = sections.find(x => x.id === d.dataset.section);
+    if(s) window.scrollTo({top: s.el.offsetTop - 20, behavior: 'smooth'});
+  }));
+</script>
+
+</body>
+</html>
