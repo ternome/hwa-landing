@@ -416,71 +416,22 @@ a { color: inherit; text-decoration: none; }
 .btn-login:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 4px 10px rgba(63, 163, 25, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
 .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
 
-/* Agreement block */
-.modal__agree {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+/* Terms block — plain caption with amber links, no checkbox */
+.modal__terms {
   margin-top: 24px;
-  padding: 0 4px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.65);
-  text-align: left;
-  cursor: pointer;
-  user-select: none;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
 }
-.modal__agree-box {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+.modal__terms a {
+  color: #E6B94D;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
 }
-.modal__agree-mark {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.05);
-  position: relative;
-  margin-top: 1px;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-.modal__agree-box:checked + .modal__agree-mark {
-  background: var(--play-bottom);
-  border-color: var(--play-bottom);
-}
-.modal__agree-box:checked + .modal__agree-mark::after {
-  content: '';
-  position: absolute;
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid var(--cream);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-.modal__agree-box:focus-visible + .modal__agree-mark {
-  box-shadow: 0 0 0 3px rgba(110, 208, 47, 0.25);
-}
-.modal__agree.is-error .modal__agree-mark {
-  border-color: rgba(231, 76, 60, 0.7);
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
-}
-.modal__agree-text { flex: 1; }
-.modal__agree-text a {
-  color: var(--white);
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.35);
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
-}
-.modal__agree-text a:hover { text-decoration-color: var(--white); }
+.modal__terms a:hover { color: #FFD56B; }
 
 /* Stage 2 — code entry */
 .modal__code-row {
@@ -584,11 +535,7 @@ a { color: inherit; text-decoration: none; }
       <input type="email" class="modal__email" id="emailInput" placeholder="email@gmail.com" autocomplete="email" />
       <button type="button" class="btn-login" id="getCodeBtn">Get a login code</button>
 
-      <label class="modal__agree" id="agreeWrap">
-        <input type="checkbox" class="modal__agree-box" id="agreeBox" />
-        <span class="modal__agree-mark" aria-hidden="true"></span>
-        <span class="modal__agree-text">I have read and agree to the <a href="#" target="_blank" rel="noopener">Terms of Service</a> and acknowledge the <a href="#" target="_blank" rel="noopener">Privacy Policy</a>.</span>
-      </label>
+      <p class="modal__terms">By continuing you agree to the <a href="#" target="_blank" rel="noopener">Terms of Service</a> and <a href="#" target="_blank" rel="noopener">Privacy Policy</a>.<br/>Progress syncs across web, iOS, and Android.</p>
     </div>
 
     <!-- Stage 2: code entry -->
@@ -675,19 +622,15 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.cl
 modal.querySelector('[data-stage-back]').addEventListener('click', () => showStage('email'));
 
 // Email submit
-const agreeBox = document.getElementById('agreeBox');
-const agreeWrap = document.getElementById('agreeWrap');
-agreeBox.addEventListener('change', () => { if (agreeBox.checked) agreeWrap.classList.remove('is-error'); });
-
 function submitEmail() {
   const v = emailInput.value.trim();
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  let bad = false;
-  if (!validEmail) { emailInput.classList.add('is-error'); bad = true; }
-  if (!agreeBox.checked) { agreeWrap.classList.add('is-error'); bad = true; }
-  if (bad) { (validEmail ? agreeBox : emailInput).focus(); return; }
+  if (!validEmail) {
+    emailInput.classList.add('is-error');
+    emailInput.focus();
+    return;
+  }
   emailInput.classList.remove('is-error');
-  agreeWrap.classList.remove('is-error');
   sentEmail.textContent = v;
   showStage('code');
   setTimeout(() => codeInputs[0].focus(), 200);
