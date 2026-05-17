@@ -889,6 +889,15 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.01em;
   flex-shrink: 0;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.push__avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.push--has-photo .push__avatar {
+  box-shadow: 0 0 0 2px rgba(255, 80, 130, 0.5), 0 0 10px rgba(255, 80, 130, 0.3);
 }
 .push__body {
   display: flex;
@@ -1351,6 +1360,12 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
     return clean.slice(0, 2).toUpperCase();
   }
 
+  // Name → photo binding (deterministic — same name always uses same avatar)
+  const AVATAR_PHOTOS = {
+    'Aurelia': 'assets/v8/avatars/aurelia.jpg',
+    'Solenne': 'assets/v8/avatars/solenne.jpg',
+  };
+
   function buildPush() {
     const useSticker = Math.random() < 0.32;
     const data = pick(useSticker ? STICKER_PUSHES : TEXTS);
@@ -1358,11 +1373,20 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
     const el = document.createElement('div');
     el.className = 'push push--' + data.kind;
 
+    const photo = AVATAR_PHOTOS[data.name];
+    if (photo) el.classList.add('push--has-photo');
+
     const bar = document.createElement('div'); bar.className = 'push__bar'; el.appendChild(bar);
 
     const av = document.createElement('div'); av.className = 'push__avatar';
-    av.style.background = avatarColor(data.name);
-    av.textContent = initials(data.name);
+    if (photo) {
+      const img = document.createElement('img');
+      img.src = photo; img.alt = data.name;
+      av.appendChild(img);
+    } else {
+      av.style.background = avatarColor(data.name);
+      av.textContent = initials(data.name);
+    }
     el.appendChild(av);
 
     const body = document.createElement('div'); body.className = 'push__body';
@@ -1384,6 +1408,7 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
     body.appendChild(reactions);
     el._kind = data.kind;
     el._reactionsBox = reactions;
+    el._hasPhoto = !!photo;
     el.appendChild(body);
 
     if (useSticker && data.sticker) {
@@ -1424,7 +1449,10 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
   function attachReactions(el, kind) {
     const box = el._reactionsBox;
     if (!box) return;
-    const bias = REACT_BIAS[kind] || ['like', 'love', 'fire', 'swords'];
+    const hot = !!el._hasPhoto;  // girl avatars get supercharged reactions
+    const bias = hot
+      ? ['love', 'fire', 'like', 'swords']
+      : (REACT_BIAS[kind] || ['like', 'love', 'fire', 'swords']);
     const pool = bias.slice();
     const used = new Map(); // type -> { pill, count }
     const timers = new Set();
@@ -1482,29 +1510,33 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
       timers.add(id);
     }
 
+    // Tuning per push kind: girl pushes (hot) get high seed counts + bigger
+    // bumps + faster cadence + more reactions added overall.
+    const tune = hot
+      ? { introMin: 22, introRange: 38, bumpMin: 5, bumpRange: 14, addProb: 0.55, contProb: 0.92, delayMin: 500, delayRange: 900 }
+      : { introMin: 1,  introRange: 4,  bumpMin: 1, bumpRange: 3,  addProb: 0.40, contProb: 0.70, delayMin: 800, delayRange: 1400 };
+
     function stepIntro() {
       if (el.classList.contains('is-out')) return;
       const t = pickFresh();
-      if (t) makePill(t, 1 + Math.floor(Math.random() * 4));
-      schedule(stepTick, 700 + Math.random() * 900);
+      if (t) makePill(t, tune.introMin + Math.floor(Math.random() * tune.introRange));
+      schedule(stepTick, tune.delayMin + Math.random() * tune.delayRange);
     }
 
     function stepTick() {
       if (el.classList.contains('is-out')) return;
-      // 60% bump existing, 40% add new (if room)
-      const addNew = used.size < pool.length && Math.random() < 0.4;
+      const addNew = used.size < pool.length && Math.random() < tune.addProb;
       if (addNew) {
         const t = pickFresh();
-        if (t) makePill(t, 1 + Math.floor(Math.random() * 3));
+        if (t) makePill(t, tune.introMin + Math.floor(Math.random() * tune.introRange));
       } else {
         const t = pickUsed();
-        if (t) bump(t, 1 + Math.floor(Math.random() * 3));
+        if (t) bump(t, tune.bumpMin + Math.floor(Math.random() * tune.bumpRange));
       }
-      // 70% continue, 30% stop
-      if (Math.random() < 0.7) schedule(stepTick, 800 + Math.random() * 1400);
+      if (Math.random() < tune.contProb) schedule(stepTick, tune.delayMin + Math.random() * tune.delayRange);
     }
 
-    schedule(stepIntro, 1000 + Math.random() * 800);
+    schedule(stepIntro, hot ? (600 + Math.random() * 500) : (1000 + Math.random() * 800));
   }
 
   function clearReactionTimers(el) {
