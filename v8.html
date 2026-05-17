@@ -972,7 +972,7 @@ a { color: inherit; text-decoration: none; }
     0 12px 32px rgba(0, 0, 0, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
-  cursor: default;
+  cursor: pointer;
   transform: translateX(380px);
   opacity: 0;
   animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
@@ -981,6 +981,28 @@ a { color: inherit; text-decoration: none; }
 }
 .push.is-out {
   animation: push-out 0.3s ease-in forwards;
+}
+
+/* Top-left docked variant — toggled via click on any push (sits under the HW logo) */
+.pushes.is-left {
+  top: 95px;
+  left: 24px;
+  right: auto;
+}
+.pushes.is-left .push {
+  animation: push-in-left 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+}
+.pushes.is-left .push.is-out {
+  animation: push-out-left 0.3s ease-in forwards;
+}
+@keyframes push-in-left {
+  0%   { transform: translateX(-380px); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes push-out-left {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-380px); opacity: 0; }
 }
 @keyframes push-in {
   0%   { transform: translateX(380px); opacity: 0; }
@@ -1857,6 +1879,12 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
     // Insert at the top so freshest is on top
     root.insertBefore(el, root.firstChild);
     activePushes.unshift(el);
+
+    // Click anywhere on the push toggles dock side: top-right ↔ top-left (under logo)
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      root.classList.toggle('is-left');
+    });
 
     // Cap stack
     while (activePushes.length > MAX_ON_SCREEN) {
