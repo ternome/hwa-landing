@@ -520,6 +520,39 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* ── Sound toggle (over hero, above meta strip) ──────────────── */
+.sound-toggle {
+  position: absolute;
+  right: 24px;
+  bottom: 92px;
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(15, 15, 20, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+.sound-toggle:hover {
+  background: rgba(25, 25, 30, 0.78);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.sound-toggle:active { transform: translateY(0); }
+.sound-toggle svg { width: 18px; height: 18px; }
+.sound-toggle .icon-on,
+.sound-toggle .icon-off { display: none; }
+.sound-toggle.is-muted .icon-off { display: block; }
+.sound-toggle:not(.is-muted) .icon-on { display: block; }
+
 /* ── Bottom meta strip (v6-style compact one-liner) ─────────── */
 .meta-strip {
   position: absolute;
@@ -875,12 +908,25 @@ a { color: inherit; text-decoration: none; }
     0 12px 32px rgba(0, 0, 0, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
-  cursor: default;
+  cursor: pointer;
   transform: translateX(380px);
   opacity: 0;
   animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
   overflow: hidden;
+}
+
+/* Bottom-right docked variant — toggled via click on any push */
+.pushes.is-bottom {
+  top: auto;
+  bottom: 24px;
+}
+.pushes.is-bottom .push.is-out {
+  animation: push-out-up 0.3s ease-in forwards;
+}
+@keyframes push-out-up {
+  0%   { transform: translateY(0);    opacity: 1; }
+  100% { transform: translateY(-32px); opacity: 0; }
 }
 .push.is-out {
   animation: push-out 0.3s ease-in forwards;
@@ -1103,6 +1149,11 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 
+  <button class="sound-toggle is-muted" type="button" id="soundToggle" aria-label="Unmute sound">
+    <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+  </button>
+
   <div class="meta-strip">
     <div class="meta-strip__platforms">
       <span class="meta-strip__label">Available on</span>
@@ -1167,9 +1218,29 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <script>
-// Video autoplay
+// Video autoplay + sound toggle
 const video = document.querySelector('.hero__video');
-if (video) video.play().catch(() => {});
+if (video) {
+  video.volume = 0.1; // 10% — gentle ambient when unmuted
+  video.play().catch(() => {});
+}
+
+const soundToggle = document.getElementById('soundToggle');
+if (video && soundToggle) {
+  let isMuted = true; // browsers require muted for autoplay; user unmutes explicitly
+  function applySound() {
+    video.muted = isMuted;
+    if (!isMuted) video.volume = 0.1;
+    soundToggle.classList.toggle('is-muted', isMuted);
+    soundToggle.setAttribute('aria-label', isMuted ? 'Unmute sound' : 'Mute sound');
+    soundToggle.title = isMuted ? 'Sound on' : 'Sound off';
+  }
+  applySound();
+  soundToggle.addEventListener('click', () => {
+    isMuted = !isMuted;
+    applySound();
+  });
+}
 
 // ── Trailer modal (YouTube) ─────────────────────────────────────
 const trailerModal = document.getElementById('trailerModal');
@@ -1632,9 +1703,19 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
       return;
     }
     const el = buildPush();
-    // Insert at the top so freshest is on top
-    root.insertBefore(el, root.firstChild);
+    // Insert position depends on dock mode: top→prepend, bottom→append
+    if (root.classList.contains('is-bottom')) {
+      root.appendChild(el);
+    } else {
+      root.insertBefore(el, root.firstChild);
+    }
     activePushes.unshift(el);
+
+    // Click anywhere on push toggles dock corner
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      root.classList.toggle('is-bottom');
+    });
 
     // Cap stack
     while (activePushes.length > MAX_ON_SCREEN) {
