@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=1280" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Hero Wars: Alliance — Raise Your Hero</title>
 <meta name="description" content="Raise Your Hero. Get 1000 emeralds for free. The best mobile RPG 2025." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,7 +27,7 @@
   --dot-green: #00FF00;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--black); color: var(--white); min-width: 1280px; overflow-x: hidden; }
+html, body { background: var(--black); color: var(--white); overflow-x: hidden; }
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -1059,6 +1059,94 @@ a { color: inherit; text-decoration: none; }
   0%   { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
   45%  { transform: scale(1.32); color: #FFD56B; }
   100% { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MOBILE / TABLET — ≤ 1023px
+   Desktop layout is preserved at 1024+; smaller viewports get a
+   vertical stack, hidden push stream, no min-width.
+   ───────────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Nav — compact */
+  .nav { padding: 14px 0; }
+  .nav__inner { padding: 0 16px; gap: 12px; }
+  .nav__logo { height: 28px; }
+  .players { display: none; }
+  .btn-enter { padding: 0 14px; height: 38px; font-size: 12px; gap: 6px; }
+  .btn-enter__hint { display: none; }
+  .btn-enter__action { letter-spacing: 0.02em; }
+
+  /* Hero content — leave room for absolute meta-strip below */
+  .hero { min-height: 600px; }
+  .hero__content { padding: 0 20px 110px; }
+
+  /* Eyebrow pill */
+  .eyebrow { font-size: 10px; letter-spacing: 0.14em; gap: 7px; padding: 4px; margin-bottom: 16px; }
+  .eyebrow .tag { font-size: 9px; padding: 2px 7px; }
+  .eyebrow__txt { padding: 0 2px; }
+  .eyebrow__icn { width: 18px; height: 18px; }
+  .eyebrow__icn svg { width: 6px; height: 7px; }
+  .wtp__preview { display: none !important; }
+
+  /* Title */
+  .hero__title { font-size: clamp(40px, 11vw, 88px); line-height: 0.95; margin-bottom: 24px; letter-spacing: 0; }
+
+  /* CTA row → vertical stack */
+  .cta-row { flex-direction: column; align-items: stretch; gap: 18px; width: 100%; max-width: 360px; }
+  .btn-play { width: 100%; height: 64px; border-radius: 14px; }
+  .btn-play__label { font-size: 28px; }
+
+  /* Offer card — compact */
+  .offer { gap: 12px; }
+  .offer__icon { width: 36px; height: 36px; }
+  .offer__title { font-size: 18px; }
+  .offer__sub { font-size: 12px; }
+  .offer__badge { font-size: 9px; padding: 2px 8px; letter-spacing: 0.16em; }
+
+  /* Play meta — wrap, smaller */
+  .play-meta { font-size: 10.5px; gap: 8px; margin-top: 14px; flex-wrap: wrap; white-space: normal; }
+  .play-meta span { gap: 8px; }
+
+  /* Meta strip — wrap, hide secondary chunks */
+  .meta-strip { left: 20px; right: 20px; bottom: 14px; gap: 12px 16px; padding-top: 12px; flex-wrap: wrap; row-gap: 8px; }
+  .meta-strip__label { display: none; }
+  .meta-strip__icons { gap: 8px; }
+  .meta-strip__icons a { width: 22px; height: 22px; }
+  .meta-strip__icons svg { width: 16px; height: 16px; }
+  .meta-strip__sep { display: none; }
+  .meta-strip__stars { font-size: 11px; }
+  .meta-strip__rating-num { font-size: 12px; }
+  .meta-strip__reviews { font-size: 10px; letter-spacing: 0.14em; }
+  .meta-strip__ec { font-size: 10px; letter-spacing: 0.12em; white-space: normal; }
+
+  /* Push notifications — too cramped on mobile, hide */
+  .pushes { display: none !important; }
+
+  /* Login modal — fit small viewports */
+  .modal { padding: 18px; }
+  .modal__close { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 20px; }
+  .modal__content { max-width: 100%; }
+  .modal__title { font-size: 28px; line-height: 1.1; }
+  .modal__title-soft { font-size: 28px; line-height: 1.1; }
+  .modal__pitch { margin-top: 18px; }
+  .modal__pitch-text { font-size: 12.5px; }
+  .modal__email { height: 56px; padding: 0 16px; font-size: 22px; margin-top: 22px; }
+  .btn-login { width: 100%; height: 52px; font-size: 15px; margin-top: 14px; }
+  .modal__terms { font-size: 11px; margin-top: 18px; }
+  .modal__back { font-size: 13px; }
+  .modal__code-row { gap: 8px; }
+  .modal__code-input { width: 44px; height: 56px; font-size: 24px; border-radius: 8px; }
+  .modal__resend { margin-top: 22px; font-size: 12.5px; }
+
+  /* Trailer modal */
+  .trailer-modal { padding: 12px; }
+  .trailer-modal__close { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 20px; }
+  .trailer-modal__frame { border-radius: 10px; }
+}
+
+/* Touch devices — disable hover-only interactions */
+@media (hover: none) {
+  .wtp__preview { display: none !important; }
 }
 </style>
 </head>
