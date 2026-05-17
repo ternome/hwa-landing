@@ -732,6 +732,60 @@ a { color: inherit; text-decoration: none; }
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
+
+/* Reactions strip on push */
+.push__reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 11.5px;
+  color: rgba(255, 253, 237, 0.88);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  transform-origin: center;
+  animation: pill-pop 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.22);
+}
+.reaction-pill__ic {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 13px;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.reaction-pill__ic img { width: 18px; height: 18px; object-fit: contain; display: block; }
+.reaction-pill--like .reaction-pill__ic  { background: linear-gradient(180deg, #4b8df2, #2c69d0); }
+.reaction-pill--love .reaction-pill__ic  { background: linear-gradient(180deg, #f24c5c, #c0303c); }
+.reaction-pill--fire .reaction-pill__ic  { background: linear-gradient(180deg, #ff9f30, #d7591a); }
+.reaction-pill--swords .reaction-pill__ic { background: linear-gradient(180deg, #f7c44a, #b07a1c); color: #1a1408; }
+.reaction-pill__count {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  transform-origin: center;
+}
+.reaction-pill__count.is-bumped { animation: count-bump 0.36s ease-out; }
+@keyframes pill-pop {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes count-bump {
+  0%   { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
+  45%  { transform: scale(1.32); color: #FFD56B; }
+  100% { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
+}
 </style>
 </head>
 <body>
@@ -1070,6 +1124,10 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
       tx.innerHTML = data.text;
       body.appendChild(tx);
     }
+    const reactions = document.createElement('div'); reactions.className = 'push__reactions';
+    body.appendChild(reactions);
+    el._kind = data.kind;
+    el._reactionsBox = reactions;
     el.appendChild(body);
 
     if (useSticker && data.sticker) {
@@ -1090,10 +1148,120 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
 
   let activePushes = [];
   let dismissTimers = new WeakMap();
+  let reactionTimers = new WeakMap();
+
+  const REACTIONS = {
+    like:   { img: 'assets/reaction-like.png',  emoji: null },
+    love:   { img: 'assets/reaction-love.png',  emoji: null },
+    fire:   { img: null, emoji: '🔥' },
+    swords: { img: null, emoji: '⚔️' },
+  };
+  const REACT_BIAS = {
+    achievement: ['swords', 'fire', 'like', 'love'],
+    loot:        ['fire', 'swords', 'love', 'like'],
+    guild:       ['like', 'fire', 'swords', 'love'],
+    dm:          ['like', 'love', 'fire'],
+    reaction:    ['love', 'like', 'fire'],
+    joining:     ['like', 'love'],
+  };
+
+  function attachReactions(el, kind) {
+    const box = el._reactionsBox;
+    if (!box) return;
+    const bias = REACT_BIAS[kind] || ['like', 'love', 'fire', 'swords'];
+    const pool = bias.slice();
+    const used = new Map(); // type -> { pill, count }
+    const timers = new Set();
+    reactionTimers.set(el, timers);
+
+    function makePill(type, startCount) {
+      const def = REACTIONS[type];
+      const pill = document.createElement('span');
+      pill.className = 'reaction-pill reaction-pill--' + type;
+      const ic = document.createElement('span');
+      ic.className = 'reaction-pill__ic';
+      if (def.img) {
+        const img = document.createElement('img');
+        img.src = def.img; img.alt = '';
+        ic.appendChild(img);
+      } else {
+        ic.textContent = def.emoji;
+      }
+      const cnt = document.createElement('span');
+      cnt.className = 'reaction-pill__count';
+      cnt.textContent = startCount;
+      pill.appendChild(ic); pill.appendChild(cnt);
+      box.appendChild(pill);
+      used.set(type, { pill, cnt, count: startCount });
+    }
+
+    function bump(type, delta) {
+      const slot = used.get(type);
+      if (!slot) return;
+      slot.count += delta;
+      slot.cnt.textContent = slot.count;
+      slot.cnt.classList.remove('is-bumped');
+      // Force reflow so animation re-triggers
+      void slot.cnt.offsetWidth;
+      slot.cnt.classList.add('is-bumped');
+    }
+
+    function pickFresh() {
+      const remaining = pool.filter(t => !used.has(t));
+      if (!remaining.length) return null;
+      // Front-of-pool weighted: 65% first, 25% second, 10% rest
+      const r = Math.random();
+      if (remaining[0] && r < 0.65) return remaining[0];
+      if (remaining[1] && r < 0.9)  return remaining[1];
+      return remaining[Math.floor(Math.random() * remaining.length)];
+    }
+
+    function pickUsed() {
+      const arr = Array.from(used.keys());
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function schedule(fn, ms) {
+      const id = setTimeout(() => { timers.delete(id); fn(); }, ms);
+      timers.add(id);
+    }
+
+    function stepIntro() {
+      if (el.classList.contains('is-out')) return;
+      const t = pickFresh();
+      if (t) makePill(t, 1 + Math.floor(Math.random() * 4));
+      schedule(stepTick, 700 + Math.random() * 900);
+    }
+
+    function stepTick() {
+      if (el.classList.contains('is-out')) return;
+      // 60% bump existing, 40% add new (if room)
+      const addNew = used.size < pool.length && Math.random() < 0.4;
+      if (addNew) {
+        const t = pickFresh();
+        if (t) makePill(t, 1 + Math.floor(Math.random() * 3));
+      } else {
+        const t = pickUsed();
+        if (t) bump(t, 1 + Math.floor(Math.random() * 3));
+      }
+      // 70% continue, 30% stop
+      if (Math.random() < 0.7) schedule(stepTick, 800 + Math.random() * 1400);
+    }
+
+    schedule(stepIntro, 1000 + Math.random() * 800);
+  }
+
+  function clearReactionTimers(el) {
+    const set = reactionTimers.get(el);
+    if (!set) return;
+    set.forEach(id => clearTimeout(id));
+    set.clear();
+  }
 
   function dismiss(el) {
     if (!el || el.classList.contains('is-out')) return;
     clearTimeout(dismissTimers.get(el));
+    clearReactionTimers(el);
     el.classList.add('is-out');
     el.addEventListener('animationend', () => {
       el.remove();
@@ -1121,6 +1289,9 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
     // Auto-dismiss 6-9s
     const life = 6000 + Math.random() * 3000;
     dismissTimers.set(el, setTimeout(() => dismiss(el), life));
+
+    // Reactions sequence
+    attachReactions(el, el._kind);
 
     // Pause auto-dismiss on hover
     el.addEventListener('mouseenter', () => clearTimeout(dismissTimers.get(el)));
