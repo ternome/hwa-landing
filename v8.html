@@ -109,25 +109,34 @@ a { color: inherit; text-decoration: none; }
   opacity: 0.9;
 }
 
-/* Enter button — lime pill */
+/* Sign-in pill — secondary CTA in nav */
 .btn-enter {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 96px;
-  height: 49px;
-  background: var(--lime);
-  color: #111111;
+  gap: 10px;
+  height: 52px;
+  padding: 0 26px;
+  background: rgba(20, 18, 14, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--white);
   border-radius: 100px;
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.02em;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
-.btn-enter:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25); }
-.btn-enter:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+.btn-enter__hint {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+.btn-enter__action {
+  color: var(--white);
+  font-weight: 700;
+}
+.btn-enter:hover { transform: translateY(-1px); background: rgba(28, 24, 18, 0.88); border-color: rgba(255, 255, 255, 0.12); }
+.btn-enter:active { transform: translateY(1px); }
 
 /* ── Hero (full viewport minus 107px nav) ──────────────────────── */
 .hero {
@@ -277,7 +286,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(18px) saturate(0.85);
   -webkit-backdrop-filter: blur(18px) saturate(0.85);
   animation: fade-in 0.25s ease-out;
@@ -290,7 +299,7 @@ a { color: inherit; text-decoration: none; }
 .modal__content {
   position: relative;
   width: 100%;
-  max-width: 460px;
+  max-width: 520px;
   text-align: center;
   color: var(--white);
   animation: content-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
@@ -366,13 +375,13 @@ a { color: inherit; text-decoration: none; }
 .modal__email {
   margin-top: 28px;
   width: 100%;
-  height: 52px;
-  padding: 0 18px;
+  height: 78px;
+  padding: 0 24px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.06);
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 36px;
   color: var(--white);
   text-align: center;
   outline: none;
@@ -384,7 +393,9 @@ a { color: inherit; text-decoration: none; }
 
 .btn-login {
   margin-top: 16px;
-  width: 100%;
+  width: 380px;
+  max-width: 100%;
+  align-self: center;
   height: 56px;
   border: none;
   border-radius: 12px;
@@ -405,23 +416,89 @@ a { color: inherit; text-decoration: none; }
 .btn-login:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 4px 10px rgba(63, 163, 25, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
 .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
 
+/* Agreement block */
+.modal__agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 0 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+.modal__agree-box {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.modal__agree-mark {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+  margin-top: 1px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.modal__agree-box:checked + .modal__agree-mark {
+  background: var(--play-bottom);
+  border-color: var(--play-bottom);
+}
+.modal__agree-box:checked + .modal__agree-mark::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--cream);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.modal__agree-box:focus-visible + .modal__agree-mark {
+  box-shadow: 0 0 0 3px rgba(110, 208, 47, 0.25);
+}
+.modal__agree.is-error .modal__agree-mark {
+  border-color: rgba(231, 76, 60, 0.7);
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
+}
+.modal__agree-text { flex: 1; }
+.modal__agree-text a {
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+.modal__agree-text a:hover { text-decoration-color: var(--white); }
+
 /* Stage 2 — code entry */
 .modal__code-row {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin-top: 22px;
+  margin-top: 24px;
 }
 .modal__code-input {
-  width: 44px;
-  height: 52px;
+  width: 64px;
+  height: 78px;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.06);
   text-align: center;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 36px;
   color: var(--white);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
@@ -463,7 +540,10 @@ a { color: inherit; text-decoration: none; }
         <span class="players__label">players online</span>
       </div>
     </div>
-    <a href="#enter" class="btn-enter">Enter</a>
+    <a href="#enter" class="btn-enter">
+      <span class="btn-enter__hint">Already playing?</span>
+      <span class="btn-enter__action">Sign in</span>
+    </a>
   </div>
 </header>
 
@@ -503,6 +583,12 @@ a { color: inherit; text-decoration: none; }
       <p class="modal__subtitle">Enter your email to log in or create an account.</p>
       <input type="email" class="modal__email" id="emailInput" placeholder="email@gmail.com" autocomplete="email" />
       <button type="button" class="btn-login" id="getCodeBtn">Get a login code</button>
+
+      <label class="modal__agree" id="agreeWrap">
+        <input type="checkbox" class="modal__agree-box" id="agreeBox" />
+        <span class="modal__agree-mark" aria-hidden="true"></span>
+        <span class="modal__agree-text">I have read and agree to the <a href="#" target="_blank" rel="noopener">Terms of Service</a> and acknowledge the <a href="#" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+      </label>
     </div>
 
     <!-- Stage 2: code entry -->
@@ -589,15 +675,19 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.cl
 modal.querySelector('[data-stage-back]').addEventListener('click', () => showStage('email'));
 
 // Email submit
+const agreeBox = document.getElementById('agreeBox');
+const agreeWrap = document.getElementById('agreeWrap');
+agreeBox.addEventListener('change', () => { if (agreeBox.checked) agreeWrap.classList.remove('is-error'); });
+
 function submitEmail() {
   const v = emailInput.value.trim();
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  if (!valid) {
-    emailInput.classList.add('is-error');
-    emailInput.focus();
-    return;
-  }
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  let bad = false;
+  if (!validEmail) { emailInput.classList.add('is-error'); bad = true; }
+  if (!agreeBox.checked) { agreeWrap.classList.add('is-error'); bad = true; }
+  if (bad) { (validEmail ? agreeBox : emailInput).focus(); return; }
   emailInput.classList.remove('is-error');
+  agreeWrap.classList.remove('is-error');
   sentEmail.textContent = v;
   showStage('code');
   setTimeout(() => codeInputs[0].focus(), 200);
@@ -608,11 +698,19 @@ emailInput.addEventListener('input', () => emailInput.classList.remove('is-error
 emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitEmail(); });
 
 // 6-digit code input behavior
+function tryRedeem() {
+  const code = Array.from(codeInputs).map(i => i.value).join('');
+  if (code.length !== 6) return;
+  if (code === '123123') {
+    window.location.href = 'https://hero-wars-alliance.com/';
+  }
+}
 codeInputs.forEach((input, i) => {
   input.addEventListener('input', (e) => {
     const v = e.target.value.replace(/\D/g, '');
     e.target.value = v.slice(0, 1);
     if (e.target.value && i < codeInputs.length - 1) codeInputs[i + 1].focus();
+    tryRedeem();
   });
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Backspace' && !e.target.value && i > 0) codeInputs[i - 1].focus();
@@ -625,6 +723,7 @@ codeInputs.forEach((input, i) => {
     digits.split('').forEach((d, idx) => { if (codeInputs[idx]) codeInputs[idx].value = d; });
     const next = Math.min(digits.length, codeInputs.length - 1);
     codeInputs[next].focus();
+    tryRedeem();
   });
 });
 
