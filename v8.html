@@ -203,13 +203,18 @@ a { color: inherit; text-decoration: none; }
   padding: 0 80px 22vh;
 }
 
-/* NEW SEASON eyebrow pill (v1-style, gold/amber) */
+/* Season pill + Watch trailer button row */
+.eyebrow-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 6px 14px 6px 6px;
-  margin-bottom: 22px;
   border-radius: 99px;
   background: rgba(255, 180, 40, 0.12);
   border: 1px solid rgba(255, 180, 40, 0.4);
@@ -234,6 +239,41 @@ a { color: inherit; text-decoration: none; }
   text-shadow: none;
 }
 
+.watch-trailer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 18px 6px 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.watch-trailer-pill:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.42);
+  transform: translateY(-1px);
+}
+.watch-trailer-pill .wtp__icn {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  background: #fff;
+  color: #0a0a0a;
+  border-radius: 50%;
+  padding-left: 2px;
+  flex-shrink: 0;
+}
+.watch-trailer-pill .wtp__icn svg { width: 8px; height: 9px; }
+
 .hero__title {
   font-family: 'Anton', sans-serif;
   font-weight: 400;
@@ -243,7 +283,6 @@ a { color: inherit; text-decoration: none; }
   color: var(--white);
   letter-spacing: -0.005em;
   text-align: left;
-  text-transform: uppercase;
   text-shadow:
     0 8px 24px rgba(0, 0, 0, 0.85),
     0 3px 0 rgba(0, 0, 0, 0.6),
@@ -653,6 +692,42 @@ a { color: inherit; text-decoration: none; }
 .stage { display: none; flex-direction: column; align-items: stretch; }
 .stage.is-active { display: flex; }
 
+/* ── Trailer modal (YouTube iframe) ───────────────────────────── */
+.trailer-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  display: none; align-items: center; justify-content: center; padding: 60px;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(20px) saturate(0.85);
+  -webkit-backdrop-filter: blur(20px) saturate(0.85);
+  animation: fade-in 0.25s ease-out;
+}
+.trailer-modal.is-open { display: flex; }
+.trailer-modal__frame {
+  position: relative;
+  width: 100%; max-width: 1180px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 50px 120px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: content-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+.trailer-modal iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+.trailer-modal__close {
+  position: fixed; top: 28px; right: 32px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 22px; line-height: 1;
+  cursor: pointer; display: grid; place-items: center;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  z-index: 1001;
+}
+.trailer-modal__close:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); transform: rotate(90deg); }
+
 /* ── Fake push notifications (top-right under Sign in) ───────── */
 .pushes {
   position: fixed;
@@ -861,12 +936,18 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__vignette"></div>
 
   <div class="hero__content">
-    <div class="eyebrow">
-      <span class="tag">New</span>
-      Season 12 · Echoes of the Astaroth
+    <div class="eyebrow-row">
+      <div class="eyebrow">
+        <span class="tag">New</span>
+        Season 32 · Rise of the Eternal Flame
+      </div>
+      <button type="button" class="watch-trailer-pill" data-open-trailer>
+        <span class="wtp__icn"><svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg></span>
+        Watch trailer
+      </button>
     </div>
 
-    <h1 class="hero__title">Level up your hero</h1>
+    <h1 class="hero__title">Level Up Your Hero</h1>
 
     <div class="cta-row">
       <a href="#play" class="btn-play">
@@ -914,6 +995,11 @@ a { color: inherit; text-decoration: none; }
 
 <div class="pushes" id="pushes" aria-hidden="true" aria-live="polite"></div>
 
+<div class="trailer-modal" id="trailerModal" aria-hidden="true" role="dialog" aria-label="Season 32 trailer">
+  <button class="trailer-modal__close" type="button" aria-label="Close" data-close-trailer>×</button>
+  <div class="trailer-modal__frame" id="trailerFrame"></div>
+</div>
+
 <div class="modal" id="loginModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
   <button class="modal__close" type="button" aria-label="Close" data-modal-close>×</button>
 
@@ -954,6 +1040,35 @@ a { color: inherit; text-decoration: none; }
 // Video autoplay
 const video = document.querySelector('.hero__video');
 if (video) video.play().catch(() => {});
+
+// ── Trailer modal (YouTube) ─────────────────────────────────────
+const trailerModal = document.getElementById('trailerModal');
+const trailerFrame = document.getElementById('trailerFrame');
+const TRAILER_ID = 'aUljHX1XmY0';
+
+function openTrailer() {
+  if (!trailerModal) return;
+  trailerFrame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + TRAILER_ID + '?autoplay=1&rel=0&modestbranding=1" title="Season 32 trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+  trailerModal.classList.add('is-open');
+  trailerModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeTrailer() {
+  if (!trailerModal) return;
+  trailerFrame.innerHTML = '';
+  trailerModal.classList.remove('is-open');
+  trailerModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('[data-open-trailer]').forEach(el => {
+  el.addEventListener('click', (e) => { e.preventDefault(); openTrailer(); });
+});
+trailerModal.addEventListener('click', (e) => {
+  if (e.target === trailerModal || e.target.matches('[data-close-trailer]')) closeTrailer();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && trailerModal.classList.contains('is-open')) closeTrailer();
+});
 
 // Modal control
 const modal = document.getElementById('loginModal');
