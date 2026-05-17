@@ -195,67 +195,60 @@ a { color: inherit; text-decoration: none; }
     0 2px 4px rgba(0, 0, 0, 0.5);
   margin-bottom: 60px;
 }
-/* Reward card — sits above PLAY NOW to anchor the offer */
+/* Reward meta — passive promo info under PLAY NOW (no bg / border) */
 .offer {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 20px;
-  padding: 18px 28px 18px 22px;
-  margin-bottom: 32px;
-  border: 1.5px solid rgba(230, 185, 77, 0.55);
-  border-radius: 16px;
-  background: rgba(10, 10, 16, 0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 32px rgba(230, 185, 77, 0.12);
+  padding: 0;
+  margin-top: 28px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  pointer-events: none;
 }
 .offer__icon {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   flex-shrink: 0;
-  filter: drop-shadow(0 4px 12px rgba(40, 200, 140, 0.45));
+  filter: drop-shadow(0 4px 12px rgba(40, 200, 140, 0.5));
 }
 .offer__body { text-align: left; line-height: 1.2; }
 .offer__title {
   font-family: 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 26px;
+  font-size: 24px;
   line-height: 1.15;
   letter-spacing: 0.005em;
   background: linear-gradient(180deg, #FFE9A8 0%, #E6B94D 50%, #B8852D 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 .offer__sub {
   margin-top: 4px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.78);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 .offer__badge {
   flex-shrink: 0;
-  padding: 10px 18px;
+  padding: 6px 14px;
   margin-left: 4px;
-  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
-  color: var(--white);
-  border-radius: 10px;
+  background: transparent;
+  border: 1.5px solid rgba(110, 208, 47, 0.7);
+  color: #87EB6B;
+  border-radius: 8px;
   font-family: 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.18em;
+  font-size: 12px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  box-shadow:
-    0 4px 0 rgba(0, 0, 0, 0.3),
-    0 6px 16px rgba(63, 163, 25, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  text-shadow: 0 0 8px rgba(110, 208, 47, 0.5);
 }
 
 /* PLAY NOW button — large 367×117 green gradient pill with badge */
@@ -307,15 +300,15 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* ── Trust strip — 3 stats above the award ────────────────────── */
+/* ── Trust strip — 4 stats incl. award, single row ────────────── */
 .trust {
   position: absolute;
   left: 50%;
-  bottom: 140px;
+  bottom: 56px;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 56px;
+  gap: 44px;
   z-index: 4;
   pointer-events: none;
   white-space: nowrap;
@@ -360,6 +353,34 @@ a { color: inherit; text-decoration: none; }
   flex-shrink: 0;
 }
 
+/* Award stat — laurels flanking gold-gradient text */
+.trust__stat--award {
+  flex-direction: row;
+  gap: 10px;
+}
+.trust__laurel {
+  width: 22px;
+  height: 64px;
+  color: #C8983B;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+.trust__laurel--right { transform: scaleX(-1); }
+.trust__award-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(180deg, #FFE9A8 0%, #E6B94D 45%, #B8852D 85%, #7C5418 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
 /* Value-prop pitch in modal — reassurance line, centered */
 .modal__pitch {
   margin-top: 28px;
@@ -370,20 +391,6 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.72);
-}
-
-/* ── Bottom band — single centered award badge ────────────────── */
-.band {
-  position: absolute;
-  left: 50%;
-  bottom: 32px;
-  transform: translateX(-50%);
-  z-index: 5;
-}
-.band__award {
-  height: 64px;
-  width: auto;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
 }
 
 /* ── Login modal — frameless, floats over blur backdrop ───────── */
@@ -615,6 +622,10 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__vignette"></div>
 
   <div class="hero__content">
+    <a href="#play" class="btn-play">
+      <span class="btn-play__label">PLAY NOW</span>
+    </a>
+
     <div class="offer">
       <img src="assets/v8/emerald.png" alt="" class="offer__icon" />
       <div class="offer__body">
@@ -623,10 +634,6 @@ a { color: inherit; text-decoration: none; }
       </div>
       <span class="offer__badge">Free</span>
     </div>
-
-    <a href="#play" class="btn-play">
-      <span class="btn-play__label">PLAY NOW</span>
-    </a>
   </div>
 
   <div class="trust">
@@ -644,10 +651,52 @@ a { color: inherit; text-decoration: none; }
       <div class="trust__num">9 yrs</div>
       <div class="trust__label">Top-grossing RPG</div>
     </div>
-  </div>
-
-  <div class="band">
-    <img src="assets/award.png" alt="The Best Mobile RPG 2025" class="band__award" />
+    <div class="trust__sep"></div>
+    <div class="trust__stat trust__stat--award">
+      <svg class="trust__laurel" viewBox="0 0 22 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <path d="M20 2 Q11 18 11 32 Q11 46 18 62"/>
+          <path d="M14 8 Q9 9 6 6" stroke-width="1"/>
+          <path d="M12 15 Q7 16 4 13" stroke-width="1"/>
+          <path d="M11 22 Q6 23 3 20" stroke-width="1"/>
+          <path d="M11 30 Q6 31 3 28" stroke-width="1"/>
+          <path d="M11 38 Q6 39 3 36" stroke-width="1"/>
+          <path d="M12 46 Q7 47 4 44" stroke-width="1"/>
+          <path d="M14 54 Q9 55 6 52" stroke-width="1"/>
+        </g>
+        <g fill="currentColor" opacity="0.85">
+          <ellipse cx="10" cy="8" rx="3.5" ry="1.4" transform="rotate(-28 10 8)"/>
+          <ellipse cx="8" cy="15" rx="3.5" ry="1.4" transform="rotate(-22 8 15)"/>
+          <ellipse cx="7" cy="22" rx="3.5" ry="1.4" transform="rotate(-15 7 22)"/>
+          <ellipse cx="7" cy="30" rx="3.5" ry="1.4" transform="rotate(-8 7 30)"/>
+          <ellipse cx="7" cy="38" rx="3.5" ry="1.4" transform="rotate(-2 7 38)"/>
+          <ellipse cx="8" cy="46" rx="3.5" ry="1.4" transform="rotate(6 8 46)"/>
+          <ellipse cx="10" cy="54" rx="3.5" ry="1.4" transform="rotate(14 10 54)"/>
+        </g>
+      </svg>
+      <div class="trust__award-text">The Best<br/>Mobile RPG<br/>2025</div>
+      <svg class="trust__laurel trust__laurel--right" viewBox="0 0 22 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <path d="M20 2 Q11 18 11 32 Q11 46 18 62"/>
+          <path d="M14 8 Q9 9 6 6" stroke-width="1"/>
+          <path d="M12 15 Q7 16 4 13" stroke-width="1"/>
+          <path d="M11 22 Q6 23 3 20" stroke-width="1"/>
+          <path d="M11 30 Q6 31 3 28" stroke-width="1"/>
+          <path d="M11 38 Q6 39 3 36" stroke-width="1"/>
+          <path d="M12 46 Q7 47 4 44" stroke-width="1"/>
+          <path d="M14 54 Q9 55 6 52" stroke-width="1"/>
+        </g>
+        <g fill="currentColor" opacity="0.85">
+          <ellipse cx="10" cy="8" rx="3.5" ry="1.4" transform="rotate(-28 10 8)"/>
+          <ellipse cx="8" cy="15" rx="3.5" ry="1.4" transform="rotate(-22 8 15)"/>
+          <ellipse cx="7" cy="22" rx="3.5" ry="1.4" transform="rotate(-15 7 22)"/>
+          <ellipse cx="7" cy="30" rx="3.5" ry="1.4" transform="rotate(-8 7 30)"/>
+          <ellipse cx="7" cy="38" rx="3.5" ry="1.4" transform="rotate(-2 7 38)"/>
+          <ellipse cx="8" cy="46" rx="3.5" ry="1.4" transform="rotate(6 8 46)"/>
+          <ellipse cx="10" cy="54" rx="3.5" ry="1.4" transform="rotate(14 10 54)"/>
+        </g>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -660,7 +709,7 @@ a { color: inherit; text-decoration: none; }
       <h2 class="modal__title" id="modalTitle">Welcome to<br/><span class="modal__title-soft">Hero Wars Alliance</span></h2>
 
       <div class="modal__pitch">
-        <p class="modal__pitch-text">No download. No password. Enter your email — we'll send you a one-time code.</p>
+        <p class="modal__pitch-text">No download. No password.<br/>Enter your email — we'll send you a one-time code.</p>
       </div>
 
       <input type="email" class="modal__email" id="emailInput" placeholder="email@gmail.com" autocomplete="email" />
