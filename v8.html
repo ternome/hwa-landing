@@ -177,7 +177,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 14vh;
+  padding-bottom: 22vh;
 }
 .hero__title {
   font-family: 'Inter', sans-serif;
@@ -195,23 +195,67 @@ a { color: inherit; text-decoration: none; }
     0 2px 4px rgba(0, 0, 0, 0.5);
   margin-bottom: 60px;
 }
-.hero__offer {
+/* Reward card — sits above PLAY NOW to anchor the offer */
+.offer {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 32px;
+  gap: 20px;
+  padding: 18px 28px 18px 22px;
+  margin-bottom: 32px;
+  border: 1.5px solid rgba(230, 185, 77, 0.55);
+  border-radius: 16px;
+  background: rgba(10, 10, 16, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 32px rgba(230, 185, 77, 0.12);
 }
-.hero__offer-text {
-  font-family: 'Roboto', sans-serif;
+.offer__icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(40, 200, 140, 0.45));
+}
+.offer__body { text-align: left; line-height: 1.2; }
+.offer__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  background: linear-gradient(180deg, #FFE9A8 0%, #E6B94D 50%, #B8852D 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+.offer__sub {
+  margin-top: 4px;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 36px;
-  color: var(--cream);
-  letter-spacing: 0.01em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
-.hero__offer-icon {
-  width: 39px; height: 39px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+.offer__badge {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  margin-left: 4px;
+  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
+  color: var(--white);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.3),
+    0 6px 16px rgba(63, 163, 25, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* PLAY NOW button — large 367×117 green gradient pill with badge */
@@ -263,16 +307,81 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* ── Trust strip — 3 stats above the award ────────────────────── */
+.trust {
+  position: absolute;
+  left: 50%;
+  bottom: 140px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  z-index: 4;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.trust__stat {
+  text-align: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.trust__num {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  background: linear-gradient(180deg, #FFE9A8 0%, #E6B94D 45%, #B8852D 85%, #7C5418 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
+}
+.trust__star { font-size: 42px; line-height: 1; margin-top: -3px; }
+.trust__label {
+  margin-top: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 253, 237, 0.78);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+  white-space: nowrap;
+}
+.trust__sep {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(180deg, transparent, rgba(230, 185, 77, 0.35) 30%, rgba(230, 185, 77, 0.35) 70%, transparent);
+  flex-shrink: 0;
+}
+
+/* Value-prop pitch in modal — reassurance line, centered */
+.modal__pitch {
+  margin-top: 28px;
+  text-align: center;
+}
+.modal__pitch-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 /* ── Bottom band — single centered award badge ────────────────── */
 .band {
   position: absolute;
   left: 50%;
-  bottom: 40px;
+  bottom: 32px;
   transform: translateX(-50%);
   z-index: 5;
 }
 .band__award {
-  height: 70px;
+  height: 64px;
   width: auto;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
 }
@@ -508,14 +617,34 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__content">
     <h1 class="hero__title">Raise Your Hero</h1>
 
+    <div class="offer">
+      <img src="assets/v8/emerald.png" alt="" class="offer__icon" />
+      <div class="offer__body">
+        <div class="offer__title">500 Emeralds + 5★ Hero</div>
+        <div class="offer__sub">For new Guardians who join today.</div>
+      </div>
+      <span class="offer__badge">Free</span>
+    </div>
+
     <a href="#play" class="btn-play">
       <span class="btn-play__label">PLAY NOW</span>
     </a>
+  </div>
 
-    <div class="hero__offer">
-      <span class="hero__offer-text">GET</span>
-      <img src="assets/v8/emerald.png" alt="" class="hero__offer-icon" />
-      <span class="hero__offer-text">1000 FOR FREE</span>
+  <div class="trust">
+    <div class="trust__stat">
+      <div class="trust__num">204M+</div>
+      <div class="trust__label">Guardians</div>
+    </div>
+    <div class="trust__sep"></div>
+    <div class="trust__stat">
+      <div class="trust__num"><span class="trust__star">★</span> 4.6</div>
+      <div class="trust__label">App Store · Play</div>
+    </div>
+    <div class="trust__sep"></div>
+    <div class="trust__stat">
+      <div class="trust__num">9 yrs</div>
+      <div class="trust__label">Top-grossing RPG</div>
     </div>
   </div>
 
@@ -531,7 +660,11 @@ a { color: inherit; text-decoration: none; }
     <!-- Stage 1: email entry -->
     <div class="stage is-active" data-stage="email">
       <h2 class="modal__title" id="modalTitle">Welcome to<br/><span class="modal__title-soft">Hero Wars Alliance</span></h2>
-      <p class="modal__subtitle">Enter your email to log in or create an account.</p>
+
+      <div class="modal__pitch">
+        <p class="modal__pitch-text">No download. No password. Enter your email — we'll send you a one-time code.</p>
+      </div>
+
       <input type="email" class="modal__email" id="emailInput" placeholder="email@gmail.com" autocomplete="email" />
       <button type="button" class="btn-login" id="getCodeBtn">Get a login code</button>
 
