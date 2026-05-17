@@ -613,6 +613,125 @@ a { color: inherit; text-decoration: none; }
 
 .stage { display: none; flex-direction: column; align-items: stretch; }
 .stage.is-active { display: flex; }
+
+/* ── Fake push notifications (top-right under Sign in) ───────── */
+.pushes {
+  position: fixed;
+  top: 95px;
+  right: 24px;
+  width: 340px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.push {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4px 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 0;
+  background: rgba(18, 16, 24, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  cursor: default;
+  transform: translateX(380px);
+  opacity: 0;
+  animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
+  overflow: hidden;
+}
+.push.is-out {
+  animation: push-out 0.3s ease-in forwards;
+}
+@keyframes push-in {
+  0%   { transform: translateX(380px); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes push-out {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(380px); opacity: 0; }
+}
+.push__bar {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 0 2px 2px 0;
+}
+.push--achievement .push__bar { background: linear-gradient(180deg, #FFD56B, #E6B94D); }
+.push--guild       .push__bar { background: linear-gradient(180deg, #A06FE0, #6F3FB8); }
+.push--loot        .push__bar { background: linear-gradient(180deg, #6ED02F, #3FA319); }
+.push--dm          .push__bar { background: linear-gradient(180deg, #4FB0FF, #2C7AD0); }
+.push--reaction    .push__bar { background: linear-gradient(180deg, #FF9F58, #E07020); }
+.push--joining     .push__bar { background: linear-gradient(180deg, #87EB6B, #4FA840); }
+
+.push__avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.push__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+.push__head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.push__name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.005em;
+}
+.push__name .crown { color: #FFD56B; margin-left: 4px; }
+.push__time {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.push__text {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.push__text .mention { color: #87EB6B; font-weight: 600; }
+.push__sticker {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
 </style>
 </head>
 <body>
@@ -690,6 +809,8 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 </section>
+
+<div class="pushes" id="pushes" aria-hidden="true" aria-live="polite"></div>
 
 <div class="modal" id="loginModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
   <button class="modal__close" type="button" aria-label="Close" data-modal-close>×</button>
@@ -842,6 +963,177 @@ codeInputs.forEach((input, i) => {
 });
 
 resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResendCountdown(); });
+
+// ── Fake push notifications ─────────────────────────────────────
+(() => {
+  const root = document.getElementById('pushes');
+  if (!root) return;
+
+  const NAMES_REG = [
+    'MysticElena', 'IronFist', 'Ashen_King', 'Lunaberry', 'Krieger', 'Aurelia',
+    'Featherweight', 'Rynaldo', 'Thornfall', 'Korso_88', 'Sapphira', 'Pixie_Storm',
+    'NewKnight_42', 'VeteranSam', 'Mirabel', 'ShadowPaw', 'Solenne', 'DragonSlayer92',
+    'BraveOne', 'BloodMoon', 'LunaShade', 'Inferno777', 'Reaper', 'Mochi',
+    'Bjorn', 'Astrid', 'theElf', 'Cassiopeia'
+  ];
+  const NAMES_CROWN = ['GuildMaster_Vex'];
+
+  const AVATAR_PALETTE = [
+    '#7B4FB8', '#3FA319', '#C03830', '#2C7AD0', '#E07020',
+    '#B8852D', '#4FA840', '#9A3FB8', '#D04F8A', '#3F9AB8'
+  ];
+
+  const TEXTS = [
+    { kind: 'achievement', name: 'DragonSlayer92', text: 'just upgraded Galahad to lvl 120! Glory to the champ! ⚔️' },
+    { kind: 'achievement', name: 'MysticElena',    text: 'promoted to Champion III in Arena 🏆 finally past that plateau' },
+    { kind: 'achievement', name: 'IronFist',       text: 'built Town Hall level 27 ✨ next stop the bank' },
+    { kind: 'achievement', name: 'Ashen_King',     text: 'got promoted to General 🎖️ thanks guild for the backup' },
+    { kind: 'achievement', name: 'Lunaberry',      text: 'pulled 20,000 emeralds from Heroic Chest!! 💎 luckiest day ever' },
+    { kind: 'achievement', name: 'Krieger',        text: 'finally beat Tydus solo 🐉 took me 23 attempts' },
+    { kind: 'achievement', name: 'Aurelia',        text: 'reached Tower floor 850 🗼 the grind is real' },
+    { kind: 'achievement', name: 'Featherweight',  text: 'just unlocked my 6th faction 🌟 the journey continues' },
+    { kind: 'achievement', name: 'Rynaldo',        text: 'maxed Glyphs on Julius 🎉 he hits like a truck now' },
+
+    { kind: 'guild', name: 'GuildMaster_Vex', crown: true, text: 'everyone hit fort 3 tonight, we need 1000 points to win Guild VS' },
+    { kind: 'guild', name: 'Thornfall',                    text: 'Hydra opens in 2h, save your titanite' },
+    { kind: 'guild', name: 'Korso_88',                     text: 'who’s running Outland 12 tonight? need 2 more' },
+    { kind: 'guild', name: 'Sapphira',                     text: 'I’m in for Outland 🙋‍♀️ ping me at 21:00 server time' },
+    { kind: 'guild', name: 'Pixie_Storm',                  text: 'Arena rewards drop in 3 min btw' },
+    { kind: 'guild', name: 'GuildMaster_Vex', crown: true, text: 'great push everyone, we’re 200 ahead of rival guild 🚀' },
+
+    { kind: 'dm', name: 'NewKnight_42', text: 'guys is Galahad good or should I pick another starter?' },
+    { kind: 'dm', name: 'VeteranSam',   text: '<span class="mention">@NewKnight_42</span> Galahad is the GOAT, you can’t go wrong' },
+    { kind: 'dm', name: 'Mirabel',      text: 'tip for new players: don’t waste emeralds on energy, save for events' },
+
+    { kind: 'loot', name: 'BloodMoon',  text: 'Legendary chest drop: +500 gems 💎' },
+    { kind: 'loot', name: 'Reaper',     text: 'Got Aurora from a soul stone!' },
+    { kind: 'loot', name: 'Inferno777', text: 'Found a Rune of Vengeance' },
+
+    { kind: 'joining', name: 'theElf',     text: 'just joined Iron Crown guild' },
+    { kind: 'joining', name: 'LunaShade',  text: 'started playing Hero Wars' },
+    { kind: 'joining', name: 'Cassiopeia', text: 'is now online' },
+  ];
+
+  const STICKER_PUSHES = [
+    { kind: 'reaction', name: 'ShadowPaw',  sticker: 'sad',           text: 'lost to a team 200k weaker than mine 😭 RNG is brutal' },
+    { kind: 'reaction', name: 'Solenne',    sticker: 'love',          text: 'new Yasmine skin is FIRE 🔥 worth every emerald' },
+    { kind: 'reaction', name: 'Mochi',      sticker: 'happy',         text: 'guild raid GG, perfect timing team' },
+    { kind: 'reaction', name: 'Bjorn',      sticker: 'support',       text: 'reacted to your achievement' },
+    { kind: 'reaction', name: 'Astrid',     sticker: 'congratulation',text: 'reacted to your achievement' },
+    { kind: 'reaction', name: 'BraveOne',   sticker: 'ok',            text: 'sent a sticker' },
+    { kind: 'reaction', name: 'Pixie_Storm',sticker: 'hello',         text: 'sent a sticker' },
+    { kind: 'reaction', name: 'Aurelia',    sticker: 'coffee',        text: 'sent a sticker' },
+    { kind: 'reaction', name: 'Mirabel',    sticker: 'chabba',        text: 'reacted to guild win' },
+    { kind: 'reaction', name: 'Krieger',    sticker: 'shoked',        text: 'reacted to Tydus solo clear' },
+  ];
+
+  const TIMES = ['TODAY', '2m ago', '5m ago', '12m ago', '38m ago', '1h ago', '3h ago'];
+  const MAX_ON_SCREEN = 3;
+
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  function avatarColor(name) {
+    let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+    return AVATAR_PALETTE[h % AVATAR_PALETTE.length];
+  }
+  function initials(name) {
+    const clean = name.replace(/[^a-zA-Z0-9_]/g, '');
+    return clean.slice(0, 2).toUpperCase();
+  }
+
+  function buildPush() {
+    const useSticker = Math.random() < 0.32;
+    const data = pick(useSticker ? STICKER_PUSHES : TEXTS);
+
+    const el = document.createElement('div');
+    el.className = 'push push--' + data.kind;
+
+    const bar = document.createElement('div'); bar.className = 'push__bar'; el.appendChild(bar);
+
+    const av = document.createElement('div'); av.className = 'push__avatar';
+    av.style.background = avatarColor(data.name);
+    av.textContent = initials(data.name);
+    el.appendChild(av);
+
+    const body = document.createElement('div'); body.className = 'push__body';
+    const head = document.createElement('div'); head.className = 'push__head';
+    const nm = document.createElement('span'); nm.className = 'push__name';
+    nm.textContent = data.name;
+    if (data.crown) { const cr = document.createElement('span'); cr.className = 'crown'; cr.textContent = '👑'; nm.appendChild(cr); }
+    const tm = document.createElement('span'); tm.className = 'push__time';
+    tm.textContent = '· ' + pick(TIMES);
+    head.appendChild(nm); head.appendChild(tm);
+    body.appendChild(head);
+
+    if (data.text) {
+      const tx = document.createElement('div'); tx.className = 'push__text';
+      tx.innerHTML = data.text;
+      body.appendChild(tx);
+    }
+    el.appendChild(body);
+
+    if (useSticker && data.sticker) {
+      const img = document.createElement('img');
+      img.className = 'push__sticker';
+      img.src = 'assets/v8/stickers/' + data.sticker + '.png';
+      img.alt = '';
+      el.appendChild(img);
+    } else {
+      // Keep grid columns consistent — add empty 4th col
+      const filler = document.createElement('span');
+      filler.style.width = '0';
+      el.appendChild(filler);
+    }
+
+    return el;
+  }
+
+  let activePushes = [];
+  let dismissTimers = new WeakMap();
+
+  function dismiss(el) {
+    if (!el || el.classList.contains('is-out')) return;
+    clearTimeout(dismissTimers.get(el));
+    el.classList.add('is-out');
+    el.addEventListener('animationend', () => {
+      el.remove();
+      activePushes = activePushes.filter(p => p !== el);
+    }, { once: true });
+  }
+
+  function spawn() {
+    // Pause spawn while modal is open
+    if (document.getElementById('loginModal').classList.contains('is-open')) {
+      scheduleNext(1500);
+      return;
+    }
+    const el = buildPush();
+    // Insert at the top so freshest is on top
+    root.insertBefore(el, root.firstChild);
+    activePushes.unshift(el);
+
+    // Cap stack
+    while (activePushes.length > MAX_ON_SCREEN) {
+      const old = activePushes.pop();
+      dismiss(old);
+    }
+
+    // Auto-dismiss 6-9s
+    const life = 6000 + Math.random() * 3000;
+    dismissTimers.set(el, setTimeout(() => dismiss(el), life));
+
+    // Pause auto-dismiss on hover
+    el.addEventListener('mouseenter', () => clearTimeout(dismissTimers.get(el)));
+    el.addEventListener('mouseleave', () => {
+      dismissTimers.set(el, setTimeout(() => dismiss(el), 3500));
+    });
+
+    scheduleNext(4000 + Math.random() * 4000);
+  }
+
+  function scheduleNext(ms) { setTimeout(spawn, ms); }
+  setTimeout(spawn, 2500);
+})();
 
 // Live "players online" counter — small fluctuations with slight upward drift
 (() => {
