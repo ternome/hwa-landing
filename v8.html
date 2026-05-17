@@ -3,10 +3,64 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Hero Wars: Alliance — Raise Your Hero</title>
-<meta name="description" content="Raise Your Hero. Get 1000 emeralds for free. The best mobile RPG 2025." />
+
+<!-- Primary -->
+<title>Hero Wars: Alliance — Level Up Your Hero · 1000 Emeralds Welcome Bonus</title>
+<meta name="description" content="Play Hero Wars: Alliance free in your browser — no download. Claim 1000 emeralds + 5★ hero welcome bonus. The Best Mobile RPG 2025, 204M+ Guardians, 4.8★ rated." />
+<meta name="keywords" content="Hero Wars, Hero Wars Alliance, mobile RPG, browser RPG, fantasy game, free to play, MMORPG" />
+<meta name="author" content="Nexters Global" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="theme-color" content="#0a0a10" />
+<meta name="color-scheme" content="dark" />
+<link rel="canonical" href="https://hero-wars-alliance.com/" />
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="any" href="assets/v8/logo.png" />
+<link rel="apple-touch-icon" href="assets/v8/logo.png" />
+
+<!-- Open Graph (Facebook, LinkedIn, Discord, Slack, Telegram) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Hero Wars: Alliance" />
+<meta property="og:url" content="https://hero-wars-alliance.com/" />
+<meta property="og:title" content="Hero Wars: Alliance — Level Up Your Hero" />
+<meta property="og:description" content="Claim 1000 emeralds + 5★ hero welcome bonus. The Best Mobile RPG 2025 — Season 32: Rise of the Eternal Flame. Free in browser, no download." />
+<meta property="og:image" content="https://hero-wars-alliance.com/assets/keyart.webp" />
+<meta property="og:image:type" content="image/webp" />
+<meta property="og:image:width" content="1920" />
+<meta property="og:image:height" content="1172" />
+<meta property="og:image:alt" content="Hero Wars: Alliance — Season 32 Rise of the Eternal Flame" />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@herowars" />
+<meta name="twitter:title" content="Hero Wars: Alliance — Level Up Your Hero" />
+<meta name="twitter:description" content="Claim 1000 emeralds + 5★ hero welcome bonus. 204M+ Guardians · 4.8★ · The Best Mobile RPG 2025." />
+<meta name="twitter:image" content="https://hero-wars-alliance.com/assets/keyart.webp" />
+<meta name="twitter:image:alt" content="Hero Wars: Alliance — Season 32 Rise of the Eternal Flame" />
+
+<!-- Schema.org structured data (Google rich results) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Hero Wars: Alliance",
+  "url": "https://hero-wars-alliance.com/",
+  "image": "https://hero-wars-alliance.com/assets/keyart.webp",
+  "description": "Dark fantasy RPG with 100+ legendary heroes, PvP raids, guild wars and seasonal events. Free to play in browser, iOS, and Android.",
+  "applicationCategory": "Game",
+  "genre": ["MMORPG", "Fantasy", "Strategy"],
+  "operatingSystem": "Web, iOS, Android",
+  "publisher": { "@type": "Organization", "name": "Nexters Global" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "ratingCount": "1200000" }
+}
+</script>
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="image" href="assets/keyart.webp" type="image/webp" fetchpriority="high" />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
 <style>
 /* ------------------------------------------------------------------
@@ -167,6 +221,8 @@ a { color: inherit; text-decoration: none; }
   height: 100vh;
   overflow: hidden;
   isolation: isolate;
+  /* Static keyart fallback — shows if <video> fails entirely or before poster loads */
+  background: #0a0a10 url('assets/keyart.webp') center/cover no-repeat;
 }
 .hero__video {
   position: absolute;
@@ -1170,7 +1226,7 @@ a { color: inherit; text-decoration: none; }
 </header>
 
 <section class="hero">
-  <video class="hero__video" autoplay muted loop playsinline preload="auto">
+  <video class="hero__video" autoplay muted loop playsinline preload="auto" poster="assets/keyart.webp">
     <source src="assets/hero-bg.mp4" type="video/mp4" />
   </video>
   <div class="hero__overlay"></div>
