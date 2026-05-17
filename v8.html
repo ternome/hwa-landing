@@ -466,7 +466,7 @@ a { color: inherit; text-decoration: none; }
     inset 0 -10px 0 rgba(0, 0, 0, 0.15),
     inset 0 2px 0 rgba(255, 255, 255, 0.18);
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-  animation: btn-pulse 2.6s ease-in-out infinite;
+  animation: btn-pulse 0.87s ease-in-out infinite;
   will-change: filter;
 }
 @keyframes btn-pulse {
@@ -482,7 +482,7 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
   transform: skewX(-22deg);
   pointer-events: none;
-  animation: btn-shine 4.2s ease-in-out infinite;
+  animation: btn-shine 1.4s ease-in-out infinite;
 }
 @keyframes btn-shine {
   0%, 38%  { left: -40%; opacity: 1; }
@@ -1325,7 +1325,10 @@ btnSound.preload = 'auto';
 btnSound.volume = 0.65;
 document.querySelector('.btn-play').addEventListener('click', (e) => {
   e.preventDefault();
-  try { btnSound.currentTime = 0; btnSound.play().catch(() => {}); } catch (_) {}
+  // Only play click feedback when global sound toggle is on (video unmuted)
+  if (video && !video.muted) {
+    try { btnSound.currentTime = 0; btnSound.play().catch(() => {}); } catch (_) {}
+  }
   openModal();
 });
 document.querySelector('.btn-enter').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
