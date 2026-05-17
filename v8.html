@@ -7,7 +7,7 @@
 <meta name="description" content="Raise Your Hero. Get 1000 emeralds for free. The best mobile RPG 2025." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
 <style>
 /* ------------------------------------------------------------------
    v8 — verbatim Figma 215:8267 (MacBook Pro 16" frame, 1728×1117)
@@ -192,38 +192,78 @@ a { color: inherit; text-decoration: none; }
   background: radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.5) 85%);
 }
 
-/* Hero content — shifted toward lower portion */
+/* Hero content — left-aligned cluster anchored to bottom */
 .hero__content {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
-  padding-bottom: 22vh;
+  padding: 0 80px 22vh;
 }
-.hero__title {
+
+/* NEW SEASON eyebrow pill (v1-style, gold/amber) */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  margin-bottom: 22px;
+  border-radius: 99px;
+  background: rgba(255, 180, 40, 0.12);
+  border: 1px solid rgba(255, 180, 40, 0.4);
   font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  font-size: 100px;
-  line-height: 1;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #FFD56B;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.eyebrow .tag {
+  background: linear-gradient(180deg, #FFD56B 0%, #E6B94D 100%);
+  color: #1a1108;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+  text-shadow: none;
+}
+
+.hero__title {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(72px, 8.5vw, 144px);
+  line-height: 0.92;
   color: var(--white);
-  letter-spacing: -0.01em;
-  text-align: center;
+  letter-spacing: -0.005em;
+  text-align: left;
   text-transform: uppercase;
   text-shadow:
     0 8px 24px rgba(0, 0, 0, 0.85),
     0 3px 0 rgba(0, 0, 0, 0.6),
     0 2px 4px rgba(0, 0, 0, 0.5);
-  margin-bottom: 60px;
+  margin-bottom: 44px;
+}
+
+/* CTA row — button + offer side-by-side */
+.cta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
 }
 /* Play-button meta — Free · No credit card · Plays in browser */
 .play-meta {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  margin-top: 16px;
+  margin-top: 20px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 13px;
@@ -241,14 +281,14 @@ a { color: inherit; text-decoration: none; }
 }
 .play-meta span:last-child::after { content: none; }
 
-/* Reward meta — passive promo info under PLAY NOW (no bg / border) */
+/* Reward meta — passive promo info beside PLAY NOW (no bg / border) */
 .offer {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 20px;
   padding: 0;
-  margin-top: 28px;
+  margin: 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -346,12 +386,11 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* ── Trust strip — 4 stats incl. award, single row ────────────── */
+/* ── Trust strip — 4 stats incl. award, single row, left-flush ── */
 .trust {
   position: absolute;
-  left: 50%;
+  left: 80px;
   bottom: 56px;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 44px;
@@ -822,23 +861,32 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__vignette"></div>
 
   <div class="hero__content">
-    <a href="#play" class="btn-play">
-      <span class="btn-play__label">PLAY NOW</span>
-    </a>
+    <div class="eyebrow">
+      <span class="tag">New</span>
+      Season 12 · Echoes of the Astaroth
+    </div>
+
+    <h1 class="hero__title">Level up your hero</h1>
+
+    <div class="cta-row">
+      <a href="#play" class="btn-play">
+        <span class="btn-play__label">PLAY NOW</span>
+      </a>
+
+      <div class="offer">
+        <img src="assets/v8/emerald.png" alt="" class="offer__icon" />
+        <div class="offer__body">
+          <div class="offer__title">500 Emeralds + 5★ Hero</div>
+          <div class="offer__sub">For new Guardians who join today.</div>
+        </div>
+        <span class="offer__badge">Free</span>
+      </div>
+    </div>
 
     <div class="play-meta">
       <span>Free</span>
       <span>No credit card</span>
       <span>Plays in browser</span>
-    </div>
-
-    <div class="offer">
-      <img src="assets/v8/emerald.png" alt="" class="offer__icon" />
-      <div class="offer__body">
-        <div class="offer__title">500 Emeralds + 5★ Hero</div>
-        <div class="offer__sub">For new Guardians who join today.</div>
-      </div>
-      <span class="offer__badge">Free</span>
     </div>
   </div>
 
