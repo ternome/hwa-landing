@@ -165,7 +165,6 @@ a { color: inherit; text-decoration: none; }
 .hero {
   position: relative;
   height: 100vh;
-  min-height: 820px;
   overflow: hidden;
   isolation: isolate;
 }
@@ -1474,19 +1473,25 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
   // Pre-filtered girl pool: entries where the name has a photo
   const GIRL_PUSHES = TEXTS.concat(STICKER_PUSHES).filter(d => AVATAR_PHOTOS[d.name]);
 
-  // Spawn-position scheduler: first 2 girls at fixed slots, then every 3-5
+  // Hard-pinned girl slots — first impressions get specific people
+  const EXPLICIT_GIRLS = { 1: 'Solenne', 2: 'Aurelia', 5: 'Aurelia' };
+
+  // After explicit slots, random girls every 3-5 pushes (starting around #8)
   let pushIndex = 0;
-  let nextGirlAt = 2;
+  let nextGirlAt = 8;
   function scheduleNextGirl(current) {
-    if (current === 2) nextGirlAt = 5;
-    else nextGirlAt = current + 3 + Math.floor(Math.random() * 3); // +3..5
+    nextGirlAt = current + 3 + Math.floor(Math.random() * 3); // +3..5
   }
 
   function buildPush() {
     pushIndex += 1;
-    const forceGirl = pushIndex === nextGirlAt && GIRL_PUSHES.length;
     let data;
-    if (forceGirl) {
+    const explicit = EXPLICIT_GIRLS[pushIndex];
+    if (explicit) {
+      const matches = GIRL_PUSHES.filter(d => d.name === explicit);
+      // Rotate variants so repeats don't show identical content
+      data = matches.length ? matches[(pushIndex - 1) % matches.length] : pick(GIRL_PUSHES);
+    } else if (pushIndex === nextGirlAt && GIRL_PUSHES.length) {
       data = pick(GIRL_PUSHES);
       scheduleNextGirl(pushIndex);
     } else {
