@@ -203,18 +203,14 @@ a { color: inherit; text-decoration: none; }
   padding: 0 80px 12vh;
 }
 
-/* Season pill + Watch trailer button row */
-.eyebrow-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 22px;
-}
+/* Season pill — single clickable element that opens trailer (whole pill click) */
 .eyebrow {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 14px 6px 6px;
+  padding: 6px 6px 6px 6px;
+  margin-bottom: 22px;
   border-radius: 99px;
   background: rgba(255, 180, 40, 0.12);
   border: 1px solid rgba(255, 180, 40, 0.4);
@@ -227,6 +223,13 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.eyebrow:hover {
+  background: rgba(255, 180, 40, 0.2);
+  border-color: rgba(255, 180, 40, 0.6);
+  transform: translateY(-1px);
 }
 .eyebrow .tag {
   background: linear-gradient(180deg, #FFD56B 0%, #E6B94D 100%);
@@ -238,42 +241,20 @@ a { color: inherit; text-decoration: none; }
   font-size: 10px;
   text-shadow: none;
 }
-
-.watch-trailer-pill {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 18px 6px 6px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+.eyebrow__txt {
+  padding: 0 4px;
+  white-space: nowrap;
 }
-.watch-trailer-pill:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.42);
-  transform: translateY(-1px);
-}
-.watch-trailer-pill .wtp__icn {
+.eyebrow__icn {
   width: 22px; height: 22px;
   display: grid; place-items: center;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
   color: #0a0a0a;
   border-radius: 50%;
   padding-left: 2px;
   flex-shrink: 0;
 }
-.watch-trailer-pill .wtp__icn svg { width: 8px; height: 9px; }
+.eyebrow__icn svg { width: 8px; height: 9px; }
 
 /* Hover-preview thumbnail above the pill */
 .wtp__preview {
@@ -354,8 +335,8 @@ a { color: inherit; text-decoration: none; }
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
-.watch-trailer-pill:hover .wtp__preview,
-.watch-trailer-pill:focus-visible .wtp__preview {
+.eyebrow:hover .wtp__preview,
+.eyebrow:focus-visible .wtp__preview {
   opacity: 1;
   transform: translateX(-50%) translateY(0) scale(1);
 }
@@ -1016,12 +997,6 @@ a { color: inherit; text-decoration: none; }
 <header class="nav">
   <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="nav__logo" />
 
-  <nav class="nav__links" aria-label="Primary">
-    <a href="#shop">Shop</a>
-    <a href="#news">News</a>
-    <a href="#bonuses">Bonuses</a>
-  </nav>
-
   <div class="nav__right">
     <div class="players">
       <span class="players__dot"></span>
@@ -1045,27 +1020,26 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__vignette"></div>
 
   <div class="hero__content">
-    <div class="eyebrow-row">
-      <div class="eyebrow">
-        <span class="tag">New</span>
-        Season 32 · Rise of the Eternal Flame
-      </div>
-      <button type="button" class="watch-trailer-pill" data-open-trailer>
-        <span class="wtp__icn"><svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg></span>
-        Watch trailer
-        <span class="wtp__preview" aria-hidden="true">
-          <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="eager" />
-          <span class="wtp__preview-tint"></span>
-          <span class="wtp__preview-play">
-            <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg>
-          </span>
-          <span class="wtp__preview-meta">
-            <span>Season 32 Trailer</span>
-            <span class="dur">1:42</span>
-          </span>
+    <button type="button" class="eyebrow" data-open-trailer aria-label="Season 32 — Watch trailer">
+      <span class="tag">New</span>
+      <span class="eyebrow__txt">Season 32 · Watch trailer</span>
+      <span class="eyebrow__icn">
+        <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="wtp__preview" aria-hidden="true">
+        <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="eager" />
+        <span class="wtp__preview-tint"></span>
+        <span class="wtp__preview-play">
+          <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg>
         </span>
-      </button>
-    </div>
+        <span class="wtp__preview-meta">
+          <span>Season 32 Trailer</span>
+          <span class="dur">1:42</span>
+        </span>
+      </span>
+    </button>
 
     <h1 class="hero__title">Level Up Your Hero</h1>
 
