@@ -267,6 +267,247 @@ a { color: inherit; text-decoration: none; }
   width: auto;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
 }
+
+/* ── Login modal ──────────────────────────────────────────────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(16px) saturate(0.85);
+  -webkit-backdrop-filter: blur(16px) saturate(0.85);
+  animation: fade-in 0.25s ease-out;
+}
+.modal.is-open { display: flex; }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 1100px;
+  height: 680px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  animation: card-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+@keyframes card-in {
+  from { transform: scale(0.92) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.modal__art {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(140, 60, 200, 0.55), transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(40, 20, 90, 0.65), transparent 65%),
+    linear-gradient(160deg, #2a1240 0%, #170825 60%, #0a0418 100%);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.modal__art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 25% 35%, rgba(255, 255, 255, 0.04) 0%, transparent 25%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 30%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.modal__art-logo {
+  position: relative;
+  width: 70%;
+  max-width: 360px;
+  height: auto;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.7));
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.modal__form {
+  background: var(--cream);
+  padding: 56px 64px;
+  display: flex;
+  flex-direction: column;
+  color: #2A1F12;
+  position: relative;
+  overflow-y: auto;
+}
+.modal__back {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #8B6F3C;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+.modal__back:hover { background: rgba(139, 111, 60, 0.1); }
+.modal__back::before { content: '‹'; font-size: 22px; line-height: 1; margin-top: -2px; }
+.modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  color: #2A1F12;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease, transform 0.15s ease;
+  z-index: 2;
+}
+.modal__close:hover { background: rgba(0, 0, 0, 0.16); transform: rotate(90deg); }
+
+.modal__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.1;
+  color: #2A1F12;
+  margin-top: 24px;
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+.modal__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #5A4A36;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+.modal__email {
+  width: 100%;
+  height: 56px;
+  padding: 0 20px;
+  border: 2px solid #2FA319;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  color: #2A1F12;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.modal__email::placeholder { color: #B5A88E; }
+.modal__email:focus { border-color: #3FA319; box-shadow: 0 0 0 4px rgba(63, 163, 25, 0.15); }
+.modal__email.is-error { border-color: #C73838; box-shadow: 0 0 0 4px rgba(199, 56, 56, 0.12); }
+
+.btn-login {
+  margin-top: 22px;
+  width: 100%;
+  height: 60px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  cursor: pointer;
+  box-shadow:
+    0 6px 0 rgba(0, 0, 0, 0.25),
+    0 10px 22px rgba(63, 163, 25, 0.35),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+.btn-login:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-login:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 4px 10px rgba(63, 163, 25, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
+.btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
+
+.modal__qr {
+  margin-top: auto;
+  padding-top: 36px;
+  text-align: center;
+}
+.modal__qr-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2A1F12;
+  margin-bottom: 14px;
+}
+.modal__qr-box {
+  width: 132px;
+  height: 132px;
+  margin: 0 auto 14px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  display: grid;
+  place-items: center;
+}
+.modal__qr-img { width: 100%; height: 100%; image-rendering: pixelated; }
+.modal__qr-info { font-size: 13px; color: #8B6F3C; margin-bottom: 6px; }
+.modal__qr-help { font-size: 13px; color: #8B6F3C; }
+.modal__qr-help a { color: #2C6BE0; text-decoration: none; font-weight: 500; }
+.modal__qr-help a:hover { text-decoration: underline; }
+
+/* Stage 2 — code entry */
+.modal__code-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+.modal__code-input {
+  width: 56px;
+  height: 64px;
+  border: 2px solid rgba(42, 31, 18, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #2A1F12;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.modal__code-input:focus { border-color: #3FA319; box-shadow: 0 0 0 4px rgba(63, 163, 25, 0.15); }
+.modal__resend {
+  margin-top: 24px;
+  background: none;
+  border: none;
+  color: #8B6F3C;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: center;
+}
+.modal__resend:hover { color: #3FA319; }
+.modal__resend:disabled { color: #B5A88E; cursor: not-allowed; }
+
+.stage { display: none; flex-direction: column; height: 100%; }
+.stage.is-active { display: flex; }
 </style>
 </head>
 <body>
@@ -318,9 +559,185 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
+<div class="modal" id="loginModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+  <div class="modal__card">
+    <button class="modal__close" type="button" aria-label="Close" data-modal-close>×</button>
+
+    <div class="modal__art">
+      <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="modal__art-logo" />
+    </div>
+
+    <div class="modal__form">
+      <!-- Stage 1: email entry -->
+      <div class="stage is-active" data-stage="email">
+        <h2 class="modal__title" id="modalTitle">Play Hero Wars<br/>Alliance</h2>
+        <p class="modal__subtitle">Enter your email to log in or create an account</p>
+        <input type="email" class="modal__email" id="emailInput" placeholder="email@gmail.com" autocomplete="email" />
+        <button type="button" class="btn-login" id="getCodeBtn">Get a login code</button>
+
+        <div class="modal__qr">
+          <p class="modal__qr-label">Or scan via mobile phone</p>
+          <div class="modal__qr-box">
+            <svg viewBox="0 0 21 21" class="modal__qr-img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <rect width="21" height="21" fill="#fff"/>
+              <g fill="#000">
+                <!-- Position detection patterns (3 corners) -->
+                <rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/>
+                <rect x="14" y="0" width="7" height="7"/><rect x="15" y="1" width="5" height="5" fill="#fff"/><rect x="16" y="2" width="3" height="3"/>
+                <rect x="0" y="14" width="7" height="7"/><rect x="1" y="15" width="5" height="5" fill="#fff"/><rect x="2" y="16" width="3" height="3"/>
+                <!-- Random-ish data modules -->
+                <rect x="8" y="0" width="1" height="1"/><rect x="10" y="0" width="1" height="1"/><rect x="12" y="0" width="1" height="1"/>
+                <rect x="9" y="1" width="1" height="1"/><rect x="11" y="1" width="1" height="1"/>
+                <rect x="8" y="2" width="2" height="1"/><rect x="11" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/>
+                <rect x="9" y="3" width="1" height="1"/><rect x="12" y="3" width="1" height="1"/>
+                <rect x="8" y="4" width="3" height="1"/><rect x="12" y="4" width="1" height="1"/>
+                <rect x="9" y="5" width="2" height="1"/>
+                <rect x="0" y="8" width="1" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="7" y="8" width="2" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="13" y="8" width="2" height="1"/><rect x="16" y="8" width="1" height="1"/><rect x="18" y="8" width="2" height="1"/>
+                <rect x="1" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="11" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="17" y="9" width="1" height="1"/><rect x="20" y="9" width="1" height="1"/>
+                <rect x="0" y="10" width="2" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="2" height="1"/><rect x="18" y="10" width="1" height="1"/>
+                <rect x="2" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="7" y="11" width="1" height="1"/><rect x="10" y="11" width="2" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="16" y="11" width="2" height="1"/><rect x="19" y="11" width="1" height="1"/>
+                <rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="2" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="15" y="12" width="1" height="1"/><rect x="17" y="12" width="2" height="1"/><rect x="20" y="12" width="1" height="1"/>
+                <rect x="1" y="13" width="2" height="1"/><rect x="4" y="13" width="1" height="1"/><rect x="6" y="13" width="2" height="1"/><rect x="11" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="16" y="13" width="1" height="1"/><rect x="19" y="13" width="2" height="1"/>
+                <rect x="8" y="14" width="1" height="1"/><rect x="11" y="14" width="2" height="1"/><rect x="14" y="14" width="1" height="1"/><rect x="16" y="14" width="2" height="1"/><rect x="19" y="14" width="1" height="1"/>
+                <rect x="9" y="15" width="1" height="1"/><rect x="13" y="15" width="1" height="1"/><rect x="15" y="15" width="1" height="1"/><rect x="18" y="15" width="1" height="1"/><rect x="20" y="15" width="1" height="1"/>
+                <rect x="8" y="16" width="2" height="1"/><rect x="11" y="16" width="1" height="1"/><rect x="13" y="16" width="2" height="1"/><rect x="17" y="16" width="2" height="1"/>
+                <rect x="9" y="17" width="1" height="1"/><rect x="12" y="17" width="1" height="1"/><rect x="14" y="17" width="1" height="1"/><rect x="16" y="17" width="1" height="1"/><rect x="20" y="17" width="1" height="1"/>
+                <rect x="8" y="18" width="1" height="1"/><rect x="10" y="18" width="2" height="1"/><rect x="13" y="18" width="1" height="1"/><rect x="15" y="18" width="2" height="1"/><rect x="18" y="18" width="1" height="1"/>
+                <rect x="9" y="19" width="1" height="1"/><rect x="11" y="19" width="1" height="1"/><rect x="14" y="19" width="2" height="1"/><rect x="17" y="19" width="1" height="1"/><rect x="19" y="19" width="1" height="1"/>
+                <rect x="8" y="20" width="2" height="1"/><rect x="12" y="20" width="1" height="1"/><rect x="14" y="20" width="1" height="1"/><rect x="16" y="20" width="2" height="1"/><rect x="19" y="20" width="1" height="1"/>
+              </g>
+            </svg>
+          </div>
+          <p class="modal__qr-info"><span id="qrCountdown">Code refreshes in 5:00</span></p>
+          <p class="modal__qr-help">QR is not working? <a href="#">See instructions</a></p>
+        </div>
+      </div>
+
+      <!-- Stage 2: code entry -->
+      <div class="stage" data-stage="code">
+        <button class="modal__back" type="button" data-stage-back>Back</button>
+        <h2 class="modal__title" style="margin-top: 56px;">Welcome to<br/>Hero Wars Alliance</h2>
+        <p class="modal__subtitle">We've sent a sign-in code to <strong id="sentEmail">you</strong>.<br/>Enter the code from your email below.</p>
+        <div class="modal__code-row">
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+          <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+        </div>
+        <button type="button" class="modal__resend" id="resendBtn" disabled>Resend email (16s)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+// Video autoplay
 const video = document.querySelector('.hero__video');
 if (video) video.play().catch(() => {});
+
+// Modal control
+const modal = document.getElementById('loginModal');
+const emailInput = document.getElementById('emailInput');
+const getCodeBtn = document.getElementById('getCodeBtn');
+const sentEmail = document.getElementById('sentEmail');
+const stages = modal.querySelectorAll('.stage');
+const codeInputs = modal.querySelectorAll('.modal__code-input');
+const resendBtn = document.getElementById('resendBtn');
+
+let resendTimer = null;
+
+function openModal() {
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => emailInput.focus(), 300);
+}
+
+function closeModal() {
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  showStage('email');
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+}
+
+function showStage(name) {
+  stages.forEach(s => s.classList.toggle('is-active', s.dataset.stage === name));
+}
+
+function startResendCountdown() {
+  let s = 16;
+  resendBtn.disabled = true;
+  resendBtn.textContent = `Resend email (${s}s)`;
+  if (resendTimer) clearInterval(resendTimer);
+  resendTimer = setInterval(() => {
+    s -= 1;
+    if (s <= 0) {
+      clearInterval(resendTimer);
+      resendTimer = null;
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend email';
+    } else {
+      resendBtn.textContent = `Resend email (${s}s)`;
+    }
+  }, 1000);
+}
+
+// Open triggers
+document.querySelector('.btn-play').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+document.querySelector('.btn-enter').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+
+// Close triggers
+modal.querySelector('[data-modal-close]').addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal(); });
+
+// Back to email stage
+modal.querySelector('[data-stage-back]').addEventListener('click', () => showStage('email'));
+
+// Email submit
+function submitEmail() {
+  const v = emailInput.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  if (!valid) {
+    emailInput.classList.add('is-error');
+    emailInput.focus();
+    return;
+  }
+  emailInput.classList.remove('is-error');
+  sentEmail.textContent = v;
+  showStage('code');
+  setTimeout(() => codeInputs[0].focus(), 200);
+  startResendCountdown();
+}
+getCodeBtn.addEventListener('click', submitEmail);
+emailInput.addEventListener('input', () => emailInput.classList.remove('is-error'));
+emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitEmail(); });
+
+// 6-digit code input behavior
+codeInputs.forEach((input, i) => {
+  input.addEventListener('input', (e) => {
+    const v = e.target.value.replace(/\D/g, '');
+    e.target.value = v.slice(0, 1);
+    if (e.target.value && i < codeInputs.length - 1) codeInputs[i + 1].focus();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !e.target.value && i > 0) codeInputs[i - 1].focus();
+    if (e.key === 'ArrowLeft' && i > 0) codeInputs[i - 1].focus();
+    if (e.key === 'ArrowRight' && i < codeInputs.length - 1) codeInputs[i + 1].focus();
+  });
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+    digits.split('').forEach((d, idx) => { if (codeInputs[idx]) codeInputs[idx].value = d; });
+    const next = Math.min(digits.length, codeInputs.length - 1);
+    codeInputs[next].focus();
+  });
+});
+
+resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResendCountdown(); });
 </script>
 </body>
 </html>
