@@ -14,9 +14,13 @@
 <meta name="color-scheme" content="dark" />
 <link rel="canonical" href="https://hero-wars-alliance.com/" />
 
-<!-- Favicons -->
-<link rel="icon" type="image/png" sizes="any" href="assets/v8/logo.png" />
-<link rel="apple-touch-icon" href="assets/v8/logo.png" />
+<!-- Favicons (official HWA logo from cdn.hero-wars-alliance.com) -->
+<link rel="icon" type="image/webp" sizes="any" href="assets/favicon.webp" />
+<link rel="apple-touch-icon" href="assets/favicon.webp" />
+<link rel="mask-icon" href="assets/favicon.webp" color="#0a0a10" />
+
+<!-- Apple Smart App Banner — iOS Safari only -->
+<meta name="apple-itunes-app" content="app-id=1158967485, app-argument=https://hero-wars-alliance.com/" />
 
 <!-- Open Graph (Facebook, LinkedIn, Discord, Slack, Telegram) -->
 <meta property="og:type" content="website" />
@@ -230,7 +234,11 @@ a { color: inherit; text-decoration: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   z-index: -3;
+  /* Cross-fade in from the static keyart poster — no jarring snap */
+  opacity: 0;
+  transition: opacity 0.9s ease-out;
 }
+.hero__video.is-ready { opacity: 1; }
 /* Dark gradient overlay (Rectangle 1576 in Figma — 20px backdrop blur, dark veil) */
 .hero__overlay {
   position: absolute;
@@ -1347,10 +1355,14 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <script>
-// Video autoplay + sound toggle
+// Video autoplay + sound toggle + cross-fade from keyart poster
 const video = document.querySelector('.hero__video');
 if (video) {
   video.volume = 0.1; // 10% — gentle ambient when unmuted
+  // Fade in once frames actually start rendering (no flash, no snap)
+  video.addEventListener('playing', () => video.classList.add('is-ready'), { once: true });
+  // Safety net: if autoplay is gated, reveal anyway after 4s so we don't sit on a frozen poster forever
+  setTimeout(() => video.classList.add('is-ready'), 4000);
   video.play().catch(() => {});
 }
 
