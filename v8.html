@@ -908,25 +908,12 @@ a { color: inherit; text-decoration: none; }
     0 12px 32px rgba(0, 0, 0, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
-  cursor: pointer;
+  cursor: default;
   transform: translateX(380px);
   opacity: 0;
   animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
   overflow: hidden;
-}
-
-/* Bottom-right docked variant — toggled via click on any push */
-.pushes.is-bottom {
-  top: auto;
-  bottom: 24px;
-}
-.pushes.is-bottom .push.is-out {
-  animation: push-out-up 0.3s ease-in forwards;
-}
-@keyframes push-out-up {
-  0%   { transform: translateY(0);    opacity: 1; }
-  100% { transform: translateY(-32px); opacity: 0; }
 }
 .push.is-out {
   animation: push-out 0.3s ease-in forwards;
@@ -1706,19 +1693,9 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
       return;
     }
     const el = buildPush();
-    // Insert position depends on dock mode: top→prepend, bottom→append
-    if (root.classList.contains('is-bottom')) {
-      root.appendChild(el);
-    } else {
-      root.insertBefore(el, root.firstChild);
-    }
+    // Insert at the top so freshest is on top
+    root.insertBefore(el, root.firstChild);
     activePushes.unshift(el);
-
-    // Click anywhere on push toggles dock corner
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      root.classList.toggle('is-bottom');
-    });
 
     // Cap stack
     while (activePushes.length > MAX_ON_SCREEN) {
