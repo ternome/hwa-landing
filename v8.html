@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1280" />
+<title>Hero Wars: Alliance — Raise Your Hero</title>
+<meta name="description" content="Raise Your Hero. Get 1000 emeralds for free. The best mobile RPG 2025." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
+<style>
+/* ------------------------------------------------------------------
+   v8 — verbatim Figma 215:8267 (MacBook Pro 16" frame, 1728×1117)
+   Hero-only single-screen landing · video bg replaces keyart
+------------------------------------------------------------------ */
+:root {
+  --black: #000;
+  --white: #fff;
+  --cream: #FFFDED;
+  --lime: #87EB6B;
+  --play-top: #668600;
+  --play-bottom: #389200;
+  --badge-1: #1FC50E;
+  --badge-2: #1BAB0C;
+  --badge-3: #149B07;
+  --badge-4: #0C8B01;
+  --dot-green: #00FF00;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--black); color: var(--white); min-width: 1280px; overflow-x: hidden; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Top nav (107px black bar, full bleed) ─────────────────────── */
+.nav {
+  position: relative;
+  z-index: 10;
+  background: var(--black);
+  height: 107px;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
+  gap: 48px;
+}
+.nav__logo { height: 43px; width: auto; }
+.nav__links {
+  display: flex;
+  gap: 48px;
+  margin-left: 48px;
+}
+.nav__links a {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+.nav__links a:hover { color: var(--lime); }
+.nav__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.players {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+}
+.players__dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--dot-green);
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+}
+.players__dot::after {
+  content: '';
+  position: absolute; inset: 1px;
+  border-radius: 50%;
+  background: var(--dot-green);
+  opacity: 0.85;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); }
+  50% { box-shadow: 0 0 14px rgba(0, 255, 0, 0.95); }
+}
+.players__text { display: flex; flex-direction: column; line-height: 1; }
+.players__count {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+}
+.players__label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* Enter button — lime pill */
+.btn-enter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 49px;
+  background: var(--lime);
+  color: #111111;
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+.btn-enter:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25); }
+.btn-enter:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+
+/* ── Hero (full viewport minus 107px nav) ──────────────────────── */
+.hero {
+  position: relative;
+  height: calc(100vh - 107px);
+  min-height: 720px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -3;
+}
+/* Dark gradient overlay (Rectangle 1576 in Figma — 20px backdrop blur, dark veil) */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.85) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
+}
+.hero__vignette {
+  position: absolute; inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.5) 85%);
+}
+
+/* Hero content centered */
+.hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 4vh;
+}
+.hero__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 100px;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 60px;
+}
+.hero__offer {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.hero__offer-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 36px;
+  color: var(--cream);
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+.hero__offer-icon {
+  width: 39px; height: 39px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+/* PLAY NOW button — large 367×117 green gradient pill with badge */
+.btn-play {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 367px;
+  height: 117px;
+  border-radius: 21px;
+  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
+  cursor: pointer;
+  box-shadow:
+    0 8px 0 rgba(0, 0, 0, 0.35),
+    0 14px 28px rgba(0, 0, 0, 0.5),
+    inset 0 -10px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.btn-play:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 10px 0 rgba(0, 0, 0, 0.35), 0 18px 36px rgba(0, 0, 0, 0.55), inset 0 -10px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.22); }
+.btn-play:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 -6px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.18); }
+.btn-play__label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 53px;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+.btn-play__badge {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: 69px; height: 69px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--badge-1) 11%, var(--badge-2) 36%, var(--badge-3) 53%, var(--badge-4) 76%);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 4px var(--white);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 38px;
+  color: var(--cream);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ── Bottom band ──────────────────────────────────────────────── */
+.band {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+}
+.band__chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.92);
+  border-radius: 13px;
+  padding: 10px 18px;
+  height: 57px;
+  min-width: 166px;
+}
+.band__chip .players__count { font-size: 20px; line-height: 1; }
+.band__chip .players__label { font-size: 14px; line-height: 1; margin-top: 4px; }
+.band__center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
+.band__laurel { width: 22px; height: 54px; flex-shrink: 0; opacity: 0.95; }
+.band__laurel--right { transform: scaleX(-1); }
+.band__title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.17;
+  color: var(--white);
+  text-align: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="nav__logo" />
+
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#shop">Shop</a>
+    <a href="#news">News</a>
+    <a href="#bonuses">Bonuses</a>
+  </nav>
+
+  <div class="nav__right">
+    <div class="players">
+      <span class="players__dot"></span>
+      <div class="players__text">
+        <span class="players__count">253 434</span>
+        <span class="players__label">players online</span>
+      </div>
+    </div>
+    <a href="#enter" class="btn-enter">Enter</a>
+  </div>
+</header>
+
+<section class="hero">
+  <video class="hero__video" autoplay muted loop playsinline preload="auto">
+    <source src="assets/hero-bg.mp4" type="video/mp4" />
+  </video>
+  <div class="hero__overlay"></div>
+  <div class="hero__vignette"></div>
+
+  <div class="hero__content">
+    <h1 class="hero__title">Raise Your Hero</h1>
+
+    <div class="hero__offer">
+      <span class="hero__offer-text">GET</span>
+      <img src="assets/v8/emerald.png" alt="" class="hero__offer-icon" />
+      <span class="hero__offer-text">1000 FOR FREE</span>
+    </div>
+
+    <a href="#play" class="btn-play">
+      <span class="btn-play__label">PLAY NOW</span>
+      <span class="btn-play__badge">3</span>
+    </a>
+  </div>
+
+  <div class="band">
+    <div class="band__chip">
+      <span class="players__dot"></span>
+      <div class="players__text">
+        <span class="players__count">253 434</span>
+        <span class="players__label">players online</span>
+      </div>
+    </div>
+
+    <div class="band__center">
+      <svg class="band__laurel" viewBox="0 0 22 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21 1C16 6 12 12 10 19c-2 7-1 14 2 21 2 5 5 9 9 13M18 8c-4 0-7 2-9 5M16 16c-4 0-7 2-9 5M14 24c-4 0-7 2-9 5M12 32c-4 0-7 2-9 5M10 40c-4 0-7 2-9 5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <p class="band__title">The Best<br/>Mobile RPG<br/>2025</p>
+      <svg class="band__laurel band__laurel--right" viewBox="0 0 22 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21 1C16 6 12 12 10 19c-2 7-1 14 2 21 2 5 5 9 9 13M18 8c-4 0-7 2-9 5M16 16c-4 0-7 2-9 5M14 24c-4 0-7 2-9 5M12 32c-4 0-7 2-9 5M10 40c-4 0-7 2-9 5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="band__chip">
+      <span class="players__dot"></span>
+      <div class="players__text">
+        <span class="players__count">253 434</span>
+        <span class="players__label">players online</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const video = document.querySelector('.hero__video');
+if (video) video.play().catch(() => {});
+</script>
+</body>
+</html>
