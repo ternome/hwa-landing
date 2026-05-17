@@ -1248,8 +1248,15 @@ function startResendCountdown() {
   }, 1000);
 }
 
-// Open triggers
-document.querySelector('.btn-play').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+// Open triggers — PLAY NOW also fires click-feedback sound
+const btnSound = new Audio('assets/button-feedback.mp3');
+btnSound.preload = 'auto';
+btnSound.volume = 0.65;
+document.querySelector('.btn-play').addEventListener('click', (e) => {
+  e.preventDefault();
+  try { btnSound.currentTime = 0; btnSound.play().catch(() => {}); } catch (_) {}
+  openModal();
+});
 document.querySelector('.btn-enter').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
 
 // Close triggers
