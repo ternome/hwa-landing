@@ -1433,7 +1433,6 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
 
     const el = document.createElement('div');
     el.className = 'push push--' + data.kind;
-    el.dataset.spawnIndex = pushIndex;
 
     const photo = AVATAR_PHOTOS[data.name];
     if (photo) el.classList.add('push--has-photo');
