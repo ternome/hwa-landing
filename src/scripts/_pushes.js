@@ -1,4 +1,4 @@
-// pushes — fake push notification spawn loop, reactions, dock toggle
+// pushes — fake push notification spawn loop, reactions
 // ── Fake push notifications ─────────────────────────────────────
 (() => {
   const root = document.getElementById('pushes');
@@ -328,12 +328,6 @@
     // Insert at the top so freshest is on top
     root.insertBefore(el, root.firstChild);
     activePushes.unshift(el);
-
-    // Click anywhere on the push toggles dock side: top-right ↔ top-left (under logo)
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      root.classList.toggle('is-left');
-    });
 
     // Cap stack
     while (activePushes.length > MAX_ON_SCREEN) {
