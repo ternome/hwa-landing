@@ -80,13 +80,21 @@ all moved to `archive/`. [`index.html`](index.html) is the production hub
 ## Quick start
 
 ```bash
+# Regenerate all 12 locale HTML files (minified, production output)
+python3 build.py
+
+# Dev build — readable, no minification (use this while iterating on src/)
+python3 build.py --no-minify
+
 # Serve locally (preview all pages)
 npx serve -l 5173 .
 # → open http://localhost:5173/index.html
-
-# Regenerate all 12 locale HTML files after editing template or locales
-python3 build.py
 ```
+
+`v8.html` + `v8.*.html` are `.gitignore`d (output of `build.py`). The source
+of truth lives in `src/` + `locales/`. Vercel runs `python3 build.py` on
+every deploy via `vercel.json` `buildCommand`, so the generated files are
+fresh in prod. Locally you regenerate them yourself.
 
 No runtime dependencies. No package.json. Python stdlib only for the build.
 The `.claude/launch.json` is wired for the Claude Code preview panel — same
@@ -158,10 +166,25 @@ The `.claude/launch.json` is wired for the Claude Code preview panel — same
 ## Tech stack
 
 * **HTML / CSS / JS** — vanilla, no framework, no transpiler, no bundler
-* **Python 3 (stdlib)** — `build.py` for i18n generation, no third-party deps
-* **Google Fonts** — Anton (display), Inter (body), Roboto/Cinzel/etc. per version
-* **Vercel** — static hosting + Accept-Language header rewrites (`vercel.json`)
+* **Python 3 (stdlib)** — `build.py` for i18n generation + stdlib regex
+  minification (HTML / CSS / JS), no third-party deps
+* **Google Fonts** — Anton (display), Inter (body), Roboto (PLAY NOW button)
+* **Vercel** — static hosting, `buildCommand: python3 build.py` runs on every
+  deploy, Accept-Language header rewrites + 301 redirects (`vercel.json`)
 * No npm dependencies. `npx serve` (one-off, no install) for local preview.
+
+### Performance characteristics (after Phase 3 minification)
+
+| Locale | Unminified | Minified | Ratio |
+|---|---|---|---|
+| EN  | 71 KB | 59 KB | 83% |
+| RU  | 72 KB | 60 KB | 83% |
+| All | 69-72 KB | 58-60 KB | ~83% |
+
+CSS bundle: 34.6 KB → 26.1 KB (75%). JS bundle: 23.5 KB → 21.7 KB (92%,
+conservative — only block comments + blank lines stripped to keep `//` URLs
+intact). Brotli compression on top (handled by Vercel) typically cuts another
+~70% off the wire payload.
 
 ## Production checklist (already done in v8)
 

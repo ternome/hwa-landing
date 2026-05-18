@@ -1,4 +1,6 @@
 {
+  "buildCommand": "python3 build.py",
+  "outputDirectory": ".",
   "redirects": [
     { "source": "/v1.html",            "destination": "/archive/v1.html",            "permanent": true },
     { "source": "/v2.html",            "destination": "/archive/v2.html",            "permanent": true },

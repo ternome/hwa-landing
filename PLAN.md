@@ -172,7 +172,7 @@ Tracking document for the v8 refactor. Removed after squash-merge.
 
 **Checkpoint:** ВСЕ 12 локалей рендерятся pixel-perfect к baseline. Если хоть один pixel-diff — назад.
 
-### Phase 3 — build pipeline + minification (~1 hour)
+### Phase 3 — build pipeline + minification (~1 hour) — DONE
 1. **Расширить build.py минификаторами (stdlib-only):**
    ```python
    def minify_css(css):

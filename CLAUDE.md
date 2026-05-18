@@ -29,15 +29,22 @@ build.py                    read src/ template → inject CSS+JS → validate lo
 vercel.json                 11 legacy-URL 301 redirects + 22 Accept-Language rewrites
 ```
 
-**Build:** `python3 build.py` — reads `src/v8.template.html` + every
-`locales/*.json` (skipping `_schema.json` and other `_*.json`), concatenates
-modules per manifest, injects at the two markers, substitutes `{{key}}`
-placeholders, writes `v8.html` (EN default) and `v8.{lang}.html` per locale.
+**Build:** `python3 build.py [--no-minify]` — reads `src/v8.template.html`
++ every `locales/*.json` (skipping `_schema.json` and other `_*.json`),
+concatenates modules per manifest, **minifies CSS+JS+HTML** (stdlib regex,
+skipped with `--no-minify` for dev), injects at the two markers, substitutes
+`{{key}}` placeholders, writes `v8.html` (EN default) and `v8.{lang}.html`
+per locale.
 
-**Do not edit generated files** (`v8.html`, `v8.*.html`). Edit the modular
-source in `src/` or the locale JSON, then rebuild. For preview/dev: open
-the regenerated `v8.html` in `npx serve` — generated files are kept in git
-(may change in Phase 3 with Vercel buildCommand + .gitignore).
+**Generated files are `.gitignore`d.** `v8.html`, `v8.*.html`, `sitemap.xml`
+(Phase 4) are output of `build.py` — source of truth is `src/` + `locales/`.
+Vercel runs `python3 build.py` on every deploy via `vercel.json`
+`buildCommand`, so production always serves freshly generated minified files.
+Locally — regenerate via `python3 build.py [--no-minify]` after any
+`src/` or `locales/` edit.
+
+**Do not edit generated files.** They're ignored by git, so accidental
+edits won't be staged, but they also won't survive the next `build.py` run.
 
 Vercel routes `/` and `/v8.html` to the correct locale via Accept-Language
 header rewrites declared in `vercel.json`. The design-handoff index remains
@@ -250,6 +257,16 @@ draws green PLAY NOW pill using `anchor="mm"` for perfect centering.
   update `_schema.json` AND every locale JSON in one pass, then rebuild.
 * **Generated files live at repo root, not under `src/`.** That is intentional
   — Vercel serves them at `/v8.html`, `/v8.ru.html`, etc. `src/` is source-only.
+* **Generated files are `.gitignore`d.** Don't try to `git add v8.html`; it's
+  silently ignored. If a generated file is missing locally, run `python3 build.py`.
+* **JS minifier is intentionally conservative.** Strips block comments + blank
+  lines only — keeps `//` because it can appear inside strings (`'https://…'`).
+  If you need more aggressive JS compression, write a proper tokenizer; do not
+  loosen the regex. We rely on Brotli (Vercel default) for the remaining 70% off.
+* **HTML minifier preserves whitespace between inline tags.** Collapsing
+  `>\s+<` would silently break inline text spacing in things like
+  `<span>foo</span> <span>bar</span>`. The current pipeline uses flex `gap`
+  for layout — but be aware.
 * **`archive/` is frozen.** Never edit files in `archive/` — they're preserved
   for history. If you need to update an archive page for some reason, it's a
   new branch + explicit user approval.
@@ -316,10 +333,12 @@ localized strings into JS — e.g. `data-label-unmute="{{sound_unmute}}"` and
 **Rebuild workflow:**
 ```bash
 # 1. Edit src/{template,styles/*,scripts/*} or locales/*.json
-# 2. Regenerate:
-python3 build.py
-# 3. Stage source + ALL generated files together (until Phase 3 gitignore):
-git --git-dir=.git --work-tree=. add src/ locales/ v8*.html
+# 2. Regenerate (production = minified, dev = readable):
+python3 build.py                # production
+python3 build.py --no-minify    # dev — readable view-source
+# 3. Stage SOURCE only (v8.*.html are .gitignored):
+git --git-dir=.git --work-tree=. add src/ locales/
+# (Vercel will run build.py on deploy and regenerate the gitignored files.)
 ```
 
 **Adding a new locale:**
