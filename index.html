@@ -44,6 +44,10 @@
   }
   .card:hover { border-color: var(--border-hover); background: #14141f; transform: translateX(4px); }
 
+  /* production card gets a subtle green tint */
+  .card.card--prod { border-color: rgba(87,210,0,.12); }
+  .card.card--prod:hover { border-color: rgba(87,210,0,.32); background: #0f1610; }
+
   .card-badge {
     flex-shrink: 0; width: 52px; height: 52px; border-radius: 10px;
     display: grid; place-items: center;
@@ -75,16 +79,20 @@
   .b-v8       { background: linear-gradient(135deg,#0a0a0a,#389200);       color: #87eb6b; }
   .b-v81      { background: linear-gradient(135deg,#0a0a0a,#6f9e1f);       color: #d4ff66; }
   .b-src      { background: rgba(255,255,255,.04); color: var(--muted); }
+  /* i18n language variants — same v8 green family, slightly muted */
+  .b-lang     { background: linear-gradient(135deg,#0d1a0a,#1e5200);       color: #6fcf4a; }
 
   /* tag styles */
-  .tag-cinema { background: rgba(192,38,211,.18); border: 1px solid rgba(192,38,211,.4); color: #f0baf7; }
-  .tag-fortnite { background: rgba(80,180,80,.18); border: 1px solid rgba(80,180,80,.4); color: #b0f090; }
-  .tag-arc    { background: rgba(43,200,242,.18); border: 1px solid rgba(43,200,242,.4); color: #aee5f7; }
-  .tag-snap   { background: rgba(255,180,40,.18); border: 1px solid rgba(255,180,40,.4); color: #ffe0a8; }
-  .tag-video  { background: rgba(230,185,77,.18); border: 1px solid rgba(230,185,77,.4); color: #ffd56b; }
-  .tag-figma  { background: rgba(135,235,107,.18); border: 1px solid rgba(135,235,107,.4); color: #87eb6b; }
-  .tag-cinematic { background: rgba(212,255,102,.16); border: 1px solid rgba(212,255,102,.42); color: #d4ff66; }
-  .tag-standalone { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); color: #cfcfdb; }
+  .tag-cinema     { background: rgba(192,38,211,.18); border: 1px solid rgba(192,38,211,.4); color: #f0baf7; }
+  .tag-fortnite   { background: rgba(80,180,80,.18);  border: 1px solid rgba(80,180,80,.4);  color: #b0f090; }
+  .tag-arc        { background: rgba(43,200,242,.18); border: 1px solid rgba(43,200,242,.4); color: #aee5f7; }
+  .tag-snap       { background: rgba(255,180,40,.18); border: 1px solid rgba(255,180,40,.4); color: #ffe0a8; }
+  .tag-video      { background: rgba(230,185,77,.18); border: 1px solid rgba(230,185,77,.4); color: #ffd56b; }
+  .tag-figma      { background: rgba(135,235,107,.18);border: 1px solid rgba(135,235,107,.4);color: #87eb6b; }
+  .tag-cinematic  { background: rgba(212,255,102,.16);border: 1px solid rgba(212,255,102,.42);color: #d4ff66; }
+  .tag-standalone { background: rgba(255,255,255,.06);border: 1px solid rgba(255,255,255,.15);color: #cfcfdb; }
+  .tag-i18n       { background: rgba(87,210,0,.14);   border: 1px solid rgba(87,210,0,.3);   color: #7ae04a; }
+  .tag-prod       { background: rgba(87,210,0,.22);   border: 1px solid rgba(87,210,0,.45);  color: #9eff66; }
 
   footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
 </style>
@@ -96,68 +104,146 @@
   <p class="subtitle">Landing page versions — design handoff</p>
 </header>
 
-<!-- ── PRIMARY VERSIONS ── -->
+<!-- ── PRODUCTION ── -->
 <section class="section">
-  <h2>Primary versions</h2>
+  <h2>Production — v8 (i18n)</h2>
   <div class="grid">
 
-    <a href="v1.html" class="card">
-      <div class="card-badge b-v1">V1</div>
+    <a href="v8.html" class="card card--prod">
+      <div class="card-badge b-v8">EN</div>
       <div class="card-info">
-        <div class="card-name">v1 — Cinematic Hero</div>
-        <div class="card-desc">Netflix-style hero cards · YouTube video bg · Anton headline · gold + magenta palette</div>
+        <div class="card-name">v8 — English (default)</div>
+        <div class="card-desc">Figma spec HWM 215:8267 · Season 32 · auto-routed via / for EN users · 68 KB</div>
       </div>
-      <span class="card-tag tag-cinema">Cinema</span>
+      <span class="card-tag tag-prod">PROD</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v2.html" class="card">
-      <div class="card-badge b-v2">V2</div>
+    <a href="v8.ru.html" class="card card--prod">
+      <div class="card-badge b-lang">RU</div>
       <div class="card-info">
-        <div class="card-name">v2 — Fortnite Discover</div>
-        <div class="card-desc">Catalog detail page layout · hero meta panel · community channels · step-cards</div>
+        <div class="card-name">v8 — Русский</div>
+        <div class="card-desc">«Прокачай своего героя» · og:locale ru_RU · авто-роутинг для ru* Accept-Language</div>
       </div>
-      <span class="card-tag tag-fortnite">Fortnite</span>
+      <span class="card-tag tag-i18n">i18n</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v3.html" class="card">
-      <div class="card-badge b-v3">V3</div>
+    <a href="v8.de.html" class="card card--prod">
+      <div class="card-badge b-lang">DE</div>
       <div class="card-info">
-        <div class="card-name">v3 — ARC Raiders (first pass)</div>
-        <div class="card-desc">Industrial condensed type · numbered feature slabs · lowercase section labels with dots</div>
+        <div class="card-name">v8 — Deutsch</div>
+        <div class="card-desc">«Level deinen Helden auf» · og:locale de_DE · авто-роутинг для de* Accept-Language</div>
       </div>
-      <span class="card-tag tag-arc">ARC</span>
+      <span class="card-tag tag-i18n">i18n</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v4.html" class="card">
-      <div class="card-badge b-v4">V4</div>
+    <a href="v8.fr.html" class="card card--prod">
+      <div class="card-badge b-lang">FR</div>
       <div class="card-info">
-        <div class="card-name">v4 — ARC Raiders (screenshot)</div>
-        <div class="card-desc">«forge. siege.» slogan · vertical side rail · neon-green patch stickers · world carousel</div>
+        <div class="card-name">v8 — Français</div>
+        <div class="card-desc">«Améliorez votre héros» · og:locale fr_FR · авто-роутинг для fr* Accept-Language</div>
       </div>
-      <span class="card-tag tag-arc">ARC</span>
+      <span class="card-tag tag-i18n">i18n</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v5.html" class="card">
-      <div class="card-badge b-v5">V5</div>
+    <a href="v8.es.html" class="card card--prod">
+      <div class="card-badge b-lang">ES</div>
       <div class="card-info">
-        <div class="card-name">v5 — Real artwork + Discover CTA</div>
-        <div class="card-desc">Hero/scene images in every section · Heroes section · Events grid · «Discover the Hero Wars Universe» CTA</div>
+        <div class="card-name">v8 — Español</div>
+        <div class="card-desc">«Mejora tu héroe» · og:locale es_ES · авто-роутинг для es* Accept-Language</div>
       </div>
-      <span class="card-tag tag-arc">ARC+Art</span>
+      <span class="card-tag tag-i18n">i18n</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v6.html" class="card">
-      <div class="card-badge b-v6">V6</div>
+    <a href="v8.pt.html" class="card card--prod">
+      <div class="card-badge b-lang">PT</div>
       <div class="card-info">
-        <div class="card-name">v6 — Snap scroll + forest news bg</div>
-        <div class="card-desc">Discrete scroll-snap by section · forest waterfall background in News · all v5 content</div>
+        <div class="card-name">v8 — Português</div>
+        <div class="card-desc">«Eleve o seu herói» · og:locale pt_BR · авто-роутинг для pt* Accept-Language</div>
       </div>
-      <span class="card-tag tag-snap">Snap</span>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.it.html" class="card card--prod">
+      <div class="card-badge b-lang">IT</div>
+      <div class="card-info">
+        <div class="card-name">v8 — Italiano</div>
+        <div class="card-desc">«Potenzia il tuo eroe» · og:locale it_IT · авто-роутинг для it* Accept-Language</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.pl.html" class="card card--prod">
+      <div class="card-badge b-lang">PL</div>
+      <div class="card-info">
+        <div class="card-name">v8 — Polski</div>
+        <div class="card-desc">«Ulepszaj swojego bohatera» · og:locale pl_PL · авто-роутинг для pl* Accept-Language</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.ja.html" class="card card--prod">
+      <div class="card-badge b-lang">JA</div>
+      <div class="card-info">
+        <div class="card-name">v8 — 日本語</div>
+        <div class="card-desc">「ヒーローをレベルアップしよう」· og:locale ja_JP · авто-роутинг для ja* Accept-Language</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.ko.html" class="card card--prod">
+      <div class="card-badge b-lang">KO</div>
+      <div class="card-info">
+        <div class="card-name">v8 — 한국어</div>
+        <div class="card-desc">「영웅을 레벨업하세요」· og:locale ko_KR · авто-роутинг для ko* Accept-Language</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.zh-hans.html" class="card card--prod">
+      <div class="card-badge b-lang">ZHS</div>
+      <div class="card-info">
+        <div class="card-name">v8 — 简体中文</div>
+        <div class="card-desc">「升级你的英雄」· og:locale zh_CN · авто-роутинг для zh-Hans, zh-CN, zh-SG</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v8.zh-hant.html" class="card card--prod">
+      <div class="card-badge b-lang">ZHT</div>
+      <div class="card-info">
+        <div class="card-name">v8 — 繁體中文</div>
+        <div class="card-desc">「升級你的英雄」· og:locale zh_TW · авто-роутинг для zh-Hant, zh-TW, zh-HK, zh-MO</div>
+      </div>
+      <span class="card-tag tag-i18n">i18n</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── ARCHIVE ── -->
+<section class="section">
+  <h2>Archive — v1 – v8.1</h2>
+  <div class="grid">
+
+    <a href="v8.1.html" class="card">
+      <div class="card-badge b-v81">V8.1</div>
+      <div class="card-info">
+        <div class="card-name">v8.1 — v6-inspired cinematic left-align</div>
+        <div class="card-desc">DM Serif Display lowercase «forge your legend.» · cream→neon-green italic gradient · vertical siderail labels · topbar w/ socials + live online · right hero-chips · v8 modal & video bg ported</div>
+      </div>
+      <span class="card-tag tag-cinematic">Cinematic</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
@@ -171,23 +257,63 @@
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v8.html" class="card">
-      <div class="card-badge b-v8">V8</div>
+    <a href="v6.html" class="card">
+      <div class="card-badge b-v6">V6</div>
       <div class="card-info">
-        <div class="card-name">v8 — Figma spec (HWM 215:8267)</div>
-        <div class="card-desc">Verbatim 1728×1117 desktop frame · «Raise Your Hero» Inter 800/100px · lime Enter + green PLAY NOW with «3» badge · v7 video bg · GET 💎 1000 FOR FREE · «THE BEST MOBILE RPG 2025» with laurel</div>
+        <div class="card-name">v6 — Snap scroll + forest news bg</div>
+        <div class="card-desc">Discrete scroll-snap by section · forest waterfall background in News · all v5 content</div>
       </div>
-      <span class="card-tag tag-figma">Figma</span>
+      <span class="card-tag tag-snap">Snap</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
-    <a href="v8.1.html" class="card">
-      <div class="card-badge b-v81">V8.1</div>
+    <a href="v5.html" class="card">
+      <div class="card-badge b-v5">V5</div>
       <div class="card-info">
-        <div class="card-name">v8.1 — v6-inspired cinematic left-align</div>
-        <div class="card-desc">DM Serif Display lowercase «forge your legend.» with cream→neon-green italic gradient · vertical siderail labels · topbar w/ socials + live online · right hero-chips (Iron Crown / 14.2M battles / 100+ heroes) · platforms + rating bar · v8 modal & video bg ported</div>
+        <div class="card-name">v5 — Real artwork + Discover CTA</div>
+        <div class="card-desc">Hero/scene images in every section · Heroes section · Events grid · «Discover the Hero Wars Universe» CTA</div>
       </div>
-      <span class="card-tag tag-cinematic">Cinematic</span>
+      <span class="card-tag tag-arc">ARC+Art</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v4.html" class="card">
+      <div class="card-badge b-v4">V4</div>
+      <div class="card-info">
+        <div class="card-name">v4 — ARC Raiders (screenshot)</div>
+        <div class="card-desc">«forge. siege.» slogan · vertical side rail · neon-green patch stickers · world carousel</div>
+      </div>
+      <span class="card-tag tag-arc">ARC</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v3.html" class="card">
+      <div class="card-badge b-v3">V3</div>
+      <div class="card-info">
+        <div class="card-name">v3 — ARC Raiders (first pass)</div>
+        <div class="card-desc">Industrial condensed type · numbered feature slabs · lowercase section labels with dots</div>
+      </div>
+      <span class="card-tag tag-arc">ARC</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v2.html" class="card">
+      <div class="card-badge b-v2">V2</div>
+      <div class="card-info">
+        <div class="card-name">v2 — Fortnite Discover</div>
+        <div class="card-desc">Catalog detail page layout · hero meta panel · community channels · step-cards</div>
+      </div>
+      <span class="card-tag tag-fortnite">Fortnite</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+
+    <a href="v1.html" class="card">
+      <div class="card-badge b-v1">V1</div>
+      <div class="card-info">
+        <div class="card-name">v1 — Cinematic Hero</div>
+        <div class="card-desc">Netflix-style hero cards · YouTube video bg · Anton headline · gold + magenta palette</div>
+      </div>
+      <span class="card-tag tag-cinema">Cinema</span>
       <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
 
@@ -239,6 +365,7 @@
     .card-name, .card-desc
     .card-tag class + label
   Then commit the new vN.html alongside the updated index.html.
+  To rebuild i18n variants: python3 build.py (edits v8.template.html + locales/*.json)
 -->
 
 <footer>© 2026 Nexters Global Ltd · Design handoff — <a href="https://github.com/ternome/hwa-landing" style="color:inherit">github.com/ternome/hwa-landing</a></footer>

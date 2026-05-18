@@ -1,0 +1,116 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)zh-(TW|HK|MO|Hant)" }],
+      "destination": "/v8.zh-hant.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)zh" }],
+      "destination": "/v8.zh-hans.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ru(-|;|,|\\s|$)" }],
+      "destination": "/v8.ru.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)de(-|;|,|\\s|$)" }],
+      "destination": "/v8.de.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)fr(-|;|,|\\s|$)" }],
+      "destination": "/v8.fr.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)es(-|;|,|\\s|$)" }],
+      "destination": "/v8.es.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)pt(-|;|,|\\s|$)" }],
+      "destination": "/v8.pt.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)it(-|;|,|\\s|$)" }],
+      "destination": "/v8.it.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)pl(-|;|,|\\s|$)" }],
+      "destination": "/v8.pl.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ja(-|;|,|\\s|$)" }],
+      "destination": "/v8.ja.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ko(-|;|,|\\s|$)" }],
+      "destination": "/v8.ko.html"
+    },
+    { "source": "/", "destination": "/v8.html" },
+
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)zh-(TW|HK|MO|Hant)" }],
+      "destination": "/v8.zh-hant.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)zh" }],
+      "destination": "/v8.zh-hans.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ru(-|;|,|\\s|$)" }],
+      "destination": "/v8.ru.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)de(-|;|,|\\s|$)" }],
+      "destination": "/v8.de.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)fr(-|;|,|\\s|$)" }],
+      "destination": "/v8.fr.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)es(-|;|,|\\s|$)" }],
+      "destination": "/v8.es.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)pt(-|;|,|\\s|$)" }],
+      "destination": "/v8.pt.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)it(-|;|,|\\s|$)" }],
+      "destination": "/v8.it.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)pl(-|;|,|\\s|$)" }],
+      "destination": "/v8.pl.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ja(-|;|,|\\s|$)" }],
+      "destination": "/v8.ja.html"
+    },
+    {
+      "source": "/v8.html",
+      "has": [{ "type": "header", "key": "accept-language", "value": "(^|,\\s*)ko(-|;|,|\\s|$)" }],
+      "destination": "/v8.ko.html"
+    }
+  ]
+}
