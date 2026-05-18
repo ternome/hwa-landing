@@ -34,18 +34,25 @@ header rewrites (`vercel.json`). Users can also link directly to any locale file
 
 ### Archive — design experiments
 
+All previous design directions live in [`archive/`](archive/). They are
+preserved for design-history reference and reachable at `/archive/vN.html`
+(or via the [archive index](archive/index.html)). Vercel issues 301 redirects
+from legacy URLs like `/v3.html` → `/archive/v3.html` to keep old links alive.
+
 | File | Concept |
 |---|---|
-| [`v8.1.html`](v8.1.html) | Cinematic left-align variant (v6-style topbar + siderail) |
-| [`v7.html`](v7.html) | Dark fantasy + video hero — Cinzel headlines, gold-gradient, starter pack |
-| [`v6.html`](v6.html) | Snap scroll + forest news bg |
-| [`v5.html`](v5.html) | Real artwork + Discover CTA — hero/scene images, events grid |
-| [`v4.html`](v4.html) | ARC Raiders (screenshot) — «forge. siege.» slogan, neon-green stickers |
-| [`v3.html`](v3.html) | ARC Raiders (first pass) — industrial condensed type, numbered slabs |
-| [`v2.html`](v2.html) | Fortnite Discover — catalog detail page, community channels, step-cards |
-| [`v1.html`](v1.html) | Cinematic hero — Netflix-style cards, YouTube video bg, Anton + magenta + gold |
+| [`archive/v8.1.html`](archive/v8.1.html) | Cinematic left-align variant (v6-style topbar + siderail) |
+| [`archive/v7.html`](archive/v7.html) | Dark fantasy + video hero — Cinzel headlines, gold-gradient |
+| [`archive/v6.html`](archive/v6.html) | Snap scroll + forest news bg |
+| [`archive/v5.html`](archive/v5.html) | Real artwork + Discover CTA — hero/scene images, events grid |
+| [`archive/v4.html`](archive/v4.html) | ARC Raiders (screenshot) — «forge. siege.» slogan, neon-green stickers |
+| [`archive/v3.html`](archive/v3.html) | ARC Raiders (first pass) — industrial condensed type, numbered slabs |
+| [`archive/v2.html`](archive/v2.html) | Fortnite Discover — catalog detail page, community channels |
+| [`archive/v1.html`](archive/v1.html) | Cinematic hero — Netflix-style cards, YouTube video bg, Anton |
 
-[`index.html`](index.html) is the versions hub (accessible at `/index.html` on Vercel).
+Plus `v1-source.html`, `v1-standalone.html`, `v6-source.html`, `tweaks-panel.jsx`
+all moved to `archive/`. [`index.html`](index.html) is the production hub
+(production-only after the refactor).
 
 ## v8 — what's inside
 
@@ -89,50 +96,63 @@ The `.claude/launch.json` is wired for the Claude Code preview panel — same
 
 ```
 /
-├── index.html               # versions hub (accessible at /index.html)
-├── v8.template.html         # i18n master template — EDIT THIS, not v8.html
-├── build.py                 # i18n build script (stdlib only)
-├── vercel.json              # Accept-Language rewrites for / and /v8.html
+├── index.html               # production-only hub (accessible at /index.html)
+├── build.py                 # i18n + module build script (stdlib only)
+├── vercel.json              # 301 redirects + Accept-Language rewrites
+├── PLAN.md                  # refactor tracking doc (removed after merge)
+│
+├── src/                     # SOURCE — EDIT THESE, generated files are output
+│   ├── v8.template.html     # structure only (INJECT_CSS + INJECT_JS markers)
+│   ├── styles/              # 10 CSS modules — see CLAUDE.md §4 for map
+│   ├── scripts/             # 6 JS modules
+│   └── manifests/
+│       ├── styles.json      # CSS concatenation order (NOT alphabetical)
+│       └── scripts.json     # JS concatenation order
+│
 ├── locales/
-│   ├── en.json              # 36 keys → v8.html
+│   ├── _schema.json         # 36 required keys; build aborts on mismatch
+│   ├── en.json              # → v8.html (EN default)
 │   ├── ru.json              # → v8.ru.html
-│   ├── de.json              # → v8.de.html
-│   ├── fr.json fr es pt it pl ja ko zh-hans zh-hant …
-│   └── …                   # 12 locales total
+│   └── …                    # 12 locales total
+│
 ├── v8.html                  # GENERATED — EN default
-├── v8.ru.html               # GENERATED — Russian
-├── v8.{lang}.html           # GENERATED — one per locale
-├── v8.1.html                # cinematic variant (not i18n)
-├── v1.html … v7.html        # archive design variants
-├── v1-source.html           # raw bundle sources (pre-inline)
-├── v1-standalone.html       # offline build with fonts inlined
-├── v6-source.html
-└── assets/
-    ├── hero-bg.mp4          # hero video (~78 MB, used by v7/v8)
-    ├── keyart.{webp,jpg,png} # static keyart (poster, OG image source)
-    ├── og-image.jpg         # social-card preview (1920×1172 with text overlay)
-    ├── favicon.webp         # browser favicon (HW Alliance wordmark)
-    ├── logo.png             # full HW Alliance wordmark
-    ├── button-feedback.mp3  # PLAY NOW click sound
-    ├── reaction-{like,love}.png  # push-notification reaction icons
-    ├── award.{svg,png}      # "The Best Mobile RPG" laurel badge
-    ├── hero-{brute,electra,luna,scribe}.png  # hero portraits (v5)
-    ├── scene-{arena,disco,forest,stormwall}.png  # scene art (v5)
-    └── v8/
-        ├── emerald.png
-        ├── logo.png
-        ├── stickers/        # 10 PNG stickers for push reactions
-        └── avatars/         # real-photo avatars (Solenne, Aurelia)
+├── v8.{lang}.html           # GENERATED — one per locale (11 more)
+│
+├── assets/                  # v8 production-only assets
+│   ├── hero-bg.mp4          # hero video (~78 MB)
+│   ├── keyart.webp          # poster + CSS bg fallback
+│   ├── og-image.jpg         # social-card preview
+│   ├── favicon.webp
+│   ├── button-feedback.mp3  # PLAY NOW click sound
+│   ├── reaction-{like,love}.png
+│   └── v8/
+│       ├── emerald.png, logo.png
+│       ├── stickers/         # 10 PNG stickers for push reactions
+│       └── avatars/          # real-photo avatars (Solenne, Aurelia)
+│
+└── archive/                 # everything NOT v8
+    ├── index.html           # archive hub (noindex robots)
+    ├── v1.html … v7.html    # design experiments
+    ├── v8.1.html            # cinematic variant
+    ├── v1-source.html, v1-standalone.html, v6-source.html
+    ├── tweaks-panel.jsx
+    └── assets/              # legacy-only assets (hero portraits, scenes,
+                             # keyart.{jpg,png}, logo.png, award.{svg,png},
+                             # lottie, news-forest.png)
 ```
 
 ## i18n — adding or updating a locale
 
-1. Edit `locales/{lang}.json` (all 36 keys required) — or create a new one
-2. Run `python3 build.py` → zero warnings expected
-3. Stage `locales/{lang}.json` + all generated `v8*.html` + `v8.template.html`
-   if it changed
+1. Edit `locales/{lang}.json` (all 36 keys required, validated against
+   `locales/_schema.json`) — or create a new one for a new language
+2. Run `python3 build.py` → zero warnings, zero unresolved placeholders,
+   schema-OK expected (build fails fast otherwise)
+3. Stage source + generated files together:
+   ```bash
+   git --git-dir=.git --work-tree=. add src/ locales/ v8*.html
+   ```
 4. If new locale: add a card in `index.html` Production section + Accept-Language
-   rewrites in `vercel.json`
+   rewrites for `/` and `/v8.html` in `vercel.json`
 5. Commit + push
 
 ## Tech stack

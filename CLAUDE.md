@@ -6,24 +6,42 @@ while building v8.
 
 ## 1. Project shape in one breath
 
-Static HTML landing for Hero Wars: Alliance. Design variants at the repo root
-(`v1.html` … `v8.html` + `v8.1.html` + a few `-source` / `-standalone`
-bundles). `index.html` is the versions selector. Shared assets live in
-`assets/`; v8-specific assets (modal logo, emerald, stickers, real-photo
-avatars) live in `assets/v8/`. **`v8.html` is the production candidate** and
-is now a **generated file** — 1900+ lines of HTML+CSS+JS produced from
-`v8.template.html` + `locales/en.json`.
+Static HTML landing for Hero Wars: Alliance. **Only v8 is production.** All
+older design experiments (v1-v7 + v8.1 + source/standalone bundles) live in
+`archive/` and are reachable at `/archive/vN.html`. Vercel issues 301
+redirects from `/vN.html` to `/archive/vN.html` for backward-compat.
 
-**i18n build step:** `python3 build.py` — reads `v8.template.html` + every
-`locales/*.json`, writes `v8.html` (EN default) and `v8.{lang}.html` per locale.
-**Do not edit `v8.html` or any `v8.*.html` directly.** Edit the template or
-locale JSON, then rebuild. For preview/dev without i18n: open `v8.template.html`
-in the browser — the `{{KEY}}` placeholders are visible but everything structural
-still works.
+The active codebase is **modular** (refactored in branch
+`refactor/v8-modular-perf` from tag `pre-refactor`):
+
+```
+src/
+  v8.template.html          structure only (with <!-- INJECT_CSS --> + <!-- INJECT_JS -->)
+  styles/                   10 CSS modules (_tokens, _reset, _nav, _hero, …)
+  scripts/                  6 JS modules (_video, _sound, _modal-trailer, …)
+  manifests/{styles,scripts}.json   explicit concatenation order — NOT alphabetical
+locales/
+  _schema.json              36 required keys; build aborts on locale schema mismatch
+  {12 *.json}               one per supported language
+assets/                     v8-production-only assets (hero-bg.mp4, keyart.webp, v8/*, …)
+archive/                    legacy v1-v8.1 + sources, with own assets/ subfolder
+build.py                    read src/ template → inject CSS+JS → validate locales → write v8.{lang}.html
+vercel.json                 11 legacy-URL 301 redirects + 22 Accept-Language rewrites
+```
+
+**Build:** `python3 build.py` — reads `src/v8.template.html` + every
+`locales/*.json` (skipping `_schema.json` and other `_*.json`), concatenates
+modules per manifest, injects at the two markers, substitutes `{{key}}`
+placeholders, writes `v8.html` (EN default) and `v8.{lang}.html` per locale.
+
+**Do not edit generated files** (`v8.html`, `v8.*.html`). Edit the modular
+source in `src/` or the locale JSON, then rebuild. For preview/dev: open
+the regenerated `v8.html` in `npx serve` — generated files are kept in git
+(may change in Phase 3 with Vercel buildCommand + .gitignore).
 
 Vercel routes `/` and `/v8.html` to the correct locale via Accept-Language
 header rewrites declared in `vercel.json`. The design-handoff index remains
-accessible at `/index.html`.
+accessible at `/index.html`. Archive index is at `/archive/index.html`.
 
 ## 2. Critical environment gotcha — git is isolated, repo lives in iCloud
 
@@ -66,35 +84,47 @@ cwd. Use `npx serve` only.
 Navigation in preview: `location.href = '/v8.html'`. Vercel-style trailing-
 `.html` URLs are accepted both ways.
 
-## 4. v8.html anatomy (sections you'll edit most)
+## 4. v8 anatomy — module map
 
-CSS sections inside `<style>`:
+**CSS modules** (`src/styles/`, concat order in `src/manifests/styles.json`):
 
-* Top nav (`.nav`, `.btn-enter`, `.players`) — **includes the eyebrow pill**
-  (`.eyebrow`) which lives in the nav between logo and `nav__right`
-* Eyebrow pill + hover thumbnail (`.eyebrow`, `.wtp__preview`) — thumbnail
-  appears **below** the pill (`top: calc(100% + 14px)`), slides down on hover
-* Hero (`.hero`, `.hero__video`, `.hero__overlay`, `.hero__content`)
-* Title (`.hero__title` — Anton sans, `text-transform: none`, source has Title Case)
-* CTA row (`.cta-row` flex), `.btn-play` (pulse + shine), `.offer` (passive promo)
-* Play-meta caption (`.play-meta`)
-* Sound toggle (`.sound-toggle`)
-* Bottom meta strip (`.meta-strip`)
-* Login modal (`.modal`, two `.stage`s: email and code)
-* Trailer modal (`.trailer-modal`)
-* Push notifications (`.pushes`, `.push`, `.reaction-pill`)
-* `@media (max-width: 1023px)` — single mobile/tablet breakpoint
-* `@media (hover: none)` — touch overrides
+1. `_tokens.css`        — design tokens (`:root` CSS variables)
+2. `_reset.css`         — universal reset + base elements
+3. `_nav.css`           — top nav (`.nav`, `.btn-enter`, `.players`) **plus the
+   eyebrow pill `.eyebrow` and hover thumbnail `.wtp__preview`** (eyebrow lives
+   in the nav semantically, its CSS got hoisted earlier in the cascade)
+4. `_hero.css`          — `.hero` structure (`.hero__video`, `.hero__overlay`,
+   `.hero__content`) + content (`.hero__title`, `.cta-row`, `.btn-play`,
+   `.offer`, `.play-meta`)
+5. `_sound-toggle.css`  — `.sound-toggle`
+6. `_meta-strip.css`    — bottom `.meta-strip`
+7. `_modal-login.css`   — `.modal` (two `.stage`s — email + code) + `.modal__pitch`
+8. `_modal-trailer.css` — `.trailer-modal` (YouTube iframe wrapper)
+9. `_pushes.css`        — `.pushes`, `.push`, `.reaction-pill`
+10. `_responsive.css`   — `@media (max-width: 1023px)` + `@media (hover: none)`
 
-HTML order in `<body>`:
+**JS modules** (`src/scripts/`, concat order in `src/manifests/scripts.json`):
+
+1. `_video.js`          — declares global `const video`; autoplay + cross-fade
+2. `_sound.js`          — sound toggle; reads `dataset.labelUnmute/labelMute`;
+   **depends on `video`** from `_video.js`
+3. `_modal-trailer.js`  — trailer modal (eyebrow `[data-open-trailer]` opens it)
+4. `_modal-login.js`    — login modal email→code flow, magic `123123` redirects;
+   **depends on `video`** (for click sound check)
+5. `_pushes.js`         — fake push notification stream (IIFE-wrapped, isolated)
+6. `_online-counter.js` — players-online counter (pulse + fluctuating number)
+
+Cross-module dependencies are satisfied by manifest order. **Do not reorder
+the manifest** without checking which modules reference whose globals.
+
+HTML order in `src/v8.template.html` body:
 
 1. `<header class="nav">` (fixed) — logo · eyebrow pill · nav__right (players + sign-in)
-2. `<section class="hero">` containing video, overlay, content, meta-strip
+2. `<section class="hero">` containing video, overlay, content, sound-toggle, meta-strip
 3. `<div class="pushes">`
 4. `<div class="trailer-modal">`
-5. `<div class="modal" id="loginModal">`
-6. `<script>` — video init, sound toggle, login modal flow, trailer modal flow,
-   push spawn loop, live online counter
+5. `<div class="modal" id="loginModal">` (two `.stage`s)
+6. `<script>` — INJECT_JS marker that build.py replaces with concatenated bundle
 
 ## 5. Working conventions
 
@@ -203,14 +233,26 @@ draws green PLAY NOW pill using `anchor="mm"` for perfect centering.
   class name `is-left` is misleading (legacy) — it now means "switched to right".
 * **Never edit `v8.html` or `v8.*.html` directly.** They are generated by
   `build.py`. Any direct edit will be silently overwritten the next time
-  someone runs the build. Edit `v8.template.html` (structure/CSS/JS) or the
-  relevant `locales/{lang}.json` (copy), then run `python3 build.py` and stage
-  ALL generated files alongside the source change.
+  someone runs the build. Edit the relevant module in `src/styles/` or
+  `src/scripts/` or the relevant `locales/{lang}.json` (copy), then run
+  `python3 build.py` and stage ALL generated files alongside the source change.
 * **`modal_code_subtitle` in locale JSONs contains `<strong id="sentEmail">`.** 
   The JS does `getElementById('sentEmail')` to fill the email address. If you
   remove or rename that id the code-entry stage breaks silently.
 * **`vercel.json` is JSON, not JSONC.** No `//` comments. Validate with
   `python3 -c "import json; json.load(open('vercel.json'))"` before committing.
+* **Manifest order matters.** `src/manifests/styles.json` determines CSS
+  cascade; `scripts.json` determines JS execution order (and so which globals
+  are in scope when a module runs). NOT alphabetical. Reordering without
+  verifying cascade + cross-module dependencies = silent breakage.
+* **Locale schema is enforced.** `locales/_schema.json` lists 36 required keys.
+  `build.py` fails fast on any locale missing/extra keys. To add a new key —
+  update `_schema.json` AND every locale JSON in one pass, then rebuild.
+* **Generated files live at repo root, not under `src/`.** That is intentional
+  — Vercel serves them at `/v8.html`, `/v8.ru.html`, etc. `src/` is source-only.
+* **`archive/` is frozen.** Never edit files in `archive/` — they're preserved
+  for history. If you need to update an archive page for some reason, it's a
+  new branch + explicit user approval.
 * **Don't run `python3 -m http.server`** for preview — macOS sandbox denies
   the iCloud cwd. `npx serve` only.
 * **Don't bake `width=1280` into the viewport tag.** It used to scale-zoom
@@ -232,29 +274,26 @@ are common.
 
 ## 14. i18n system — how it works
 
-**Source of truth: `v8.template.html` + `locales/*.json`**
+**Source of truth: `src/v8.template.html` + `src/styles/` + `src/scripts/` + `locales/*.json`**
 
 ```
-v8.template.html   ← edit this for CSS/JS/structural changes
+src/
+  v8.template.html              structure with INJECT_CSS + INJECT_JS markers
+  styles/_*.css                 10 CSS modules
+  scripts/_*.js                 6 JS modules
+  manifests/styles.json         concat order for styles
+  manifests/scripts.json        concat order for scripts
 locales/
-  en.json          ← 36 keys; EN → v8.html
-  ru.json          ← RU → v8.ru.html
-  de.json          ← DE → v8.de.html
-  fr.json          ← FR → v8.fr.html
-  es.json          ← ES → v8.es.html
-  pt.json          ← PT → v8.pt.html
-  it.json          ← IT → v8.it.html
-  pl.json          ← PL → v8.pl.html
-  ja.json          ← JA → v8.ja.html
-  ko.json          ← KO → v8.ko.html
-  zh-hans.json     ← ZH-Hans → v8.zh-hans.html
-  zh-hant.json     ← ZH-Hant → v8.zh-hant.html
-build.py           ← stdlib-only; run to regenerate
-vercel.json        ← Accept-Language rewrites (/ and /v8.html)
+  _schema.json                  36 required-keys list; build aborts on mismatch
+  en.json                       EN → v8.html
+  ru.json + 10 more             {lang} → v8.{lang}.html
+build.py                        stdlib-only; runs the full pipeline
+vercel.json                     redirects (legacy /vN.html) + Accept-Language rewrites
 ```
 
-**Placeholder syntax:** `{{KEY}}` in the template, key names in JSON.
-Build script uses `str.replace(f"{{{{key}}}}", value)`.
+**Placeholder syntax:** `{{KEY}}` in template OR CSS OR JS (yes, you can use
+placeholders inside CSS/JS modules too — they're concatenated INTO the template
+before locale substitution), key names in JSON.
 
 **36 locale keys per file:** `lang`, `og_locale`, `page_title`,
 `meta_description`, `og_title`, `og_description`, `twitter_img_alt`,
@@ -266,6 +305,9 @@ Build script uses `str.replace(f"{{{{key}}}}", value)`.
 `modal_email_ph`, `modal_get_code`, `modal_terms`, `modal_back`,
 `modal_code_subtitle`, `modal_resend_label`, `modal_resend_init`.
 
+The canonical list lives in `locales/_schema.json` — `build.py` reads it and
+enforces every locale conforms. Out-of-band keys = build error.
+
 **JS localization without runtime loading:** `data-*` attributes carry the
 localized strings into JS — e.g. `data-label-unmute="{{sound_unmute}}"` and
 `data-resend-label="{{modal_resend_label}}"`. JS reads them via
@@ -273,21 +315,23 @@ localized strings into JS — e.g. `data-label-unmute="{{sound_unmute}}"` and
 
 **Rebuild workflow:**
 ```bash
-# 1. Edit template and/or locale JSONs
+# 1. Edit src/{template,styles/*,scripts/*} or locales/*.json
 # 2. Regenerate:
 python3 build.py
-# 3. Stage everything:
-git --git-dir=.git --work-tree=. add v8.template.html locales/ \
-  v8.html v8.ru.html v8.de.html v8.fr.html v8.es.html v8.pt.html \
-  v8.it.html v8.pl.html v8.ja.html v8.ko.html v8.zh-hans.html v8.zh-hant.html
+# 3. Stage source + ALL generated files together (until Phase 3 gitignore):
+git --git-dir=.git --work-tree=. add src/ locales/ v8*.html
 ```
 
-**Adding a new locale:** create `locales/{code}.json` with all 36 keys →
-run `build.py` → add a card to `index.html` Production section → add
-Accept-Language rewrites to `vercel.json` → commit all.
+**Adding a new locale:**
+1. Create `locales/{code}.json` with all 36 keys (copy from `en.json`, translate)
+2. Run `python3 build.py` (schema validation will catch missing keys)
+3. Add a card to root `index.html` Production section
+4. Add Accept-Language rewrites for `/` and `/v8.html` in `vercel.json`
+5. Commit everything
 
 **Vercel routing (`vercel.json`):**
-- `/` and `/v8.html` both have Accept-Language header rewrites
+- 11 permanent (301) redirects: `/vN.html` → `/archive/vN.html` (legacy ads/links)
+- 22 rewrites: `/` and `/v8.html` with Accept-Language headers
 - zh-Hant rule (`zh-TW|HK|MO|Hant`) placed BEFORE generic `zh` catch
 - Unlisted languages (including EN) fall through to `v8.html`
 - `/index.html` = design handoff, always accessible explicitly

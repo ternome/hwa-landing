@@ -104,7 +104,7 @@ Tracking document for the v8 refactor. Removed after squash-merge.
 
 ## 4. Фазы
 
-### Phase 0 — baseline & branch (~15 min)
+### Phase 0 — baseline & branch (~15 min) — DONE
 1. Создать тег `pre-refactor` на текущей `main`
 2. Создать ветку `refactor/v8-modular-perf`
 3. **Baseline screenshots:** 12 локалей × 4 viewports (375, 768, 1280, 1920) = 48 скриншотов → `/tmp/baseline/`. Для визуальной регрессии в конце.
@@ -114,7 +114,7 @@ Tracking document for the v8 refactor. Removed after squash-merge.
 
 **Checkpoint:** ветка готова, baseline зафиксирован. Можно отменить = удалить ветку.
 
-### Phase 1 — archive cleanup (~45 min)
+### Phase 1 — archive cleanup (~45 min) — DONE (commit df299f4)
 Самая безопасная фаза: только перемещение файлов, никакой логики.
 
 1. `mkdir archive archive/assets`
@@ -134,7 +134,7 @@ Tracking document for the v8 refactor. Removed after squash-merge.
 
 **Checkpoint:** root чище в ~10 раз, прод не сломан, старые URL редиректятся.
 
-### Phase 2 — source split (~2 hours, основная работа)
+### Phase 2 — source split (~2 hours, основная работа) — DONE (commit 9945981)
 1. `mkdir -p src/styles src/scripts src/manifests`
 2. **CSS split:** скопировать `v8.template.html`, разрезать `<style>` по логическим границам:
    - найти разделы по существующим комментариям и class-namespace
