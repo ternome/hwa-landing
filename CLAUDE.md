@@ -179,21 +179,35 @@ Test viewports we've validated: **375×812, 414×896, 768×1024, 1023×700,
 
 ## 8. Assets cheatsheet
 
+**Production (v8) — `assets/`:**
+
 * `assets/hero-bg.mp4` — hero video, 78 MB (`<video poster="keyart.webp">`)
-* `assets/keyart.webp` — 1920×1172 (CSS bg fallback, video poster, OG source)
-* `assets/keyart.jpg` — same image as JPEG (legacy fallback)
+  Preloaded only on `(min-width: 1024px)`; mobile gets it on demand.
+* `assets/keyart.webp` — 1920×1172 (CSS bg fallback, video poster). Preloaded
+  with `fetchpriority="high"` on every page load.
 * `assets/og-image.jpg` — final social card with text overlay (regenerated
   via Python script — see §9)
 * `assets/favicon.webp` — pulled from cdn.hero-wars-alliance.com, used for
   rel=icon and apple-touch-icon
-* `assets/v8/logo.png` — HW Alliance wordmark (used inside login modal art)
-* `assets/v8/emerald.png` — 76×76 emerald icon
+* `assets/v8/logo.png` — HW Alliance wordmark (nav logo + login modal art)
+* `assets/v8/emerald.png` — emerald icon (rendered at 48×48 in `.offer`)
 * `assets/v8/avatars/{solenne,aurelia}.jpg` — real-photo avatars for the
-  "girl" push slots
+  "girl" push slots (loaded lazily by `_pushes.js`)
 * `assets/v8/stickers/*.png` — 10 stickers (hello, happy, congratulation,
   love, support, ok, chabba, coffee, sad, shoked) for push reactions
 * `assets/button-feedback.mp3` — PLAY NOW click sound (60% volume)
 * `assets/reaction-{like,love}.png` — push-notification reaction icons
+
+**Archive — `archive/assets/`** (legacy, only loaded by v1-v8.1 pages):
+
+* `archive/assets/keyart.{jpg,png}` — JPEG/PNG variants of keyart (v8 uses
+  `assets/keyart.webp` directly)
+* `archive/assets/logo.png` — legacy wordmark (v1/v5/v6); v8 uses `assets/v8/logo.png`
+* `archive/assets/award.{svg,png}` — "Best Mobile RPG" laurel badge (orphan)
+* `archive/assets/DotLottiePlayer.wasm`, `dotlottie-player.js`, `oval-anim.json` — lottie player
+* `archive/assets/hero-{brute,electra,luna,scribe}.png` — hero portraits (v5, v6)
+* `archive/assets/scene-{arena,disco,forest,stormwall}.png` — scene art (v5, v6)
+* `archive/assets/news-forest.png` — News-section background (v6)
 
 ## 9. Regenerating `og-image.jpg`
 
