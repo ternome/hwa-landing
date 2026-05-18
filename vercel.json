@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    { "source": "/v1.html",            "destination": "/archive/v1.html",            "permanent": true },
+    { "source": "/v2.html",            "destination": "/archive/v2.html",            "permanent": true },
+    { "source": "/v3.html",            "destination": "/archive/v3.html",            "permanent": true },
+    { "source": "/v4.html",            "destination": "/archive/v4.html",            "permanent": true },
+    { "source": "/v5.html",            "destination": "/archive/v5.html",            "permanent": true },
+    { "source": "/v6.html",            "destination": "/archive/v6.html",            "permanent": true },
+    { "source": "/v7.html",            "destination": "/archive/v7.html",            "permanent": true },
+    { "source": "/v8.1.html",          "destination": "/archive/v8.1.html",          "permanent": true },
+    { "source": "/v1-source.html",     "destination": "/archive/v1-source.html",     "permanent": true },
+    { "source": "/v1-standalone.html", "destination": "/archive/v1-standalone.html", "permanent": true },
+    { "source": "/v6-source.html",     "destination": "/archive/v6-source.html",     "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/",
