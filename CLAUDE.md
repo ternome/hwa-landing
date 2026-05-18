@@ -295,6 +295,35 @@ Long-form, multi-paragraph, written like a small changelog entry. See
 First line is one sentence; the body explains what changed in each section
 and why. We avoid one-liners for non-trivial changes.
 
+## 12.5 Rollback safety net
+
+A tag `pre-refactor` exists on origin pointing to the last commit before the
+modular/perf refactor landed on main. To roll back the **entire refactor**:
+
+```bash
+cd "/Users/terno/Library/Mobile Documents/com~apple~CloudDocs/Code/hwa-landing"
+git --git-dir=.git --work-tree=. reset --hard pre-refactor
+git --git-dir=.git --work-tree=. push --force-with-lease origin main
+```
+
+To roll back a **single phase** while keeping the others (refactor landed via
+fast-forward, so each phase commit is on main):
+
+```bash
+git --git-dir=.git --work-tree=. revert <phase-commit-sha>
+git --git-dir=.git --work-tree=. push origin main
+```
+
+Phase commits on main (refactor/v8-modular-perf history, oldest first):
+- `df299f4` Phase 1 — archive cleanup
+- `9945981` Phase 2 — src/ source split
+- `f623756` docs catch-up (Phase 1+2)
+- `fbc7a31` Phase 3 — minify + Vercel buildCommand + gitignore
+- `4d34da0` Phase 4 — preload + cache + sitemap + lazy-loading
+
+Branch `refactor/v8-modular-perf` is preserved on origin for ~2 weeks
+post-merge as another reference. The `pre-refactor` tag is permanent.
+
 ## 13. When the user shares an image / screenshot
 
 The screenshot is the source of truth for the bug they're seeing. Don't

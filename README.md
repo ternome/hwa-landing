@@ -107,7 +107,6 @@ The `.claude/launch.json` is wired for the Claude Code preview panel — same
 ├── index.html               # production-only hub (accessible at /index.html)
 ├── build.py                 # i18n + module build script (stdlib only)
 ├── vercel.json              # 301 redirects + Accept-Language rewrites
-├── PLAN.md                  # refactor tracking doc (removed after merge)
 │
 ├── src/                     # SOURCE — EDIT THESE, generated files are output
 │   ├── v8.template.html     # structure only (INJECT_CSS + INJECT_JS markers)
