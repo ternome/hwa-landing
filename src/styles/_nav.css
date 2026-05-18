@@ -1,0 +1,262 @@
+/* nav — top bar, players counter, sign-in pill, Season pill (eyebrow), trailer hover-thumbnail */
+/* ── Top nav (107px, transparent, floats over hero video) ──────── */
+.nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  background: transparent;
+  height: 107px;
+  display: flex;
+  align-items: center;
+  padding: 0 64px;
+  gap: 48px;
+}
+.nav__logo { height: 43px; width: auto; }
+.nav__links {
+  display: flex;
+  gap: 48px;
+  margin-left: 48px;
+}
+.nav__links a {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+.nav__links a:hover { color: var(--lime); }
+.nav__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.players {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+}
+.players__dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--dot-green);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.75);
+  position: relative;
+  animation: dot-throb 1.6s ease-in-out infinite;
+}
+.players__dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: rgba(0, 255, 90, 0.55);
+  z-index: -1;
+  animation: dot-ring 1.8s cubic-bezier(0.2, 0.7, 0.4, 1) infinite;
+}
+.players__dot::after {
+  content: '';
+  position: absolute; inset: 2px;
+  border-radius: 50%;
+  background: #B8FFB8;
+  opacity: 0.7;
+}
+@keyframes dot-throb {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 0, 0.55); transform: scale(1); }
+  50%      { box-shadow: 0 0 16px rgba(0, 255, 0, 0.95); transform: scale(1.12); }
+}
+@keyframes dot-ring {
+  0%   { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.players__count {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+  font-variant-numeric: tabular-nums;
+}
+.players__count.is-flash-up   { color: #B8FFB8; text-shadow: 0 0 10px rgba(0, 255, 90, 0.7); }
+.players__count.is-flash-down { color: #FFC8B8; text-shadow: 0 0 10px rgba(255, 100, 60, 0.5); }
+.players__text { display: flex; flex-direction: column; line-height: 1; }
+.players__count {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+}
+.players__label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* Sign-in pill — secondary CTA in nav */
+.btn-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 26px;
+  background: rgba(20, 18, 14, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--white);
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.btn-enter__hint {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+.btn-enter__action {
+  color: var(--white);
+  font-weight: 700;
+}
+.btn-enter:hover { transform: translateY(-1px); background: rgba(28, 24, 18, 0.88); border-color: rgba(255, 255, 255, 0.12); }
+.btn-enter:active { transform: translateY(1px); }
+
+/* Season pill — single clickable element that opens trailer (whole pill click) */
+.eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 6px;
+  border-radius: 99px;
+  background: rgba(255, 180, 40, 0.12);
+  border: 1px solid rgba(255, 180, 40, 0.4);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #FFD56B;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.eyebrow:hover {
+  background: rgba(255, 180, 40, 0.2);
+  border-color: rgba(255, 180, 40, 0.6);
+  transform: translateY(-1px);
+}
+.eyebrow .tag {
+  background: linear-gradient(180deg, #FFD56B 0%, #E6B94D 100%);
+  color: #1a1108;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+  text-shadow: none;
+}
+.eyebrow__txt {
+  padding: 0 4px;
+  white-space: nowrap;
+}
+.eyebrow__icn {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0a0a0a;
+  border-radius: 50%;
+  padding-left: 2px;
+  flex-shrink: 0;
+}
+.eyebrow__icn svg { width: 8px; height: 9px; }
+
+/* Hover-preview thumbnail below the pill (pill lives in nav) */
+.wtp__preview {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  width: 320px;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-8px) scale(0.96);
+  transform-origin: top center;
+  transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  z-index: 6;
+}
+.wtp__preview::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 14px; height: 14px;
+  background: #000;
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: -1px -1px 0 rgba(255, 255, 255, 0.06);
+}
+.wtp__preview img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.04);
+}
+.wtp__preview-tint {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+}
+.wtp__preview-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 52px; height: 52px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  color: #0a0a0a;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+  padding-left: 3px;
+}
+.wtp__preview-play svg { width: 16px; height: 18px; }
+.wtp__preview-meta {
+  position: absolute;
+  left: 12px; right: 12px; bottom: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wtp__preview-meta .dur {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.eyebrow:hover .wtp__preview,
+.eyebrow:focus-visible .wtp__preview {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}

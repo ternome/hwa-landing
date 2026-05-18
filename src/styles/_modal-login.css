@@ -1,0 +1,206 @@
+/* modal-login — login modal (email -> code), incl. modal__pitch */
+/* Value-prop pitch in modal — reassurance line, centered */
+.modal__pitch {
+  margin-top: 28px;
+  text-align: center;
+}
+.modal__pitch-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── Login modal — frameless, floats over blur backdrop ───────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(18px) saturate(0.85);
+  -webkit-backdrop-filter: blur(18px) saturate(0.85);
+  animation: fade-in 0.25s ease-out;
+}
+.modal.is-open { display: flex; }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal__content {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  color: var(--white);
+  animation: content-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+@keyframes content-in {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal__close {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  z-index: 1001;
+}
+.modal__close:hover { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
+
+.modal__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  margin-bottom: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.modal__back::before { content: '‹'; font-size: 20px; line-height: 1; margin-top: -2px; }
+.modal__back:hover { color: var(--white); background: rgba(255, 255, 255, 0.08); }
+
+.modal__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 1.15;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.modal__title-soft {
+  display: block;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.01em;
+}
+.modal__subtitle {
+  margin-top: 28px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.88);
+}
+.modal__subtitle strong { font-weight: 600; color: var(--white); }
+.modal__email {
+  margin-top: 28px;
+  width: 100%;
+  height: 78px;
+  padding: 0 24px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: 'Inter', sans-serif;
+  font-size: 36px;
+  color: var(--white);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.modal__email::placeholder { color: rgba(255, 255, 255, 0.45); }
+.modal__email:focus { border-color: rgba(110, 208, 47, 0.7); background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 4px rgba(110, 208, 47, 0.15); }
+.modal__email.is-error { border-color: rgba(231, 76, 60, 0.7); box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.12); }
+
+.btn-login {
+  margin-top: 16px;
+  width: 380px;
+  max-width: 100%;
+  align-self: center;
+  height: 56px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
+  color: var(--cream);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow:
+    0 5px 0 rgba(0, 0, 0, 0.25),
+    0 8px 22px rgba(63, 163, 25, 0.35),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+.btn-login:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-login:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 4px 10px rgba(63, 163, 25, 0.3), inset 0 -4px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
+.btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
+
+/* Terms block — plain caption with amber links, no checkbox */
+.modal__terms {
+  margin-top: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+.modal__terms a {
+  color: #E6B94D;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.modal__terms a:hover { color: #FFD56B; }
+
+/* Stage 2 — code entry */
+.modal__code-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.modal__code-input {
+  width: 64px;
+  height: 78px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.modal__code-input:focus { border-color: rgba(110, 208, 47, 0.7); background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 3px rgba(110, 208, 47, 0.15); }
+.modal__resend {
+  margin-top: 32px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.modal__resend:hover { color: var(--white); }
+.modal__resend:disabled { color: rgba(255, 255, 255, 0.35); cursor: not-allowed; }
+
+.stage { display: none; flex-direction: column; align-items: stretch; }
+.stage.is-active { display: flex; }

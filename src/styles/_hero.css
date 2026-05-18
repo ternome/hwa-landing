@@ -1,0 +1,228 @@
+/* hero — hero section structure + content (title, CTA, offer card, play-meta) */
+/* ── Hero (full viewport minus 107px nav) ──────────────────────── */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  /* Static keyart fallback — shows if <video> fails entirely or before poster loads */
+  background: #0a0a10 url('assets/keyart.webp') center/cover no-repeat;
+}
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -3;
+  /* Cross-fade in from the static keyart poster — no jarring snap */
+  opacity: 0;
+  transition: opacity 0.9s ease-out;
+}
+.hero__video.is-ready { opacity: 1; }
+/* Dark gradient overlay (Rectangle 1576 in Figma — 20px backdrop blur, dark veil) */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.85) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
+}
+.hero__vignette {
+  position: absolute; inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.5) 85%);
+}
+
+/* Hero content — left-aligned cluster anchored to bottom */
+.hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 80px 12vh;
+}
+
+
+.hero__title {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(72px, 8.5vw, 144px);
+  line-height: 0.92;
+  color: var(--white);
+  letter-spacing: -0.005em;
+  text-align: left;
+  text-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.85),
+    0 3px 0 rgba(0, 0, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 44px;
+}
+
+/* CTA row — button + offer side-by-side */
+.cta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+/* Play-button meta — Free · No credit card · Plays in browser */
+.play-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.play-meta span { display: inline-flex; align-items: center; gap: 14px; }
+.play-meta span::after {
+  content: '·';
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 700;
+}
+.play-meta span:last-child::after { content: none; }
+
+/* Reward meta — passive promo info beside PLAY NOW (no bg / border) */
+.offer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+.offer__icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(40, 200, 140, 0.5));
+}
+.offer__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  line-height: 1.2;
+}
+.offer__badge {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 3px 10px;
+  background: #C9322D;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.offer__title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  background: linear-gradient(180deg, #FFE9A8 0%, #E6B94D 50%, #B8852D 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+.offer__sub {
+  margin-top: 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* PLAY NOW button — large 367×117 green gradient pill with idle pulse + shine */
+.btn-play {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 367px;
+  height: 117px;
+  border-radius: 21px;
+  background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    0 8px 0 rgba(0, 0, 0, 0.35),
+    0 14px 28px rgba(0, 0, 0, 0.5),
+    inset 0 -10px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  animation: btn-pulse 0.87s ease-in-out infinite;
+  will-change: filter;
+}
+@keyframes btn-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(110, 208, 47, 0)); }
+  50%      { filter: drop-shadow(0 0 22px rgba(110, 208, 47, 0.55)); }
+}
+.btn-play::before {
+  content: '';
+  position: absolute;
+  top: -10%; bottom: -10%;
+  left: -40%;
+  width: 30%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
+  transform: skewX(-22deg);
+  pointer-events: none;
+  animation: btn-shine 1.4s ease-in-out infinite;
+}
+@keyframes btn-shine {
+  0%, 38%  { left: -40%; opacity: 1; }
+  60%      { left: 130%; opacity: 1; }
+  100%     { left: 130%; opacity: 0; }
+}
+.btn-play:hover { filter: brightness(1.08) drop-shadow(0 0 22px rgba(110, 208, 47, 0.65)); transform: translateY(-2px); box-shadow: 0 10px 0 rgba(0, 0, 0, 0.35), 0 18px 36px rgba(0, 0, 0, 0.55), inset 0 -10px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.22); animation-play-state: paused; }
+.btn-play:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 -6px 0 rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.18); animation-play-state: paused; }
+.btn-play__label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 53px;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+.btn-play__badge {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: 69px; height: 69px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--badge-1) 11%, var(--badge-2) 36%, var(--badge-3) 53%, var(--badge-4) 76%);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 4px var(--white);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 38px;
+  color: var(--cream);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+

@@ -1,0 +1,86 @@
+/* meta-strip — bottom v6-style strip (AVAILABLE ON · stars · players · award) */
+/* ── Bottom meta strip (v6-style compact one-liner) ─────────── */
+.meta-strip {
+  position: absolute;
+  left: 80px;
+  right: 80px;
+  bottom: 32px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.meta-strip__platforms {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.meta-strip__label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.meta-strip__icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.meta-strip__icons a {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  color: #c8c8c8;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+.meta-strip__icons a:hover { color: #fff; transform: translateY(-1px); }
+.meta-strip__icons svg { width: 18px; height: 18px; fill: currentColor; }
+
+.meta-strip__rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.88);
+}
+.meta-strip__stars {
+  color: #fc0;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px rgba(255, 204, 0, 0.45);
+}
+.meta-strip__rating-num {
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.meta-strip__sep {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+.meta-strip__reviews {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.68);
+}
+.meta-strip__ec {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fc0;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+  white-space: nowrap;
+}
+

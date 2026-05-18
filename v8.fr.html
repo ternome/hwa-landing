@@ -68,6 +68,7 @@
 <link rel="preload" as="image" href="assets/keyart.webp" type="image/webp" fetchpriority="high" />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
 <style>
+/* tokens — design tokens (CSS custom properties) */
 /* ------------------------------------------------------------------
    v8 — verbatim Figma 215:8267 (MacBook Pro 16" frame, 1728×1117)
    Hero-only single-screen landing · video bg replaces keyart
@@ -85,6 +86,8 @@
   --badge-4: #0C8B01;
   --dot-green: #00FF00;
 }
+
+/* reset — minimal universal reset + base element styles */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { background: var(--black); color: var(--white); overflow-x: hidden; }
 body {
@@ -95,6 +98,7 @@ body {
 img, video { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 
+/* nav — top bar, players counter, sign-in pill, Season pill (eyebrow), trailer hover-thumbnail */
 /* ── Top nav (107px, transparent, floats over hero video) ──────── */
 .nav {
   position: absolute;
@@ -219,53 +223,6 @@ a { color: inherit; text-decoration: none; }
 }
 .btn-enter:hover { transform: translateY(-1px); background: rgba(28, 24, 18, 0.88); border-color: rgba(255, 255, 255, 0.12); }
 .btn-enter:active { transform: translateY(1px); }
-
-/* ── Hero (full viewport minus 107px nav) ──────────────────────── */
-.hero {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-  isolation: isolate;
-  /* Static keyart fallback — shows if <video> fails entirely or before poster loads */
-  background: #0a0a10 url('assets/keyart.webp') center/cover no-repeat;
-}
-.hero__video {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  z-index: -3;
-  /* Cross-fade in from the static keyart poster — no jarring snap */
-  opacity: 0;
-  transition: opacity 0.9s ease-out;
-}
-.hero__video.is-ready { opacity: 1; }
-/* Dark gradient overlay (Rectangle 1576 in Figma — 20px backdrop blur, dark veil) */
-.hero__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.85) 100%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
-}
-.hero__vignette {
-  position: absolute; inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.5) 85%);
-}
-
-/* Hero content — left-aligned cluster anchored to bottom */
-.hero__content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding: 0 80px 12vh;
-}
 
 /* Season pill — single clickable element that opens trailer (whole pill click) */
 .eyebrow {
@@ -403,6 +360,55 @@ a { color: inherit; text-decoration: none; }
   opacity: 1;
   transform: translateX(-50%) translateY(0) scale(1);
 }
+
+/* hero — hero section structure + content (title, CTA, offer card, play-meta) */
+/* ── Hero (full viewport minus 107px nav) ──────────────────────── */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  /* Static keyart fallback — shows if <video> fails entirely or before poster loads */
+  background: #0a0a10 url('assets/keyart.webp') center/cover no-repeat;
+}
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -3;
+  /* Cross-fade in from the static keyart poster — no jarring snap */
+  opacity: 0;
+  transition: opacity 0.9s ease-out;
+}
+.hero__video.is-ready { opacity: 1; }
+/* Dark gradient overlay (Rectangle 1576 in Figma — 20px backdrop blur, dark veil) */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.85) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
+}
+.hero__vignette {
+  position: absolute; inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.5) 85%);
+}
+
+/* Hero content — left-aligned cluster anchored to bottom */
+.hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 80px 12vh;
+}
+
 
 .hero__title {
   font-family: 'Anton', sans-serif;
@@ -583,6 +589,8 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
+
+/* sound-toggle — circular mute/unmute toggle, bottom-right of hero */
 /* ── Sound toggle (over hero, above meta strip) ──────────────── */
 .sound-toggle {
   position: absolute;
@@ -616,6 +624,8 @@ a { color: inherit; text-decoration: none; }
 .sound-toggle.is-muted .icon-off { display: block; }
 .sound-toggle:not(.is-muted) .icon-on { display: block; }
 
+
+/* meta-strip — bottom v6-style strip (AVAILABLE ON · stars · players · award) */
 /* ── Bottom meta strip (v6-style compact one-liner) ─────────── */
 .meta-strip {
   position: absolute;
@@ -701,6 +711,8 @@ a { color: inherit; text-decoration: none; }
   white-space: nowrap;
 }
 
+
+/* modal-login — login modal (email -> code), incl. modal__pitch */
 /* Value-prop pitch in modal — reassurance line, centered */
 .modal__pitch {
   margin-top: 28px;
@@ -907,6 +919,7 @@ a { color: inherit; text-decoration: none; }
 .stage { display: none; flex-direction: column; align-items: stretch; }
 .stage.is-active { display: flex; }
 
+/* modal-trailer — YouTube trailer modal (iframe wrapper) */
 /* ── Trailer modal (YouTube iframe) ───────────────────────────── */
 .trailer-modal {
   position: fixed; inset: 0; z-index: 1000;
@@ -943,6 +956,8 @@ a { color: inherit; text-decoration: none; }
 }
 .trailer-modal__close:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); transform: rotate(90deg); }
 
+
+/* pushes — fake push notification dock, reactions, animations */
 /* ── Fake push notifications (top-right under Sign in) ───────── */
 .pushes {
   position: fixed;
@@ -1148,6 +1163,8 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
 }
 
+
+/* responsive — single 1023px breakpoint + (hover: none) overrides */
 /* ─────────────────────────────────────────────────────────────────
    MOBILE / TABLET — ≤ 1023px
    Desktop layout is preserved at 1024+; smaller viewports get a
@@ -1229,6 +1246,7 @@ a { color: inherit; text-decoration: none; }
 @media (hover: none) {
   .wtp__preview { display: none !important; }
 }
+
 </style>
 </head>
 <body>
@@ -1373,6 +1391,7 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <script>
+// video — hero video autoplay + cross-fade from keyart poster
 // Video autoplay + sound toggle + cross-fade from keyart poster
 const video = document.querySelector('.hero__video');
 if (video) {
@@ -1384,6 +1403,7 @@ if (video) {
   video.play().catch(() => {});
 }
 
+// sound — sound toggle (reads soundToggle.dataset.labelUnmute/labelMute)
 const soundToggle = document.getElementById('soundToggle');
 if (video && soundToggle) {
   let isMuted = true; // browsers require muted for autoplay; user unmutes explicitly
@@ -1403,6 +1423,7 @@ if (video && soundToggle) {
   });
 }
 
+// modal-trailer — YouTube trailer modal (eyebrow [data-open-trailer] opens it)
 // ── Trailer modal (YouTube) ─────────────────────────────────────
 const trailerModal = document.getElementById('trailerModal');
 const trailerFrame = document.getElementById('trailerFrame');
@@ -1432,6 +1453,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && trailerModal.classList.contains('is-open')) closeTrailer();
 });
 
+// modal-login — login modal email->code, magic code 123123 redirects to game
 // Modal control
 const modal = document.getElementById('loginModal');
 const emailInput = document.getElementById('emailInput');
@@ -1554,6 +1576,7 @@ codeInputs.forEach((input, i) => {
 
 resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResendCountdown(); });
 
+// pushes — fake push notification spawn loop, reactions, dock toggle
 // ── Fake push notifications ─────────────────────────────────────
 (() => {
   const root = document.getElementById('pushes');
@@ -1910,6 +1933,7 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
   setTimeout(spawn, 2500);
 })();
 
+// online-counter — players-online counter (pulse + fluctuating number)
 // Live "players online" counter — small fluctuations with slight upward drift
 (() => {
   const fmt = n => n.toLocaleString('en-US').replace(/,/g, ' ');
@@ -1941,6 +1965,7 @@ resendBtn.addEventListener('click', () => { if (!resendBtn.disabled) startResend
   }
   setTimeout(tick, 900);
 })();
+
 </script>
 </body>
 </html>

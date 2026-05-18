@@ -1,0 +1,206 @@
+/* pushes — fake push notification dock, reactions, animations */
+/* ── Fake push notifications (top-right under Sign in) ───────── */
+.pushes {
+  position: fixed;
+  top: 95px;
+  left: 24px;
+  right: auto;
+  width: 340px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.push {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4px 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 0;
+  background: rgba(18, 16, 24, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translateX(-380px);
+  opacity: 0;
+  animation: push-in-left 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
+  overflow: hidden;
+}
+.push.is-out {
+  animation: push-out-left 0.3s ease-in forwards;
+}
+
+/* Top-right docked variant — toggled via click on any push */
+.pushes.is-left {
+  top: 95px;
+  right: 24px;
+  left: auto;
+}
+.pushes.is-left .push {
+  animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+}
+.pushes.is-left .push.is-out {
+  animation: push-out 0.3s ease-in forwards;
+}
+@keyframes push-in-left {
+  0%   { transform: translateX(-380px); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes push-out-left {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-380px); opacity: 0; }
+}
+@keyframes push-in {
+  0%   { transform: translateX(380px); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes push-out {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(380px); opacity: 0; }
+}
+.push__bar {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 0 2px 2px 0;
+}
+.push--achievement .push__bar { background: linear-gradient(180deg, #FFD56B, #E6B94D); }
+.push--guild       .push__bar { background: linear-gradient(180deg, #A06FE0, #6F3FB8); }
+.push--loot        .push__bar { background: linear-gradient(180deg, #6ED02F, #3FA319); }
+.push--dm          .push__bar { background: linear-gradient(180deg, #4FB0FF, #2C7AD0); }
+.push--reaction    .push__bar { background: linear-gradient(180deg, #FF9F58, #E07020); }
+.push--joining     .push__bar { background: linear-gradient(180deg, #87EB6B, #4FA840); }
+
+.push__avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.push__avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.push--has-photo .push__avatar {
+  box-shadow: 0 0 0 2px rgba(255, 80, 130, 0.5), 0 0 10px rgba(255, 80, 130, 0.3);
+}
+.push__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+.push__head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.push__name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.005em;
+}
+.push__name .crown { color: #FFD56B; margin-left: 4px; }
+.push__time {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.push__text {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.push__text .mention { color: #87EB6B; font-weight: 600; }
+.push__sticker {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+/* Reactions strip on push */
+.push__reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 11.5px;
+  color: rgba(255, 253, 237, 0.88);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  transform-origin: center;
+  animation: pill-pop 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.22);
+}
+.reaction-pill__ic {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 13px;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.reaction-pill__ic img { width: 18px; height: 18px; object-fit: contain; display: block; }
+.reaction-pill--like .reaction-pill__ic  { background: linear-gradient(180deg, #4b8df2, #2c69d0); }
+.reaction-pill--love .reaction-pill__ic  { background: linear-gradient(180deg, #f24c5c, #c0303c); }
+.reaction-pill--fire .reaction-pill__ic  { background: linear-gradient(180deg, #ff9f30, #d7591a); }
+.reaction-pill--swords .reaction-pill__ic { background: linear-gradient(180deg, #f7c44a, #b07a1c); color: #1a1408; }
+.reaction-pill__count {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  transform-origin: center;
+}
+.reaction-pill__count.is-bumped { animation: count-bump 0.36s ease-out; }
+@keyframes pill-pop {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes count-bump {
+  0%   { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
+  45%  { transform: scale(1.32); color: #FFD56B; }
+  100% { transform: scale(1);    color: rgba(255, 253, 237, 0.88); }
+}
+
