@@ -61,9 +61,11 @@ Navigation in preview: `location.href = '/v8.html'`. Vercel-style trailing-
 
 CSS sections inside `<style>`:
 
-* Top nav (`.nav`, `.btn-enter`, `.players`)
+* Top nav (`.nav`, `.btn-enter`, `.players`) — **includes the eyebrow pill**
+  (`.eyebrow`) which lives in the nav between logo and `nav__right`
+* Eyebrow pill + hover thumbnail (`.eyebrow`, `.wtp__preview`) — thumbnail
+  appears **below** the pill (`top: calc(100% + 14px)`), slides down on hover
 * Hero (`.hero`, `.hero__video`, `.hero__overlay`, `.hero__content`)
-* Eyebrow pill that also triggers trailer modal (`.eyebrow`, `.wtp__preview`)
 * Title (`.hero__title` — Anton sans, `text-transform: none`, source has Title Case)
 * CTA row (`.cta-row` flex), `.btn-play` (pulse + shine), `.offer` (passive promo)
 * Play-meta caption (`.play-meta`)
@@ -77,7 +79,7 @@ CSS sections inside `<style>`:
 
 HTML order in `<body>`:
 
-1. `<header class="nav">` (fixed)
+1. `<header class="nav">` (fixed) — logo · eyebrow pill · nav__right (players + sign-in)
 2. `<section class="hero">` containing video, overlay, content, meta-strip
 3. `<div class="pushes">`
 4. `<div class="trailer-modal">`
@@ -109,6 +111,7 @@ below → vertical column stack. Sub-rules:
 * `.cta-row` becomes `flex-direction: column`, `.btn-play` full-width, offer
   card stacks below
 * `.pushes { display: none }` on mobile
+* `.eyebrow { display: none }` on mobile — nav too tight; pill hidden at ≤1023px
 * `.wtp__preview` (trailer thumbnail tooltip) hidden via `@media (hover: none)`
 * `.meta-strip` wraps to two rows, `AVAILABLE ON` label hidden, pipe-sep hidden
 * Modals shrink padding 40 → 18, input heights 78 → 56
@@ -183,6 +186,9 @@ draws green PLAY NOW pill using `anchor="mm"` for perfect centering.
   generated locally but not pushed.
 * **Push notifications are NOT for production data.** They're a fake stream
   — extending the array is fine, but don't claim they're real.
+* **Push dock: default = top-left.** `.pushes` sits at `left: 24px` by default;
+  click toggles `is-left` class which moves the stream to `right: 24px`. The
+  class name `is-left` is misleading (legacy) — it now means "switched to right".
 * **Don't run `python3 -m http.server`** for preview — macOS sandbox denies
   the iCloud cwd. `npx serve` only.
 * **Don't bake `width=1280` into the viewport tag.** It used to scale-zoom

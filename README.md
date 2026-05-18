@@ -26,16 +26,18 @@ them.
 
 * **Hero**: full-viewport video (`assets/hero-bg.mp4`) with `keyart.webp` as poster
   + CSS-bg fallback + dissolve-in once `playing` event fires
-* **Top nav**: HW logo · live "players online" counter (pulsing dot, fluctuating
-  number) · "Already playing? **Sign in**" pill (opens login modal)
-* **Hero content (left-flush)**: «NEW · Season 32 · Watch trailer» pill (opens
-  YouTube modal) → `LEVEL UP YOUR HERO` (Anton) → green `PLAY NOW` button
-  (pulse + shine animation, click sound) → 1000 emeralds welcome-bonus offer →
-  Free · No credit card · Plays in browser meta
+* **Top nav**: HW logo · «NEW · Season 32 · Watch trailer» pill (opens YouTube
+  modal, hover shows thumbnail below pill) · live "players online" counter
+  (pulsing dot, fluctuating number) · "Already playing? **Sign in**" pill
+  (opens login modal)
+* **Hero content (left-flush)**: `LEVEL UP YOUR HERO` (Anton) → green `PLAY NOW`
+  button (pulse + shine animation, click sound) → 1000 emeralds welcome-bonus
+  offer → Free · No credit card · Plays in browser meta
 * **Bottom meta strip**: AVAILABLE ON [Web/iOS/Android] · ★★★★★ 4.8 · 204M+
   Players · THE BEST MOBILE RPG 2025
-* **Fake push notifications** (top-right, hidden on mobile): scheduled stream
-  with real-photo girl avatars, sticker reactions, click-to-toggle dock side
+* **Fake push notifications** (top-left by default, hidden on mobile): scheduled
+  stream with real-photo girl avatars, sticker reactions, click-to-toggle to
+  top-right
 * **Modals**: 2-stage email → code login (magic code `123123` redirects to
   the real app); YouTube trailer iframe modal
 * **Mobile (≤1023px)**: vertical stack, no push stream, no hover-thumbnail,
