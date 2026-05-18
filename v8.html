@@ -274,7 +274,6 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 10px;
   padding: 6px 6px 6px 6px;
-  margin-bottom: 22px;
   border-radius: 99px;
   background: rgba(255, 180, 40, 0.12);
   border: 1px solid rgba(255, 180, 40, 0.4);
@@ -320,10 +319,10 @@ a { color: inherit; text-decoration: none; }
 }
 .eyebrow__icn svg { width: 8px; height: 9px; }
 
-/* Hover-preview thumbnail above the pill */
+/* Hover-preview thumbnail below the pill (pill lives in nav) */
 .wtp__preview {
   position: absolute;
-  bottom: calc(100% + 14px);
+  top: calc(100% + 14px);
   left: 50%;
   width: 320px;
   aspect-ratio: 16 / 9;
@@ -335,8 +334,8 @@ a { color: inherit; text-decoration: none; }
     0 0 0 1px rgba(255, 255, 255, 0.08);
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-50%) translateY(8px) scale(0.96);
-  transform-origin: bottom center;
+  transform: translateX(-50%) translateY(-8px) scale(0.96);
+  transform-origin: top center;
   transition: opacity 0.22s ease, transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15);
   z-index: 6;
 }
@@ -344,11 +343,11 @@ a { color: inherit; text-decoration: none; }
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -7px;
+  top: -7px;
   width: 14px; height: 14px;
   background: #000;
   transform: translateX(-50%) rotate(45deg);
-  box-shadow: 1px 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: -1px -1px 0 rgba(255, 255, 255, 0.06);
 }
 .wtp__preview img {
   width: 100%; height: 100%;
@@ -1166,13 +1165,8 @@ a { color: inherit; text-decoration: none; }
   .hero { min-height: 600px; }
   .hero__content { padding: 0 20px 110px; }
 
-  /* Eyebrow pill */
-  .eyebrow { font-size: 10px; letter-spacing: 0.14em; gap: 7px; padding: 4px; margin-bottom: 16px; }
-  .eyebrow .tag { font-size: 9px; padding: 2px 7px; }
-  .eyebrow__txt { padding: 0 2px; }
-  .eyebrow__icn { width: 18px; height: 18px; }
-  .eyebrow__icn svg { width: 6px; height: 7px; }
-  .wtp__preview { display: none !important; }
+  /* Eyebrow pill — hide in nav on mobile (nav too tight) */
+  .eyebrow { display: none; }
 
   /* Title */
   .hero__title { font-size: clamp(40px, 11vw, 88px); line-height: 0.95; margin-bottom: 24px; letter-spacing: 0; }
@@ -1241,6 +1235,27 @@ a { color: inherit; text-decoration: none; }
 <header class="nav">
   <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="nav__logo" />
 
+  <button type="button" class="eyebrow" data-open-trailer aria-label="Season 32 — Watch trailer">
+    <span class="tag">New</span>
+    <span class="eyebrow__txt">Season 32 · Watch trailer</span>
+    <span class="eyebrow__icn">
+      <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="wtp__preview" aria-hidden="true">
+      <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="eager" />
+      <span class="wtp__preview-tint"></span>
+      <span class="wtp__preview-play">
+        <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg>
+      </span>
+      <span class="wtp__preview-meta">
+        <span>Season 32 Trailer</span>
+        <span class="dur">1:42</span>
+      </span>
+    </span>
+  </button>
+
   <div class="nav__right">
     <div class="players">
       <span class="players__dot"></span>
@@ -1264,27 +1279,6 @@ a { color: inherit; text-decoration: none; }
   <div class="hero__vignette"></div>
 
   <div class="hero__content">
-    <button type="button" class="eyebrow" data-open-trailer aria-label="Season 32 — Watch trailer">
-      <span class="tag">New</span>
-      <span class="eyebrow__txt">Season 32 · Watch trailer</span>
-      <span class="eyebrow__icn">
-        <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/>
-        </svg>
-      </span>
-      <span class="wtp__preview" aria-hidden="true">
-        <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="eager" />
-        <span class="wtp__preview-tint"></span>
-        <span class="wtp__preview-play">
-          <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg>
-        </span>
-        <span class="wtp__preview-meta">
-          <span>Season 32 Trailer</span>
-          <span class="dur">1:42</span>
-        </span>
-      </span>
-    </button>
-
     <h1 class="hero__title">Level Up Your Hero</h1>
 
     <div class="cta-row">
