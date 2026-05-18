@@ -137,6 +137,8 @@
     if (photo) {
       const img = document.createElement('img');
       img.src = photo; img.alt = data.name;
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.width = 38; img.height = 38;
       av.appendChild(img);
     } else {
       av.style.background = avatarColor(data.name);
@@ -171,6 +173,8 @@
       img.className = 'push__sticker';
       img.src = 'assets/v8/stickers/' + data.sticker + '.png';
       img.alt = '';
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.width = 56; img.height = 56;
       el.appendChild(img);
     } else {
       // Keep grid columns consistent — add empty 4th col
@@ -222,6 +226,8 @@
       if (def.img) {
         const img = document.createElement('img');
         img.src = def.img; img.alt = '';
+        img.loading = 'lazy'; img.decoding = 'async';
+        img.width = 14; img.height = 14;
         ic.appendChild(img);
       } else {
         ic.textContent = def.emoji;

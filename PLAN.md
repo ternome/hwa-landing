@@ -205,7 +205,7 @@ Tracking document for the v8 refactor. Removed after squash-merge.
 
 **Checkpoint:** размер `v8.html` сократился на >=30%; визуально идентично; функционально идентично; preview всё ещё работает (Vercel запустит build при деплое).
 
-### Phase 4 — performance polish (~1.5 hours)
+### Phase 4 — performance polish (~1.5 hours) — DONE (favicon PNG set + lite hero video deferred — need local ImageMagick/ffmpeg)
 1. **Critical asset hints в template:**
    ```html
    <link rel="preconnect" href="https://fonts.googleapis.com">

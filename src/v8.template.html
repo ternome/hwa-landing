@@ -62,10 +62,14 @@
 }
 </script>
 
-<!-- Fonts -->
+<!-- Resource hints — preload critical, preconnect to fonts, dns-prefetch to YouTube (trailer) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="dns-prefetch" href="https://www.youtube.com" />
+<link rel="dns-prefetch" href="https://img.youtube.com" />
 <link rel="preload" as="image" href="assets/keyart.webp" type="image/webp" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/v8/emerald.png" type="image/png" />
+<link rel="preload" as="video" href="assets/hero-bg.mp4" type="video/mp4" media="(min-width: 1024px)" />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet" />
 <style>
 <!-- INJECT_CSS -->
@@ -74,7 +78,7 @@
 <body>
 
 <header class="nav">
-  <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="nav__logo" />
+  <img src="assets/v8/logo.png" alt="Hero Wars Alliance" class="nav__logo" width="138" height="43" decoding="async" />
 
   <button type="button" class="eyebrow" data-open-trailer aria-label="{{nav_pill_aria}}">
     <span class="tag">{{nav_pill_tag}}</span>
@@ -85,7 +89,7 @@
       </svg>
     </span>
     <span class="wtp__preview" aria-hidden="true">
-      <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="eager" />
+      <img src="https://img.youtube.com/vi/aUljHX1XmY0/maxresdefault.jpg" alt="" loading="lazy" decoding="async" width="320" height="180" />
       <span class="wtp__preview-tint"></span>
       <span class="wtp__preview-play">
         <svg viewBox="0 0 10 12" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L10 6 L0 12 Z" fill="currentColor"/></svg>
@@ -128,7 +132,7 @@
       </a>
 
       <div class="offer">
-        <img src="assets/v8/emerald.png" alt="" class="offer__icon" />
+        <img src="assets/v8/emerald.png" alt="" class="offer__icon" width="48" height="48" decoding="async" />
         <div class="offer__body">
           <span class="offer__badge">{{offer_badge}}</span>
           <div class="offer__title">{{offer_title}}</div>

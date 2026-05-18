@@ -30,6 +30,10 @@ SCRIPTS_DIR  = BASE / "src" / "scripts"
 MANIFESTS    = BASE / "src" / "manifests"
 LOCALES      = BASE / "locales"
 SCHEMA       = LOCALES / "_schema.json"
+SITEMAP_OUT  = BASE / "sitemap.xml"
+ROBOTS_OUT   = BASE / "robots.txt"
+
+SITE_BASE = "https://hwa-landing.vercel.app"
 
 INJECT_CSS_MARKER = "<!-- INJECT_CSS -->"
 INJECT_JS_MARKER  = "<!-- INJECT_JS -->"
@@ -181,6 +185,50 @@ def build(minify=True):
         print(f"  {out.name:<22}  {size_kb} KB")
 
     print(f"\n{len(generated)} file(s) generated{' (minified)' if minify else ' (NOT minified)'}")
+
+    # ── Sitemap.xml + robots.txt ───────────────────────────────────
+    # Map locale stems to canonical hreflang tags (sitemap requires these)
+    HREFLANG_MAP = {
+        "en": "en",         "ru": "ru",       "de": "de",
+        "fr": "fr",         "es": "es",       "pt": "pt-BR",
+        "it": "it",         "pl": "pl",       "ja": "ja",
+        "ko": "ko",         "zh-hans": "zh-Hans", "zh-hant": "zh-Hant",
+    }
+    urls = []
+    for lang in HREFLANG_MAP:
+        path = "/v8.html" if lang == "en" else f"/v8.{lang}.html"
+        urls.append((lang, path))
+
+    sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+                     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+                     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for lang, path in urls:
+        sitemap_lines.append(f'  <url>')
+        sitemap_lines.append(f'    <loc>{SITE_BASE}{path}</loc>')
+        for alt_lang, alt_path in urls:
+            sitemap_lines.append(
+                f'    <xhtml:link rel="alternate" hreflang="{HREFLANG_MAP[alt_lang]}" href="{SITE_BASE}{alt_path}" />'
+            )
+        sitemap_lines.append(
+            f'    <xhtml:link rel="alternate" hreflang="x-default" href="{SITE_BASE}/v8.html" />'
+        )
+        sitemap_lines.append(f'    <changefreq>weekly</changefreq>')
+        sitemap_lines.append(f'    <priority>{"1.0" if lang == "en" else "0.9"}</priority>')
+        sitemap_lines.append(f'  </url>')
+    sitemap_lines.append('</urlset>')
+    SITEMAP_OUT.write_text("\n".join(sitemap_lines) + "\n", encoding="utf-8")
+    print(f"  sitemap.xml          {SITEMAP_OUT.stat().st_size // 1024} KB  ({len(urls)} URLs)")
+
+    robots = (
+        "# Hero Wars: Alliance landing — robots.txt\n"
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /archive/\n"
+        f"\nSitemap: {SITE_BASE}/sitemap.xml\n"
+    )
+    ROBOTS_OUT.write_text(robots, encoding="utf-8")
+    print(f"  robots.txt           {ROBOTS_OUT.stat().st_size} bytes")
+
     return generated
 
 
