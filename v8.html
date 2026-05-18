@@ -947,7 +947,8 @@ a { color: inherit; text-decoration: none; }
 .pushes {
   position: fixed;
   top: 95px;
-  right: 24px;
+  left: 24px;
+  right: auto;
   width: 340px;
   z-index: 90;
   display: flex;
@@ -972,27 +973,27 @@ a { color: inherit; text-decoration: none; }
     0 2px 6px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
   cursor: pointer;
-  transform: translateX(380px);
+  transform: translateX(-380px);
   opacity: 0;
-  animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+  animation: push-in-left 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
   overflow: hidden;
 }
 .push.is-out {
-  animation: push-out 0.3s ease-in forwards;
+  animation: push-out-left 0.3s ease-in forwards;
 }
 
-/* Top-left docked variant — toggled via click on any push (sits under the HW logo) */
+/* Top-right docked variant — toggled via click on any push */
 .pushes.is-left {
   top: 95px;
-  left: 24px;
-  right: auto;
+  right: 24px;
+  left: auto;
 }
 .pushes.is-left .push {
-  animation: push-in-left 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
+  animation: push-in 0.42s cubic-bezier(0.18, 0.9, 0.32, 1.18) forwards;
 }
 .pushes.is-left .push.is-out {
-  animation: push-out-left 0.3s ease-in forwards;
+  animation: push-out 0.3s ease-in forwards;
 }
 @keyframes push-in-left {
   0%   { transform: translateX(-380px); opacity: 0; }
