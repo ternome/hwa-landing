@@ -67,9 +67,8 @@ all moved to `archive/`. [`index.html`](index.html) is the production hub
   offer → Free · No credit card · Plays in browser meta
 * **Bottom meta strip**: AVAILABLE ON [Web/iOS/Android] · ★★★★★ 4.8 · 204M+
   Players · THE BEST MOBILE RPG 2025
-* **Fake push notifications** (top-left by default, hidden on mobile): scheduled
-  stream with real-photo girl avatars, sticker reactions, click-to-toggle to
-  top-right
+* **Fake push notifications** (top-right, fixed position, hidden on mobile):
+  scheduled stream with real-photo girl avatars, sticker reactions
 * **Modals**: 2-stage email → code login (magic code `123123` redirects to
   the real app); YouTube trailer iframe modal
 * **Mobile (≤1023px)**: vertical stack, no push stream, no hover-thumbnail,
