@@ -161,7 +161,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 367px;
+  width: auto;
+  min-width: 367px;
+  padding: 0 48px;
   height: 117px;
   border-radius: 21px;
   background: linear-gradient(180deg, var(--play-top) 0%, var(--play-bottom) 100%);
@@ -202,6 +204,7 @@
   font-family: 'Roboto', sans-serif;
   font-weight: 700;
   font-size: 53px;
+  white-space: nowrap;
   color: var(--cream);
   letter-spacing: 0.02em;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.5);
