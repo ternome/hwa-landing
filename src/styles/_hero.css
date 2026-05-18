@@ -48,10 +48,11 @@
 
 
 .hero__title {
-  font-family: 'Anton', sans-serif;
+  font-family: 'Anton', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: clamp(72px, 8.5vw, 144px);
+  font-size: clamp(72px, 8.5vw, 114px);
+  text-transform: capitalize;
   line-height: 0.92;
   color: var(--white);
   letter-spacing: -0.005em;
