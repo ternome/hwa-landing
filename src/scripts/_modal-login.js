@@ -112,6 +112,12 @@ function submitEmail() {
 getCodeBtn.addEventListener('click', submitEmail);
 emailInput.addEventListener('input', clearEmailError);
 emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitEmail(); });
+emailInput.addEventListener('paste', (e) => {
+  const pasted = (e.clipboardData.getData('text') || '').trim();
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pasted)) {
+    setTimeout(submitEmail, 150);
+  }
+});
 
 // 6-digit code input behavior
 function tryRedeem() {
