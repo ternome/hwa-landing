@@ -70,7 +70,8 @@ all moved to `archive/`. [`index.html`](index.html) is the production hub
 * **Fake push notifications** (top-right, fixed position, hidden on mobile):
   scheduled stream with real-photo girl avatars, sticker reactions
 * **Modals**: 2-stage email → code login (magic code `123123` redirects to
-  the real app); YouTube trailer iframe modal
+  the real app); inline validation errors with reserved space (no layout jump);
+  YouTube trailer iframe modal
 * **Mobile (≤1023px)**: vertical stack, no push stream, no hover-thumbnail,
   modals fit narrow viewports
 * **OG / SEO**: full meta-tag suite, Schema.org `VideoGame` JSON-LD, Apple
@@ -149,7 +150,7 @@ The `.claude/launch.json` is wired for the Claude Code preview panel — same
 
 ## i18n — adding or updating a locale
 
-1. Edit `locales/{lang}.json` (all 36 keys required, validated against
+1. Edit `locales/{lang}.json` (all 39 keys required, validated against
    `locales/_schema.json`) — or create a new one for a new language
 2. Run `python3 build.py` → zero warnings, zero unresolved placeholders,
    schema-OK expected (build fails fast otherwise)

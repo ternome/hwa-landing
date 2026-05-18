@@ -125,6 +125,16 @@
 .modal__email:focus { border-color: rgba(110, 208, 47, 0.7); background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 4px rgba(110, 208, 47, 0.15); }
 .modal__email.is-error { border-color: rgba(231, 76, 60, 0.7); box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.12); }
 
+.modal__field-error {
+  min-height: 20px;
+  margin-top: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #E85D4A;
+  text-align: center;
+}
+
 .btn-login {
   margin-top: 16px;
   width: 380px;

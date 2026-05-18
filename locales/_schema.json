@@ -11,6 +11,9 @@
     "modal_back",
     "modal_code_subtitle",
     "modal_email_ph",
+    "modal_error_code_invalid",
+    "modal_error_email_empty",
+    "modal_error_email_invalid",
     "modal_get_code",
     "modal_pitch",
     "modal_resend_init",
@@ -38,5 +41,5 @@
     "strip_players",
     "twitter_img_alt"
   ],
-  "expected_count": 36
+  "expected_count": 39
 }

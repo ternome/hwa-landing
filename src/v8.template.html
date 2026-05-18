@@ -193,6 +193,9 @@
       </div>
 
       <input type="email" class="modal__email" id="emailInput" placeholder="{{modal_email_ph}}" autocomplete="email" />
+      <p class="modal__field-error" id="emailError" aria-live="polite"
+         data-error-empty="{{modal_error_email_empty}}"
+         data-error-invalid="{{modal_error_email_invalid}}"></p>
       <button type="button" class="btn-login" id="getCodeBtn">{{modal_get_code}}</button>
 
       <p class="modal__terms">{{modal_terms}}</p>
@@ -211,6 +214,8 @@
         <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
         <input type="text" class="modal__code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" />
       </div>
+      <p class="modal__field-error" id="codeError" aria-live="polite"
+         data-error-code="{{modal_error_code_invalid}}"></p>
       <button type="button" class="modal__resend" id="resendBtn" disabled data-resend-label="{{modal_resend_label}}">{{modal_resend_init}}</button>
     </div>
   </div>

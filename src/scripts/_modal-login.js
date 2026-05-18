@@ -2,18 +2,32 @@
 // Modal control
 const modal = document.getElementById('loginModal');
 const emailInput = document.getElementById('emailInput');
+const emailError = document.getElementById('emailError');
 const getCodeBtn = document.getElementById('getCodeBtn');
 const sentEmail = document.getElementById('sentEmail');
 const stages = modal.querySelectorAll('.stage');
 const codeInputs = modal.querySelectorAll('.modal__code-input');
+const codeError = document.getElementById('codeError');
 const resendBtn = document.getElementById('resendBtn');
 
 let resendTimer = null;
+
+function clearEmailError() {
+  emailInput.classList.remove('is-error');
+  emailError.textContent = '';
+}
+
+function clearCodeError() {
+  codeInputs.forEach(i => i.classList.remove('is-error'));
+  codeError.textContent = '';
+}
 
 function openModal() {
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  clearEmailError();
+  clearCodeError();
   setTimeout(() => emailInput.focus(), 300);
 }
 
@@ -22,6 +36,8 @@ function closeModal() {
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
   showStage('email');
+  clearEmailError();
+  clearCodeError();
   if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
 }
 
@@ -68,25 +84,33 @@ modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); }
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal(); });
 
 // Back to email stage
-modal.querySelector('[data-stage-back]').addEventListener('click', () => showStage('email'));
+modal.querySelector('[data-stage-back]').addEventListener('click', () => { clearCodeError(); showStage('email'); });
 
 // Email submit
 function submitEmail() {
   const v = emailInput.value.trim();
-  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  if (!validEmail) {
+  if (!v) {
     emailInput.classList.add('is-error');
+    emailError.textContent = emailError.dataset.errorEmpty;
     emailInput.focus();
     return;
   }
-  emailInput.classList.remove('is-error');
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  if (!validEmail) {
+    emailInput.classList.add('is-error');
+    emailError.textContent = emailError.dataset.errorInvalid;
+    emailInput.focus();
+    return;
+  }
+  clearEmailError();
+  clearCodeError();
   sentEmail.textContent = v;
   showStage('code');
   setTimeout(() => codeInputs[0].focus(), 200);
   startResendCountdown();
 }
 getCodeBtn.addEventListener('click', submitEmail);
-emailInput.addEventListener('input', () => emailInput.classList.remove('is-error'));
+emailInput.addEventListener('input', clearEmailError);
 emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitEmail(); });
 
 // 6-digit code input behavior
@@ -95,12 +119,16 @@ function tryRedeem() {
   if (code.length !== 6) return;
   if (code === '123123') {
     window.location.href = 'https://hero-wars-alliance.com/';
+  } else {
+    codeInputs.forEach(i => i.classList.add('is-error'));
+    codeError.textContent = codeError.dataset.errorCode;
   }
 }
 codeInputs.forEach((input, i) => {
   input.addEventListener('input', (e) => {
     const v = e.target.value.replace(/\D/g, '');
     e.target.value = v.slice(0, 1);
+    clearCodeError();
     if (e.target.value && i < codeInputs.length - 1) codeInputs[i + 1].focus();
     tryRedeem();
   });

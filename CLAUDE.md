@@ -114,7 +114,9 @@ Navigation in preview: `location.href = '/v8.html'`. Vercel-style trailing-
      `_responsive.css` is unaffected.
 5. `_sound-toggle.css`  — `.sound-toggle`
 6. `_meta-strip.css`    — bottom `.meta-strip`
-7. `_modal-login.css`   — `.modal` (two `.stage`s — email + code) + `.modal__pitch`
+7. `_modal-login.css`   — `.modal` (two `.stage`s — email + code) + `.modal__pitch` +
+   `.modal__field-error` (inline validation error, `min-height: 20px` reserves space
+   above button so form doesn't jump on error; color `#E85D4A`)
 8. `_modal-trailer.css` — `.trailer-modal` (YouTube iframe wrapper)
 9. `_pushes.css`        — `.pushes`, `.push`, `.reaction-pill`
 10. `_responsive.css`   — `@media (max-width: 1023px)` + `@media (hover: none)`
@@ -126,7 +128,9 @@ Navigation in preview: `location.href = '/v8.html'`. Vercel-style trailing-
    **depends on `video`** from `_video.js`
 3. `_modal-trailer.js`  — trailer modal (eyebrow `[data-open-trailer]` opens it)
 4. `_modal-login.js`    — login modal email→code flow, magic `123123` redirects;
-   **depends on `video`** (for click sound check)
+   **depends on `video`** (for click sound check). Inline validation: empty
+   email → `dataset.errorEmpty`, bad format → `dataset.errorInvalid`, wrong
+   OTP → `dataset.errorCode` (all read from `<p>` `data-*` attrs, locale-driven)
 5. `_pushes.js`         — fake push notification stream (IIFE-wrapped, isolated)
 6. `_online-counter.js` — players-online counter (pulse + fluctuating number)
 
@@ -278,7 +282,7 @@ draws green PLAY NOW pill using `anchor="mm"` for perfect centering.
   cascade; `scripts.json` determines JS execution order (and so which globals
   are in scope when a module runs). NOT alphabetical. Reordering without
   verifying cascade + cross-module dependencies = silent breakage.
-* **Locale schema is enforced.** `locales/_schema.json` lists 36 required keys.
+* **Locale schema is enforced.** `locales/_schema.json` lists 39 required keys.
   `build.py` fails fast on any locale missing/extra keys. To add a new key —
   update `_schema.json` AND every locale JSON in one pass, then rebuild.
 * **Generated files live at repo root, not under `src/`.** That is intentional
@@ -379,14 +383,16 @@ vercel.json                     redirects (legacy /vN.html) + Accept-Language re
 placeholders inside CSS/JS modules too — they're concatenated INTO the template
 before locale substitution), key names in JSON.
 
-**36 locale keys per file:** `lang`, `og_locale`, `page_title`,
+**39 locale keys per file:** `lang`, `og_locale`, `page_title`,
 `meta_description`, `og_title`, `og_description`, `twitter_img_alt`,
 `nav_pill_aria`, `nav_pill_tag`, `nav_pill_text`, `preview_label`,
 `players_label`, `signin_hint`, `signin_action`, `hero_title`, `cta_play`,
 `offer_badge`, `offer_title`, `offer_sub`, `meta_free`, `meta_no_card`,
 `meta_browser`, `strip_available`, `strip_players`, `strip_award`,
 `sound_unmute`, `sound_mute`, `modal_welcome`, `modal_pitch`,
-`modal_email_ph`, `modal_get_code`, `modal_terms`, `modal_back`,
+`modal_email_ph`, `modal_get_code`, `modal_error_email_empty`,
+`modal_error_email_invalid`, `modal_error_code_invalid`,
+`modal_terms`, `modal_back`,
 `modal_code_subtitle`, `modal_resend_label`, `modal_resend_init`.
 
 The canonical list lives in `locales/_schema.json` — `build.py` reads it and
@@ -409,7 +415,7 @@ git --git-dir=.git --work-tree=. add src/ locales/
 ```
 
 **Adding a new locale:**
-1. Create `locales/{code}.json` with all 36 keys (copy from `en.json`, translate)
+1. Create `locales/{code}.json` with all 39 keys (copy from `en.json`, translate)
 2. Run `python3 build.py` (schema validation will catch missing keys)
 3. Add a card to root `index.html` Production section
 4. Add Accept-Language rewrites for `/` and `/v8.html` in `vercel.json`
