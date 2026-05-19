@@ -173,6 +173,15 @@
   </div>
 </section>
 
+<div class="locale-switcher" id="localeSwitcher">
+  <button class="locale-switcher__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Change language" data-locale="{{lang}}">
+    <svg class="locale-switcher__globe" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm4.95 4.5h-2.12a9.6 9.6 0 00-.97-2.3A5.52 5.52 0 0112.95 5.5zM8 2.55c.65.8 1.17 1.84 1.5 2.95H6.5C6.83 4.4 7.35 3.35 8 2.55zM2.18 9.5A5.48 5.48 0 012 8c0-.52.07-1.02.18-1.5h2.44c-.06.49-.12.98-.12 1.5s.06 1.01.12 1.5H2.18zm.87 1.5h2.12c.22.82.54 1.6.97 2.3A5.52 5.52 0 013.05 11zm2.12-6H3.05a5.52 5.52 0 013.09-2.3A9.6 9.6 0 006.17 5zM8 13.45c-.65-.8-1.17-1.84-1.5-2.95h3c-.33 1.11-.85 2.15-1.5 2.95zm1.84-4.45H6.16C6.09 8.51 6 8.02 6 7.5s.09-1.01.16-1.5h3.68c.07.49.16.98.16 1.5s-.09 1.01-.16 1.5zm.33 3.75a9.6 9.6 0 00.97-2.3h2.12a5.52 5.52 0 01-3.09 2.3zm1.25-3.75c.06-.49.08-.98.08-1.5s-.02-1.01-.08-1.5h2.44c.11.48.14.98.14 1.5s-.03 1.02-.14 1.5h-2.44z"/></svg>
+    <span class="locale-switcher__label"></span>
+    <svg class="locale-switcher__chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+  </button>
+  <ul class="locale-switcher__dropdown" role="listbox"></ul>
+</div>
+
 <div class="pushes" id="pushes" aria-hidden="true" aria-live="polite"></div>
 
 <div class="trailer-modal" id="trailerModal" aria-hidden="true" role="dialog" aria-label="{{nav_pill_aria}}">

@@ -4,5 +4,6 @@
   "_modal-trailer.js",
   "_modal-login.js",
   "_pushes.js",
-  "_online-counter.js"
+  "_online-counter.js",
+  "_locale-switcher.js"
 ]
